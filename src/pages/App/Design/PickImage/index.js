@@ -22,15 +22,25 @@ export default function PickImage({ done }) {
 
   // const source = { uri: `data:image/jpeg;base64,${response.data}` };
 
-  const [size, setSize] = useState(200);
+  const [size, setSize] = useState(200); // slider de size
 
   const captureViewRef = useRef();
   // gera o URI e converte pra base64 antes de salvar no reducer
 
   function shirtDone(uritemp) {
+    // salvo na camera e puxo de imediato, ver se tem algo com nome.
+    // overload é salvar na noMedia, com isso pega a URI nova
+    // e salva na posição certa
+    // após isso deve checar se o type não é null, e dá um override
+    // o switch irá funcionar APENAS se o type e camiseta do redux forem null
+    // isso irá gerar vários re-renders, cacheia a imagem e faz useMemo pra verificação
+
     const source = { uri: `data:image/jpeg;base64,${uritemp}` };
     console.tron.log(`prev> ${source.uri}`);
 
+    // passa o uri novo, da foto puxada da camera. sepa gera um no media, faz o switch pra type
+    // e side da camiseta. isso fica no reducer, aqui já recebe apenas dois campos. que já e a camisa
+    // e o lado.
     dispatch(updateShirt(source, shirt));
     done();
   }

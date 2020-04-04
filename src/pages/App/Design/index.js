@@ -17,15 +17,6 @@ import iconColor from '~/assets/ico-color.png';
 import iconStickers from '~/assets/ico-sticker.png';
 import iconText from '~/assets/ico-text.png';
 
-import tShirtFront from '~/assets/t-shirt-front.png';
-import tShirtBack from '~/assets/t-shirt-back.png';
-
-import babylookFront from '~/assets/babylook-front.png';
-import babylookBack from '~/assets/babylook-back.png';
-
-import moletomFront from '~/assets/moletom-front.png';
-import moletomBack from '~/assets/moletom-back.png';
-
 import {
   Container,
   Bottom,
@@ -40,27 +31,56 @@ import {
 } from './styles';
 
 export default function Design({ navigation }) {
+  const customT = useSelector((state) => state.user.tshirt);
+  const customB = useSelector((state) => state.user.bshirt);
+  const customH = useSelector((state) => state.user.hoodie);
+
+  console.tron.log(`tfront: ${customT.front}`);
+  console.tron.log(`tback: ${customT.back}`);
+
+  console.tron.log(`bfront: ${customB.front}`);
+  console.tron.log(`bback: ${customB.back}`);
+
+  console.tron.log(`hfront: ${customH.front}`);
+  console.tron.log(`hback: ${customH.back}`);
+
+  // se der certo, tira o import dai e popula com o reducer, já poupa inicializaçao e codigo
+
   const [shirtType, setShirtType] = useState('tshirt');
   const [shirtSide, setShirtSide] = useState('front');
-  const [tShirtImage, setTShirtImage] = useState(tShirtFront);
-  // const [tShirtImage, setTShirtFront] = useState(tShirtFront);
 
-  const updated = useSelector((state) => state.user.preview);
-  // const whichUpdated = useSelector((state) => state.user.shirtType);
+  const [tFront, setTFront] = useState(customT.front);
+  const [tBack, setTBack] = useState(customT.back);
 
-  // cons;
+  const [bFront, setBFront] = useState(customB.front);
+  const [bBack, setBBack] = useState(customB.back);
 
-  // if (updated !== null) {
-  //   setTShirtImage(updated);
-  // }
+  const [hFront, setHFront] = useState(customH.front);
+  const [hBack, setHBack] = useState(customH.back);
 
+  const [tShirtImage, setTShirtImage] = useState(tFront);
+
+  useEffect(() => {
+    setTFront(customT.front);
+    setTBack(customT.back);
+  }, [customT]);
+
+  useEffect(() => {
+    setBFront(customB.front);
+    setBBack(customB.back);
+  }, [customB]);
+
+  useEffect(() => {
+    setHFront(customH.front);
+    setHBack(customH.back);
+  }, [customH]);
+
+  // eh uma verificação de 3 campos. deve ser de apenas 1 que representa os 3. tshirt-front
   // alterar a logica do switch ou monitorar alteração no estado para
   // renderizar apenas quando não há a camiseta do estado
   // viabilizar o 'useCallback', 'useMemo', dimnuir funções e ganhar performance
 
   const dispatch = useDispatch();
-
-  const [image, setImage] = useState(null);
 
   const [visible, setVisible] = useState(false);
 
@@ -71,19 +91,13 @@ export default function Design({ navigation }) {
   useEffect(() => {
     switch (shirtType) {
       case 'tshirt':
-        shirtSide === 'front'
-          ? setTShirtImage(tShirtFront)
-          : setTShirtImage(tShirtBack);
+        shirtSide === 'front' ? setTShirtImage(tFront) : setTShirtImage(tBack);
         break;
       case 'babylook':
-        shirtSide === 'front'
-          ? setTShirtImage(babylookFront)
-          : setTShirtImage(babylookBack);
+        shirtSide === 'front' ? setTShirtImage(bFront) : setTShirtImage(bBack);
         break;
       case 'moletom':
-        shirtSide === 'front'
-          ? setTShirtImage(moletomFront)
-          : setTShirtImage(moletomBack);
+        shirtSide === 'front' ? setTShirtImage(hFront) : setTShirtImage(hBack);
         break;
     }
   }, [shirtType, shirtSide]);
@@ -92,6 +106,7 @@ export default function Design({ navigation }) {
     const options = {
       title: 'Escolha uma imagem da galeria',
     };
+    console.tron.log(`camisa: ${shirtType} e lado: ${shirtSide}`);
 
     ImagePicker.showImagePicker(options, (response) => {
       console.tron.log('Response = ', response);
@@ -103,9 +118,9 @@ export default function Design({ navigation }) {
       } else {
         const source = { uri: `data:image/jpeg;base64,${response.data}` };
         console.tron.log(`camisa${shirt.uri}`);
-        dispatch(updateShirt(source, shirt));
+        dispatch(updateShirt(source, shirt, shirtType, shirtSide));
         setVisible(true);
-        setImage(source);
+        setTShirtImage(source);
       }
     });
   }
@@ -116,7 +131,7 @@ export default function Design({ navigation }) {
 
       <Container>
         <TShirtContainer>
-          <TShirtImage source={tShirtImage} resizeMode="contain" />
+          <TShirtImage source={{ uri: tShirtImage }} resizeMode="contain" />
         </TShirtContainer>
 
         <TopButtonsContainer>
