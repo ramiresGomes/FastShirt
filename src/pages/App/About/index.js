@@ -1,9 +1,9 @@
 import React from 'react';
 import Header from '~/components/Header';
 
-import {Container, PageText} from './styles';
+import { Container, PageText } from './styles';
 
-export default function About({navigation}) {
+export default function About({ navigation }) {
   return (
     <>
       <Header navigation={navigation} title="Sobre" />

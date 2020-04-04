@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import {TouchableOpacity, Image} from 'react-native';
+import { TouchableOpacity, Image } from 'react-native';
 
 export const Container = styled.View`
   background: #f2f2f2;
@@ -52,8 +52,8 @@ export const TopButtonsContainer = styled.View`
 `;
 
 export const ActionButton = styled(TouchableOpacity)`
-  background: ${props => (props.active ? '#e58230' : '#fff')};
-  border: 1px solid ${props => (props.active ? '#e58230' : '#dcdcdc')};
+  background: ${(props) => (props.active ? '#e58230' : '#fff')};
+  border: 1px solid ${(props) => (props.active ? '#e58230' : '#dcdcdc')};
   border-radius: 4px;
   padding: 5px 15px;
   min-width: 100px;
@@ -63,8 +63,8 @@ export const ActionButton = styled(TouchableOpacity)`
 
 export const ActionButtonText = styled.Text`
   font-size: 16px;
-  color: ${props => (props.active ? '#fff' : '#000')};
-  font-weight: ${props => (props.active ? 'bold' : 'normal')};
+  color: ${(props) => (props.active ? '#fff' : '#000')};
+  font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
 `;
 
 export const BottomButtonsContainer = styled.View`

@@ -13,7 +13,7 @@ import {
   HeaderTitle,
 } from './styles';
 
-export default function Header({navigation, title = null}) {
+export default function Header({ navigation, title = null }) {
   return (
     <Container>
       <LeftBlock>

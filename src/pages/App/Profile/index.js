@@ -1,10 +1,10 @@
-import React, {useRef, useState, useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useRef, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Background from '~/components/Background';
 import Header from '~/components/Header';
-import {signOut} from '~/store/modules/auth/actions';
-import {updateProfileRequest} from '~/store/modules/user/actions';
+import { signOut } from '~/store/modules/auth/actions';
+import { updateProfileRequest } from '~/store/modules/user/actions';
 
 import {
   Container,
@@ -15,9 +15,9 @@ import {
   LogoutButton,
 } from './styles';
 
-export default function Profile({navigation}) {
+export default function Profile({ navigation }) {
   const dispatch = useDispatch();
-  const profile = useSelector(state => state.user.profile);
+  const profile = useSelector((state) => state.user.profile);
 
   const emailRef = useRef();
   const oldPasswordRef = useRef();
@@ -44,7 +44,7 @@ export default function Profile({navigation}) {
         oldPassword,
         password,
         confirmPassword,
-      }),
+      })
     );
   }
 

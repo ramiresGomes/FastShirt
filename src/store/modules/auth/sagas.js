@@ -1,17 +1,17 @@
-import {call, put, all, takeLatest} from 'redux-saga/effects';
+import { call, put, all, takeLatest } from 'redux-saga/effects';
 import Toast from 'react-native-tiny-toast';
 
 import api from '~/services/api';
 
-import {signInSuccess, signFailure} from '~/store/modules/auth/actions';
+import { signInSuccess, signFailure } from '~/store/modules/auth/actions';
 
-export function* signIn({payload}) {
-  const {email, password} = payload;
+export function* signIn({ payload }) {
+  const { email, password } = payload;
 
   try {
-    const response = yield call(api.post, 'login', {email, password});
+    const response = yield call(api.post, 'login', { email, password });
 
-    const {token, user} = response.data;
+    const { token, user } = response.data;
 
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
@@ -22,11 +22,11 @@ export function* signIn({payload}) {
   }
 }
 
-export function* signUp({payload}) {
+export function* signUp({ payload }) {
   try {
-    const {name, email, password} = payload;
+    const { name, email, password } = payload;
 
-    yield call(api.post, 'users', {name, email, password});
+    yield call(api.post, 'users', { name, email, password });
     Toast.show('Seu cadastro foi realizado com sucesso, faça o login.');
   } catch (error) {
     Toast.show('Houve um erro no login, verifique seus dados.');
@@ -34,10 +34,10 @@ export function* signUp({payload}) {
   }
 }
 
-export function setToken({payload}) {
+export function setToken({ payload }) {
   if (!payload) return;
 
-  const {token} = payload.auth;
+  const { token } = payload.auth;
 
   if (token) {
     api.defaults.headers.Authorization = `Bearer ${token}`;

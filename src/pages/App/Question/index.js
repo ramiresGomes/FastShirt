@@ -2,9 +2,9 @@ import React from 'react';
 
 import Header from '~/components/Header';
 
-import {Container, PageText} from './styles';
+import { Container, PageText } from './styles';
 
-export default function Question({navigation}) {
+export default function Question({ navigation }) {
   return (
     <>
       <Header navigation={navigation} title="Dúvidas" />

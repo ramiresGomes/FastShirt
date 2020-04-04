@@ -2,10 +2,12 @@ import produce from 'immer';
 
 const INITIAL_STATE = {
   profile: null,
+  preview: null, // camiseta em edição
+  shirtType: null,
 };
 
-export default function user(state = INITIAL_STATE, {type, payload}) {
-  return produce(state, draft => {
+export default function user(state = INITIAL_STATE, { type, payload }) {
+  return produce(state, (draft) => {
     switch (type) {
       case '@auth/SIGN_IN_SUCCESS': {
         draft.profile = payload.user;
@@ -15,6 +17,12 @@ export default function user(state = INITIAL_STATE, {type, payload}) {
         draft.profile = payload.profile;
         break;
       }
+
+      case '@user/UPDATE_SHIRT': {
+        draft.preview = payload.source;
+        draft.shirtType = payload.tShirtImage;
+        break;
+      }
       case '@auth/SIGN_OUT': {
         draft.profile = null;
         break;
@@ -22,4 +30,4 @@ export default function user(state = INITIAL_STATE, {type, payload}) {
       default:
     }
   });
-};
+}

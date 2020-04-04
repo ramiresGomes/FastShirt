@@ -6,8 +6,8 @@ const INITIAL_STATE = {
   loading: false,
 };
 
-export default (state = INITIAL_STATE, {type, payload}) => {
-  return produce(state, draft => {
+export default (state = INITIAL_STATE, { type, payload }) => {
+  return produce(state, (draft) => {
     switch (type) {
       case '@auth/SIGN_IN_REQUEST': {
         draft.loading = true;

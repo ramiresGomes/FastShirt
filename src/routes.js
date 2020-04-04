@@ -1,12 +1,11 @@
 import React from 'react';
-import {StatusBar} from 'react-native';
+import { StatusBar } from 'react-native';
 
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createStackNavigator} from '@react-navigation/stack';
-
-import CustomDrawerContent from '~/components/CustomDrawerContent';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import CustomDrawerContent from '~/components/CustomDrawerContent';
 
 import SignIn from '~/pages/Auth/SignIn';
 import SignUp from '~/pages/Auth/SignUp';
@@ -20,7 +19,7 @@ import Contact from '~/pages/App/Contact';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-function createIcon({color, size}, name) {
+function createIcon({ color, size }, name) {
   return <Icon name={name} color={color} size={size} />;
 }
 
@@ -54,14 +53,15 @@ export default function createRouter(isSigned = false) {
             fontSize: 18,
           },
         }}
-        initialRouteName="Design">
+        initialRouteName="Design"
+      >
         <Drawer.Screen
           name="Profile"
           component={Profile}
           options={{
             title: 'Minha Conta',
-            drawerIcon: ({color, size}) =>
-              createIcon({color, size}, 'person-outline'),
+            drawerIcon: ({ color, size }) =>
+              createIcon({ color, size }, 'person-outline'),
           }}
         />
         <Drawer.Screen
@@ -69,8 +69,8 @@ export default function createRouter(isSigned = false) {
           component={Design}
           options={{
             title: 'Criação',
-            drawerIcon: ({color, size}) =>
-              createIcon({color, size}, 'dashboard'),
+            drawerIcon: ({ color, size }) =>
+              createIcon({ color, size }, 'dashboard'),
           }}
         />
         <Drawer.Screen
@@ -78,8 +78,8 @@ export default function createRouter(isSigned = false) {
           component={Contact}
           options={{
             title: 'Compras',
-            drawerIcon: ({color, size}) =>
-              createIcon({color, size}, 'shopping-basket'),
+            drawerIcon: ({ color, size }) =>
+              createIcon({ color, size }, 'shopping-basket'),
           }}
         />
         <Drawer.Screen
@@ -87,8 +87,8 @@ export default function createRouter(isSigned = false) {
           component={About}
           options={{
             title: 'Sobre',
-            drawerIcon: ({color, size}) =>
-              createIcon({color, size}, 'info-outline'),
+            drawerIcon: ({ color, size }) =>
+              createIcon({ color, size }, 'info-outline'),
           }}
         />
         <Drawer.Screen
@@ -96,8 +96,8 @@ export default function createRouter(isSigned = false) {
           component={Question}
           options={{
             title: 'Dúvidas',
-            drawerIcon: ({color, size}) =>
-              createIcon({color, size}, 'help-outline'),
+            drawerIcon: ({ color, size }) =>
+              createIcon({ color, size }, 'help-outline'),
           }}
         />
         <Drawer.Screen
@@ -105,8 +105,8 @@ export default function createRouter(isSigned = false) {
           component={Contact}
           options={{
             title: 'Contato',
-            drawerIcon: ({color, size}) =>
-              createIcon({color, size}, 'contacts'),
+            drawerIcon: ({ color, size }) =>
+              createIcon({ color, size }, 'contacts'),
           }}
         />
       </Drawer.Navigator>

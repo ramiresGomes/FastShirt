@@ -1,18 +1,22 @@
-import {call, put, all, takeLatest} from 'redux-saga/effects';
+import { call, put, all, takeLatest } from 'redux-saga/effects';
 import Toast from 'react-native-tiny-toast';
 
 import api from '~/services/api';
 
-import {updateProfileSuccess, updateProfileFailure} from '~/store/modules/user/actions';
+import {
+  updateProfileSuccess,
+  updateProfileFailure,
+} from '~/store/modules/user/actions';
 
-export function* updateProfile({payload}) {
+export function* updateProfile({ payload }) {
   try {
-    const {name, email, ...rest} = payload.data;
+    const { name, email, ...rest } = payload.data;
 
-    const profile = Object.assign(
-      {name, email},
-      rest.oldPassword ? rest : {}
-    );
+    const profile = {
+      name,
+      email,
+      ...(rest.oldPassword ? rest : {}),
+    };
 
     const response = yield call(api.put, 'users', profile);
 

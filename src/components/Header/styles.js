@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import {TouchableWithoutFeedback, Text} from 'react-native';
+import { TouchableWithoutFeedback, Text } from 'react-native';
 
 export const Container = styled.View`
   background: #fff;

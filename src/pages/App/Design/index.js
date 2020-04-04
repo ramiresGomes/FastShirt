@@ -1,7 +1,16 @@
-import React, {useState, useEffect} from 'react';
-import {Image} from 'react-native';
+import React, { useMemo, useState, useEffect } from 'react';
+import { Image } from 'react-native';
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+
+import { useDispatch, useSelector } from 'react-redux';
+import ImagePicker from 'react-native-image-picker';
 
 import Header from '~/components/Header';
+import Modal from '~/components/Modal';
+
+import PickImage from './PickImage';
+
+import { updateShirt } from '~/store/modules/user/actions';
 
 import iconImage from '~/assets/ico-image.png';
 import iconColor from '~/assets/ico-color.png';
@@ -30,10 +39,34 @@ import {
   BottomButtonsContainer,
 } from './styles';
 
-export default function Design({navigation}) {
+export default function Design({ navigation }) {
   const [shirtType, setShirtType] = useState('tshirt');
   const [shirtSide, setShirtSide] = useState('front');
   const [tShirtImage, setTShirtImage] = useState(tShirtFront);
+  // const [tShirtImage, setTShirtFront] = useState(tShirtFront);
+
+  const updated = useSelector((state) => state.user.preview);
+  // const whichUpdated = useSelector((state) => state.user.shirtType);
+
+  // cons;
+
+  // if (updated !== null) {
+  //   setTShirtImage(updated);
+  // }
+
+  // alterar a logica do switch ou monitorar alteração no estado para
+  // renderizar apenas quando não há a camiseta do estado
+  // viabilizar o 'useCallback', 'useMemo', dimnuir funções e ganhar performance
+
+  const dispatch = useDispatch();
+
+  const [image, setImage] = useState(null);
+
+  const [visible, setVisible] = useState(false);
+
+  const shirt = useMemo(() => {
+    return resolveAssetSource(tShirtImage);
+  }, [tShirtImage]);
 
   useEffect(() => {
     switch (shirtType) {
@@ -55,6 +88,28 @@ export default function Design({navigation}) {
     }
   }, [shirtType, shirtSide]);
 
+  function handleChoosePhoto() {
+    const options = {
+      title: 'Escolha uma imagem da galeria',
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+      console.tron.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.tron.log('User cancelled image picker');
+      } else if (response.error) {
+        console.tron.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = { uri: `data:image/jpeg;base64,${response.data}` };
+        console.tron.log(`camisa${shirt.uri}`);
+        dispatch(updateShirt(source, shirt));
+        setVisible(true);
+        setImage(source);
+      }
+    });
+  }
+
   return (
     <>
       <Header navigation={navigation} title="Design" />
@@ -67,7 +122,8 @@ export default function Design({navigation}) {
         <TopButtonsContainer>
           <ActionButton
             active={shirtType === 'tshirt'}
-            onPress={() => setShirtType('tshirt')}>
+            onPress={() => setShirtType('tshirt')}
+          >
             <ActionButtonText active={shirtType === 'tshirt'}>
               T-Shirt
             </ActionButtonText>
@@ -75,7 +131,8 @@ export default function Design({navigation}) {
 
           <ActionButton
             active={shirtType === 'babylook'}
-            onPress={() => setShirtType('babylook')}>
+            onPress={() => setShirtType('babylook')}
+          >
             <ActionButtonText active={shirtType === 'babylook'}>
               Babylook
             </ActionButtonText>
@@ -83,7 +140,8 @@ export default function Design({navigation}) {
 
           <ActionButton
             active={shirtType === 'moletom'}
-            onPress={() => setShirtType('moletom')}>
+            onPress={() => setShirtType('moletom')}
+          >
             <ActionButtonText active={shirtType === 'moletom'}>
               Moletom
             </ActionButtonText>
@@ -93,7 +151,8 @@ export default function Design({navigation}) {
         <BottomButtonsContainer>
           <ActionButton
             active={shirtSide === 'front'}
-            onPress={() => setShirtSide('front')}>
+            onPress={() => setShirtSide('front')}
+          >
             <ActionButtonText active={shirtSide === 'front'}>
               Frente
             </ActionButtonText>
@@ -101,7 +160,8 @@ export default function Design({navigation}) {
 
           <ActionButton
             active={shirtSide === 'back'}
-            onPress={() => setShirtSide('back')}>
+            onPress={() => setShirtSide('back')}
+          >
             <ActionButtonText active={shirtSide === 'back'}>
               Verso
             </ActionButtonText>
@@ -110,7 +170,7 @@ export default function Design({navigation}) {
       </Container>
 
       <Bottom>
-        <BottomButton onPress={() => {}}>
+        <BottomButton onPress={() => handleChoosePhoto()}>
           <Image source={iconImage} resizeMode="contain" />
           <IconLabel>Imagem</IconLabel>
         </BottomButton>
@@ -130,6 +190,9 @@ export default function Design({navigation}) {
           <IconLabel>Textos</IconLabel>
         </BottomButton>
       </Bottom>
+      <Modal visible={visible} onRequestClose={() => setVisible(false)}>
+        <PickImage done={() => setVisible(false)} />
+      </Modal>
     </>
   );
 }

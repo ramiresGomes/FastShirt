@@ -9,7 +9,7 @@ export const Container = styled.SafeAreaView`
 
 export const Form = styled.ScrollView.attrs({
   showVerticalScrollIndicator: false,
-  contentContainerStyle: {padding: 30},
+  contentContainerStyle: { padding: 30 },
 })`
   align-self: stretch;
 `;

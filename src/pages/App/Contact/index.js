@@ -1,9 +1,9 @@
 import React from 'react';
 import Header from '~/components/Header';
 
-import {Container, PageText} from './styles';
+import { Container, PageText } from './styles';
 
-export default function Contact({navigation}) {
+export default function Contact({ navigation }) {
   return (
     <>
       <Header navigation={navigation} title="Contato" />
