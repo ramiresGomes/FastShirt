@@ -1,16 +1,13 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image } from 'react-native';
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 
 import Header from '~/components/Header';
 import Modal from '~/components/Modal';
 
 import PickImage from './PickImage';
-
-import { updateShirt } from '~/store/modules/user/actions';
 
 import iconImage from '~/assets/ico-image.png';
 import iconColor from '~/assets/ico-color.png';
@@ -35,14 +32,14 @@ export default function Design({ navigation }) {
   const customB = useSelector((state) => state.user.bshirt);
   const customH = useSelector((state) => state.user.hoodie);
 
-  console.tron.log(`tfront: ${customT.front}`);
-  console.tron.log(`tback: ${customT.back}`);
+  // console.tron.log(`tfront: ${customT.front}`);
+  // console.tron.log(`tback: ${customT.back}`);
 
-  console.tron.log(`bfront: ${customB.front}`);
-  console.tron.log(`bback: ${customB.back}`);
+  // console.tron.log(`bfront: ${customB.front}`);
+  // console.tron.log(`bback: ${customB.back}`);
 
-  console.tron.log(`hfront: ${customH.front}`);
-  console.tron.log(`hback: ${customH.back}`);
+  // console.tron.log(`hfront: ${customH.front}`);
+  // console.tron.log(`hback: ${customH.back}`);
 
   // se der certo, tira o import dai e popula com o reducer, já poupa inicializaçao e codigo
 
@@ -59,6 +56,7 @@ export default function Design({ navigation }) {
   const [hBack, setHBack] = useState(customH.back);
 
   const [tShirtImage, setTShirtImage] = useState(tFront);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     setTFront(customT.front);
@@ -80,13 +78,7 @@ export default function Design({ navigation }) {
   // renderizar apenas quando não há a camiseta do estado
   // viabilizar o 'useCallback', 'useMemo', dimnuir funções e ganhar performance
 
-  const dispatch = useDispatch();
-
   const [visible, setVisible] = useState(false);
-
-  const shirt = useMemo(() => {
-    return resolveAssetSource(tShirtImage);
-  }, [tShirtImage]);
 
   useEffect(() => {
     switch (shirtType) {
@@ -96,7 +88,7 @@ export default function Design({ navigation }) {
       case 'babylook':
         shirtSide === 'front' ? setTShirtImage(bFront) : setTShirtImage(bBack);
         break;
-      case 'moletom':
+      case 'hoodie':
         shirtSide === 'front' ? setTShirtImage(hFront) : setTShirtImage(hBack);
         break;
     }
@@ -104,23 +96,22 @@ export default function Design({ navigation }) {
 
   function handleChoosePhoto() {
     const options = {
-      title: 'Escolha uma imagem da galeria',
+      title: 'Selecionar imagem',
+      cancelButtonTitle: 'Cancelar',
+      takePhotoButtonTitle: 'Tirar foto',
+      chooseFromLibraryButtonTitle: 'Selecionar imagem da galeria',
+      mediaType: 'photo',
     };
-    console.tron.log(`camisa: ${shirtType} e lado: ${shirtSide}`);
 
     ImagePicker.showImagePicker(options, (response) => {
-      console.tron.log('Response = ', response);
-
       if (response.didCancel) {
         console.tron.log('User cancelled image picker');
       } else if (response.error) {
         console.tron.log('ImagePicker Error: ', response.error);
       } else {
         const source = { uri: `data:image/jpeg;base64,${response.data}` };
-        console.tron.log(`camisa${shirt.uri}`);
-        dispatch(updateShirt(source, shirt, shirtType, shirtSide));
         setVisible(true);
-        setTShirtImage(source);
+        setImage(source);
       }
     });
   }
@@ -154,10 +145,10 @@ export default function Design({ navigation }) {
           </ActionButton>
 
           <ActionButton
-            active={shirtType === 'moletom'}
-            onPress={() => setShirtType('moletom')}
+            active={shirtType === 'hoodie'}
+            onPress={() => setShirtType('hoodie')}
           >
-            <ActionButtonText active={shirtType === 'moletom'}>
+            <ActionButtonText active={shirtType === 'hoodie'}>
               Moletom
             </ActionButtonText>
           </ActionButton>
@@ -206,7 +197,13 @@ export default function Design({ navigation }) {
         </BottomButton>
       </Bottom>
       <Modal visible={visible} onRequestClose={() => setVisible(false)}>
-        <PickImage done={() => setVisible(false)} />
+        <PickImage
+          image={image}
+          shirt={tShirtImage}
+          type={shirtType}
+          side={shirtSide}
+          done={() => setVisible(false)}
+        />
       </Modal>
     </>
   );

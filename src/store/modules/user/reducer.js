@@ -23,28 +23,36 @@ export default function user(state = INITIAL_STATE, { type, payload }) {
         break;
       }
 
-      case '@user/UPDATE_SHIRT': {
-        // switch pra escolher qual lado de qual camiseta
-        switch (payload.shirtType) {
-          case 'tshirt':
-            payload.shirtSide === 'front'
-              ? (draft.tshirt.front = payload.source)
-              : (draft.tshirt.back = payload.source);
-            break;
-          case 'babylook':
-            payload.shirtSide === 'front'
-              ? (draft.bshirt.front = payload.source)
-              : (draft.bshirt.back = payload.source);
-            break;
-          case 'moletom':
-            payload.shirtSide === 'front'
-              ? (draft.hoodie.front = payload.source)
-              : (draft.hoodie.back = payload.source);
-            break;
-          default:
-        }
+      case '@user/update_tshirt_front': {
+        draft.tshirt.front = payload.uri;
         break;
       }
+
+      case '@user/update_tshirt_back': {
+        draft.tshirt.back = payload.uri;
+        break;
+      }
+
+      case '@user/update_bshirt_front': {
+        draft.bshirt.front = payload.uri;
+        break;
+      }
+
+      case '@user/update_bshirt_back': {
+        draft.bshirt.back = payload.uri;
+        break;
+      }
+
+      case '@user/update_hoodie_front': {
+        draft.hoodie.front = payload.uri;
+        break;
+      }
+
+      case '@user/update_hoodie_back': {
+        draft.hoodie.back = payload.uri;
+        break;
+      }
+
       case '@auth/SIGN_OUT': {
         draft.profile = null;
         break;
