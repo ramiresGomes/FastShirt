@@ -7,7 +7,7 @@ import Toast from 'react-native-tiny-toast';
 
 import { captureRef } from 'react-native-view-shot';
 
-import { Alert, View, Image, StatusBar } from 'react-native';
+import { View, Image, StatusBar } from 'react-native';
 
 import { Actions, ContainerActions, ESlider as Slider } from './styles';
 
@@ -51,8 +51,6 @@ export default function PickImage({ image, shirt, type, side, done }) {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" backgroundColor="#e6b32a" />
-
       <View style={{ flex: 1 }}>
         <View ref={captureViewRef} style={{ backgroundColor: '#f2f2f2' }}>
           <Image source={{ uri: shirt }} style={{ height: 380 }} />

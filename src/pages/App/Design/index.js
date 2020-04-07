@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Image } from 'react-native';
+import {
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Modal as CustomModal,
+  KeyboardAvoidingView,
+} from 'react-native';
 
 import { useSelector } from 'react-redux';
-import ImagePicker from 'react-native-image-picker';
 
 import Header from '~/components/Header';
 import Modal from '~/components/Modal';
+import CustomList from '~/components/List';
 
 import PickImage from './PickImage';
+import PickText from './PickText';
 
 import iconImage from '~/assets/ico-image.png';
 import iconColor from '~/assets/ico-color.png';
@@ -32,16 +40,25 @@ export default function Design({ navigation }) {
   const customB = useSelector((state) => state.user.bshirt);
   const customH = useSelector((state) => state.user.hoodie);
 
-  // console.tron.log(`tfront: ${customT.front}`);
-  // console.tron.log(`tback: ${customT.back}`);
+  const [data, setData] = useState([]);
+  const [text, setText] = useState('');
 
-  // console.tron.log(`bfront: ${customB.front}`);
-  // console.tron.log(`bback: ${customB.back}`);
-
-  // console.tron.log(`hfront: ${customH.front}`);
-  // console.tron.log(`hback: ${customH.back}`);
-
-  // se der certo, tira o import dai e popula com o reducer, já poupa inicializaçao e codigo
+  const [images, setImages] = useState([
+    { key: 'A' },
+    { key: 'B' },
+    { key: 'C' },
+    { key: 'D' },
+    { key: 'E' },
+    { key: 'F' },
+  ]);
+  const [stickers, setStickers] = useState([
+    { key: 'F' },
+    { key: 'E' },
+    { key: 'D' },
+    { key: 'C' },
+    { key: 'B' },
+    { key: 'A' },
+  ]);
 
   const [shirtType, setShirtType] = useState('tshirt');
   const [shirtSide, setShirtSide] = useState('front');
@@ -79,6 +96,9 @@ export default function Design({ navigation }) {
   // viabilizar o 'useCallback', 'useMemo', dimnuir funções e ganhar performance
 
   const [visible, setVisible] = useState(false);
+  const [visible2, setVisible2] = useState(false);
+  const [visible3, setVisible3] = useState(false);
+  const [visible4, setVisible4] = useState(false);
 
   useEffect(() => {
     switch (shirtType) {
@@ -93,28 +113,6 @@ export default function Design({ navigation }) {
         break;
     }
   }, [shirtType, shirtSide]);
-
-  function handleChoosePhoto() {
-    const options = {
-      title: 'Selecionar imagem',
-      cancelButtonTitle: 'Cancelar',
-      takePhotoButtonTitle: 'Tirar foto',
-      chooseFromLibraryButtonTitle: 'Selecionar imagem da galeria',
-      mediaType: 'photo',
-    };
-
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        console.tron.log('User cancelled image picker');
-      } else if (response.error) {
-        console.tron.log('ImagePicker Error: ', response.error);
-      } else {
-        const source = { uri: `data:image/jpeg;base64,${response.data}` };
-        setVisible(true);
-        setImage(source);
-      }
-    });
-  }
 
   return (
     <>
@@ -176,7 +174,12 @@ export default function Design({ navigation }) {
       </Container>
 
       <Bottom>
-        <BottomButton onPress={() => handleChoosePhoto()}>
+        <BottomButton
+          onPress={() => {
+            setData(images);
+            setVisible(true);
+          }}
+        >
           <Image source={iconImage} resizeMode="contain" />
           <IconLabel>Imagem</IconLabel>
         </BottomButton>
@@ -186,23 +189,114 @@ export default function Design({ navigation }) {
           <IconLabel>Cores</IconLabel>
         </BottomButton>
 
-        <BottomButton onPress={() => {}}>
+        <BottomButton
+          onPress={() => {
+            setData(stickers);
+            setVisible(true);
+          }}
+        >
           <Image source={iconStickers} resizeMode="contain" />
           <IconLabel>Stickers</IconLabel>
         </BottomButton>
 
-        <BottomButton onPress={() => {}}>
+        <BottomButton
+          onPress={() => {
+            setVisible3(true);
+          }}
+        >
           <Image source={iconText} resizeMode="contain" />
           <IconLabel>Textos</IconLabel>
         </BottomButton>
       </Bottom>
       <Modal visible={visible} onRequestClose={() => setVisible(false)}>
+        <CustomList
+          data={data}
+          handle={setImage}
+          done={() => {
+            setVisible(false);
+            setVisible2(true);
+          }}
+        />
+      </Modal>
+      <Modal visible={visible2} onRequestClose={() => setVisible2(false)}>
         <PickImage
           image={image}
           shirt={tShirtImage}
           type={shirtType}
           side={shirtSide}
-          done={() => setVisible(false)}
+          done={() => setVisible2(false)}
+        />
+      </Modal>
+
+      <CustomModal
+        visible={visible3}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setVisible3(false)}
+      >
+        <KeyboardAvoidingView
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            justifyContent: 'center',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: 'bold',
+              color: '#B9BBBE',
+              marginBottom: 5,
+            }}
+          >
+            Nome
+          </Text>
+          <TextInput
+            value={text}
+            onChangeText={setText}
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+              borderWidth: 1,
+              borderColor: 'rgba(0, 0, 0, 0.2)',
+              borderRadius: 5,
+              height: 44,
+              paddingHorizontal: 10,
+              marginBottom: 20,
+              color: '#FFF',
+            }}
+            autoFocus
+            underlineColorAndroid="transparent"
+            maxLength={15}
+            returnKeyType="send"
+            onSubmitEditing={() => {
+              setVisible3(false);
+              setVisible4(true);
+            }}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              setVisible3(false);
+              setVisible4(true);
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#FFF' }}>
+              Criar time
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setVisible3(false)}>
+            <Text style={{ alignItems: 'center', marginTop: 20 }}>
+              Cancelar
+            </Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </CustomModal>
+      <Modal visible={visible4} onRequestClose={() => setVisible4(false)}>
+        <PickText
+          text={text}
+          shirt={tShirtImage}
+          type={shirtType}
+          side={shirtSide}
+          done={() => setVisible4(false)}
         />
       </Modal>
     </>

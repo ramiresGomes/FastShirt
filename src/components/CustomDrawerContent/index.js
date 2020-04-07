@@ -2,8 +2,8 @@ import React from 'react';
 import { Image } from 'react-native';
 import { DrawerItemList } from '@react-navigation/drawer';
 
-import logoHeader from '~/assets/logo-drawer-header.png';
-import logoFooter from '~/assets/logo-drawer-footer.png';
+import logoHeader from '~/assets/logo.png';
+import logoFooter from '~/assets/selo.png';
 
 import { Container, Header, Footer, DrawerContent } from './styles';
 

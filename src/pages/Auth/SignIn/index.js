@@ -6,7 +6,7 @@ import { signInRequest } from '~/store/modules/auth/actions';
 
 import Background from '~/components/Background';
 
-import logo from '~/assets/logo-sign.png';
+import logo from '~/assets/selo.png';
 
 import {
   Container,

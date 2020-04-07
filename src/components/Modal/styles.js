@@ -7,10 +7,10 @@ export const Container = styled.KeyboardAvoidingView`
 `;
 
 export const Content = styled.View`
-  background-color: #353940;
+  background-color: #888;
   padding: 30px 20px 30px 20px;
   margin: 20px;
-  height: 500px;
+  height: 90%;
   border-radius: 5px;
   align-items: stretch;
 `;

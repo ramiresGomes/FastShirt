@@ -5,7 +5,7 @@ export const Container = styled.View`
   height: 60px;
   background: rgba(0, 0, 0, 0.1);
   border-radius: 46px;
-  border: 1px rgba(180, 72, 40, 0.5);
+  border: 1px rgba(3, 88, 17, 0.5);
   flex-direction: row;
   align-items: center;
 `;

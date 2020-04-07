@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">FastShirt</string>
+    <string name="app_name">Clube do Cavalo</string>
     <string moduleConfig="true" name="CodePushDeploymentKey">BuildConfig.CODEPUSH_KEY</string>
 </resources>

@@ -26,7 +26,7 @@ function createIcon({ color, size }, name) {
 export default function createRouter(isSigned = false) {
   return !isSigned ? (
     <>
-      <StatusBar barStyle="light-content" backgroundColor="#e47858" />
+      <StatusBar barStyle="light-content" backgroundColor="#038841" />
       <Stack.Navigator headerMode="none">
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
