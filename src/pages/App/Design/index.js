@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import {
   Image,
   Text,
-  TextInput,
   TouchableOpacity,
   Modal as CustomModal,
-  KeyboardAvoidingView,
 } from 'react-native';
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 import { useSelector } from 'react-redux';
 
@@ -22,6 +21,11 @@ import iconColor from '~/assets/ico-color.png';
 import iconStickers from '~/assets/ico-sticker.png';
 import iconText from '~/assets/ico-text.png';
 
+import bat from '~/assets/samples/batlogo.png';
+import sm from '~/assets/samples/smlogo.png';
+import rs from '~/assets/samples/rocketseat.png';
+import stt from '~/assets/samples/photo.jpg';
+
 import {
   Container,
   Bottom,
@@ -33,6 +37,8 @@ import {
   ActionButton,
   ActionButtonText,
   BottomButtonsContainer,
+  Input,
+  CustomView,
 } from './styles';
 
 export default function Design({ navigation }) {
@@ -43,14 +49,36 @@ export default function Design({ navigation }) {
   const [data, setData] = useState([]);
   const [text, setText] = useState('');
 
+  const batman = resolveAssetSource(bat);
+  const superman = resolveAssetSource(sm);
+  const rocket = resolveAssetSource(rs);
+  const stitch = resolveAssetSource(stt);
+
   const [images, setImages] = useState([
-    { key: 'A' },
-    { key: 'B' },
-    { key: 'C' },
-    { key: 'D' },
-    { key: 'E' },
-    { key: 'F' },
+    {
+      key: 1,
+      uri: batman.uri,
+      empty: false,
+    },
+    {
+      key: 2,
+      uri: superman.uri,
+      empty: false,
+    },
+    {
+      key: 3,
+      uri: rocket.uri,
+      empty: false,
+    },
+    {
+      key: 4,
+      uri: stitch.uri,
+      empty: false,
+    },
   ]);
+
+  console.tron.log(`images: ${images[0].uri}`);
+
   const [stickers, setStickers] = useState([
     { key: 'F' },
     { key: 'E' },
@@ -73,7 +101,7 @@ export default function Design({ navigation }) {
   const [hBack, setHBack] = useState(customH.back);
 
   const [tShirtImage, setTShirtImage] = useState(tFront);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState('');
 
   useEffect(() => {
     setTFront(customT.front);
@@ -211,7 +239,10 @@ export default function Design({ navigation }) {
       <Modal visible={visible} onRequestClose={() => setVisible(false)}>
         <CustomList
           data={data}
-          handle={setImage}
+          handle={(value) => {
+            console.tron.log(value);
+            setImage(value);
+          }}
           done={() => {
             setVisible(false);
             setVisible2(true);
@@ -220,7 +251,7 @@ export default function Design({ navigation }) {
       </Modal>
       <Modal visible={visible2} onRequestClose={() => setVisible2(false)}>
         <PickImage
-          image={image}
+          image={{ uri: image }}
           shirt={tShirtImage}
           type={shirtType}
           side={shirtSide}
@@ -234,44 +265,18 @@ export default function Design({ navigation }) {
         transparent
         onRequestClose={() => setVisible3(false)}
       >
-        <KeyboardAvoidingView
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            justifyContent: 'center',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: 'bold',
-              color: '#B9BBBE',
-              marginBottom: 5,
-            }}
-          >
-            Nome
-          </Text>
-          <TextInput
+        <CustomView>
+          <Input
+            autoFocus
             value={text}
             onChangeText={setText}
-            style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-              borderWidth: 1,
-              borderColor: 'rgba(0, 0, 0, 0.2)',
-              borderRadius: 5,
-              height: 44,
-              paddingHorizontal: 10,
-              marginBottom: 20,
-              color: '#FFF',
-            }}
-            autoFocus
-            underlineColorAndroid="transparent"
             maxLength={15}
             returnKeyType="send"
             onSubmitEditing={() => {
               setVisible3(false);
               setVisible4(true);
             }}
+            underlineColorAndroid="transparent"
           />
           <TouchableOpacity
             onPress={() => {
@@ -280,7 +285,7 @@ export default function Design({ navigation }) {
             }}
           >
             <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#FFF' }}>
-              Criar time
+              Ok
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setVisible3(false)}>
@@ -288,7 +293,7 @@ export default function Design({ navigation }) {
               Cancelar
             </Text>
           </TouchableOpacity>
-        </KeyboardAvoidingView>
+        </CustomView>
       </CustomModal>
       <Modal visible={visible4} onRequestClose={() => setVisible4(false)}>
         <PickText
@@ -302,3 +307,11 @@ export default function Design({ navigation }) {
     </>
   );
 }
+
+// transformar em styled component
+// usar o HSV picker pra pegar a cor
+// adicionar o header com preço e etc
+// aumentar modal e mudar cor de fundo, arrumar borda de cada imagem
+
+// limitar o posicionamento, provalmente com o draggable com um max de 60% da tela, ou algo assim.
+// ja atua nas bordas entao ao aumentar o texto, ainda se mantem

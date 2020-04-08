@@ -76,3 +76,20 @@ export const BottomButtonsContainer = styled.View`
   flex-direction: row;
   justify-content: center;
 `;
+
+export const Input = styled.TextInput`
+  background-color: 'rgba(0, 0, 0, 0.1)';
+  border-width: 1px;
+  border-color: 'rgba(0, 0, 0, 0.2)';
+  border-radius: 5px;
+  height: 44px;
+  padding: 2px 10px 2px 10px;
+  margin-bottom: 20px;
+  color: #fff;
+`;
+
+export const CustomView = styled.KeyboardAvoidingView`
+  flex: 1;
+  background-color: 'rgba(144, 14, 14, 0.7)';
+  justify-content: center;
+`;

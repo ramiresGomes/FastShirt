@@ -16,7 +16,7 @@ Icon.loadFont();
 export default function PickImage({ image, shirt, type, side, done }) {
   const dispatch = useDispatch();
 
-  const [size, setSize] = useState(200); // slider de size
+  const [size, setSize] = useState(130); // slider de size
 
   const captureViewRef = useRef();
 
@@ -53,18 +53,19 @@ export default function PickImage({ image, shirt, type, side, done }) {
     <>
       <View style={{ flex: 1 }}>
         <View ref={captureViewRef} style={{ backgroundColor: '#f2f2f2' }}>
-          <Image source={{ uri: shirt }} style={{ height: 380 }} />
+          <Image
+            source={{ uri: shirt }}
+            style={{ height: 420, borderRadius: 8 }}
+          />
           <Draggable
             imageSource={image}
             renderSize={size}
-            x={0}
-            y={0}
-            onDragRelease={() => console.tron.log('end of movement')}
-            onLongPress={() => console.tron.log('long press')}
-            onShortPressRelease={() => console.tron.log('end - short press')}
-            onLongPressRelease={() => console.tron.log('end - long press')}
-            onPressIn={() => console.tron.log('in press')}
-            onPressOut={() => console.tron.log('out press')}
+            x={100}
+            y={100}
+            minX={70}
+            maxX={230}
+            minY={60}
+            maxY={320}
           />
         </View>
         <ContainerActions>

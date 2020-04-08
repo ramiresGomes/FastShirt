@@ -18,7 +18,7 @@ import { List, Item } from './styles';
 //   // { key: 'L' },
 // ];
 
-import image from '~/assets/photo.jpg';
+import image from '~/assets/samples/photo.jpg';
 
 function formatData(data, numColumns) {
   const numberOfFullRows = Math.floor(data.length / numColumns);
@@ -42,15 +42,19 @@ export default function CustomList({ data, handle, done }) {
     if (item.empty === true) {
       return <Item disabled={true} />;
     }
+
     return (
       <Item
         onPress={() => {
-          handle(image);
+          handle(item.uri);
           done();
         }}
       >
-        {/* <Text style={{ color: '#FFF' }}>{item.key}</Text> */}
-        <Image source={image} resizeMode="contain" style={{ height: 90 }} />
+        <Image
+          source={{ uri: item.uri }}
+          resizeMode="contain"
+          style={{ width: 90, height: 90 }}
+        />
       </Item>
     );
   }

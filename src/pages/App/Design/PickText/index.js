@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch } from 'react-redux';
-import Draggable from 'react-native-draggable';
 
 import { captureRef } from 'react-native-view-shot';
 
 import { View, Image } from 'react-native';
+import Draggable from './CustomDraggable';
 
 import { Actions, ContainerActions, ESlider as Slider } from './styles';
 
@@ -14,7 +14,10 @@ Icon.loadFont();
 export default function PickText({ text, shirt, type, side, done }) {
   const dispatch = useDispatch();
 
-  const [size, setSize] = useState(12); // slider de size
+  const [size, setSize] = useState(10); // slider de size
+  const [color, setColor] = useState('#000'); // slider de size
+
+  const constant = (4.9 * (text.length + 1)) / 10;
 
   const captureViewRef = useRef();
 
@@ -35,6 +38,8 @@ export default function PickText({ text, shirt, type, side, done }) {
     });
   }
 
+  console.tron.log(`size: ${size}`);
+  console.tron.log(`constant: ${constant}`);
   return (
     <>
       <View style={{ flex: 1 }}>
@@ -42,11 +47,16 @@ export default function PickText({ text, shirt, type, side, done }) {
           <Image source={{ uri: shirt }} style={{ height: 380 }} />
           <Draggable
             renderText={text}
-            textColor="#f0f"
+            textColor={color}
+            renderHeight={size}
             textSize={size}
-            renderSize={size * 16}
-            x={0}
-            y={0}
+            renderSize={constant * size}
+            x={120}
+            y={30}
+            minX={74}
+            maxX={234}
+            minY={60}
+            maxY={320}
           />
         </View>
         <ContainerActions>
@@ -60,7 +70,7 @@ export default function PickText({ text, shirt, type, side, done }) {
         <Slider
           value={size}
           minimumValue={10}
-          maximumValue={30}
+          maximumValue={21}
           onValueChange={(value) => setSize(value)}
         />
       </View>
