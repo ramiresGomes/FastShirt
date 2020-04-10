@@ -128,4 +128,37 @@ export function* upload() {
   );
 }
 
-export default all([takeLatest('@auth/SIGN_IN_REQUEST', upload)]);
+export function* popShirts({ payload }) {
+  if (!payload) return;
+
+  const {
+    tshirt,
+    bshirt,
+    hoodie,
+    tFronts,
+    tBacks,
+    bFronts,
+    bBacks,
+    hFronts,
+    hBacks,
+  } = payload.shirts;
+
+  yield put(
+    uploadShirts(
+      tshirt,
+      bshirt,
+      hoodie,
+      tFronts,
+      tBacks,
+      bFronts,
+      bBacks,
+      hFronts,
+      hBacks
+    )
+  );
+}
+
+export default all([
+  takeLatest('@auth/SIGN_IN_REQUEST', upload),
+  takeLatest('persist/PERSIST', popShirts),
+]);
