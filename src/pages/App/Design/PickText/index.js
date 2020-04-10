@@ -11,13 +11,13 @@ import { Actions, ContainerActions, ESlider as Slider } from './styles';
 
 Icon.loadFont();
 
-export default function PickText({ text, shirt, type, side, done }) {
+export default function PickText({ font, text, shirt, type, side, done }) {
   const dispatch = useDispatch();
 
   const [size, setSize] = useState(10); // slider de size
   const [color, setColor] = useState('#000'); // slider de size
 
-  const constant = (4.9 * (text.length + 1)) / 10;
+  const constant = (5.2 * (text.length + 1)) / 10;
 
   const captureViewRef = useRef();
 
@@ -47,6 +47,7 @@ export default function PickText({ text, shirt, type, side, done }) {
           <Image source={{ uri: shirt }} style={{ height: 380 }} />
           <Draggable
             renderText={text}
+            font={font}
             textColor={color}
             renderHeight={size}
             textSize={size}
@@ -61,10 +62,29 @@ export default function PickText({ text, shirt, type, side, done }) {
         </View>
         <ContainerActions>
           <Actions
-            onPress={() => onCapture()}
+            onPress={done}
+            style={{ backgroundColor: '#d10000' }}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Icon name="done" size={25} color="#FFF" />
+            <Icon name="close" size={30} color="#FFF" />
+          </Actions>
+          <Actions
+            onPress={() => onCapture('next')}
+            style={{ backgroundColor: '#038311' }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Icon name="done" size={30} color="#FFF" />
+          </Actions>
+          <Actions
+            onPress={() => onCapture('save')}
+            style={{
+              backgroundColor: '#999',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Icon name="archive" size={25} color="#FFF" />
           </Actions>
         </ContainerActions>
         <Slider

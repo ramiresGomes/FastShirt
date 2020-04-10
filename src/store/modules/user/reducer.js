@@ -5,6 +5,12 @@ const INITIAL_STATE = {
   tshirt: null,
   bshirt: null,
   hoodie: null,
+  tFronts: null,
+  tBacks: null,
+  bFronts: null,
+  bBacks: null,
+  hFronts: null,
+  hBacks: null,
 };
 
 export default function user(state = INITIAL_STATE, { type, payload }) {
@@ -15,6 +21,13 @@ export default function user(state = INITIAL_STATE, { type, payload }) {
         draft.tshirt = payload.tshirt;
         draft.bshirt = payload.bshirt;
         draft.hoodie = payload.hoodie;
+
+        draft.tFronts = payload.tFronts;
+        draft.tBacks = payload.tBacks;
+        draft.bFronts = payload.bFronts;
+        draft.bBacks = payload.bBacks;
+        draft.hFronts = payload.hFronts;
+        draft.hBacks = payload.hBacks;
         break;
       }
 

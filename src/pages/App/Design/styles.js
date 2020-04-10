@@ -84,12 +84,30 @@ export const Input = styled.TextInput`
   border-radius: 5px;
   height: 44px;
   padding: 2px 10px 2px 10px;
-  margin-bottom: 20px;
+  margin: 10px 0 10px 0;
   color: #fff;
 `;
 
 export const CustomView = styled.KeyboardAvoidingView`
   flex: 1;
-  background-color: 'rgba(144, 14, 14, 0.7)';
+  background-color: 'rgba(0, 0, 0, 0.7)';
   justify-content: center;
+`;
+
+export const PickTextButton = styled.Text`
+  background-color: #7159c1;
+  padding: 5px;
+  border-radius: 4px;
+  margin-right: 5px;
+  height: 35px;
+  width: 70px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+`;
+
+export const PickTextButtonText = styled.Text`
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
 `;

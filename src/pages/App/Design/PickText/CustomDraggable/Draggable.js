@@ -23,6 +23,7 @@ function clamp(number, min, max) {
 
 export default function Draggable(props) {
   const {
+    font,
     renderText,
     renderHeight,
     textColor,
@@ -237,6 +238,7 @@ export default function Draggable(props) {
             style={{
               color: textColor,
               fontSize: textSize,
+              fontFamily: font,
               textAlign: 'center',
             }}
           >
@@ -310,6 +312,7 @@ export default function Draggable(props) {
 /***** Default props and types */
 
 Draggable.defaultProps = {
+  font: 'Arial',
   renderText: '＋',
   textColor: '#fff',
   renderSize: 36,
@@ -333,6 +336,7 @@ Draggable.defaultProps = {
 Draggable.propTypes = {
   /**** props that should probably be removed in favor of "children" */
   renderText: PropTypes.string,
+  font: PropTypes.string,
   renderHeight: PropTypes.number,
   textColor: PropTypes.string,
   textSize: PropTypes.number,

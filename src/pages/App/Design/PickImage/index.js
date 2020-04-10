@@ -7,7 +7,7 @@ import Toast from 'react-native-tiny-toast';
 
 import { captureRef } from 'react-native-view-shot';
 
-import { View, Image, StatusBar } from 'react-native';
+import { View, Image } from 'react-native';
 
 import { Actions, ContainerActions, ESlider as Slider } from './styles';
 
@@ -70,16 +70,25 @@ export default function PickImage({ image, shirt, type, side, done }) {
         </View>
         <ContainerActions>
           <Actions
-            onPress={() => onCapture('save')}
+            onPress={done}
+            style={{ backgroundColor: '#d10000' }}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Icon name="archive" size={25} color="#FFF" />
+            <Icon name="close" size={30} color="#FFF" />
           </Actions>
           <Actions
             onPress={() => onCapture('next')}
+            style={{ backgroundColor: '#038311' }}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Icon name="done" size={25} color="#FFF" />
+            <Icon name="done" size={30} color="#FFF" />
+          </Actions>
+          <Actions
+            onPress={() => onCapture('save')}
+            style={{ backgroundColor: '#999' }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Icon name="archive" size={25} color="#FFF" />
           </Actions>
         </ContainerActions>
         <Slider

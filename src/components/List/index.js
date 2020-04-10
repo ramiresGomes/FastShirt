@@ -1,7 +1,7 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, View } from 'react-native';
 
-import { List, Item } from './styles';
+import { List, Item, Header } from './styles';
 
 // const  = [
 //   { key: 'A' },
@@ -19,6 +19,7 @@ import { List, Item } from './styles';
 // ];
 
 import image from '~/assets/samples/photo.jpg';
+import { Text } from '../Button/styles';
 
 function formatData(data, numColumns) {
   const numberOfFullRows = Math.floor(data.length / numColumns);
@@ -60,10 +61,25 @@ export default function CustomList({ data, handle, done }) {
   }
 
   return (
-    <List
-      data={formatData(data, numColumns)}
-      renderItem={renderItem}
-      numColumns={numColumns}
-    />
+    <View>
+      <Header>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: '#038841',
+            marginRight: 5,
+          }}
+        >
+          Frente
+        </Text>
+        <Text style={{ fontSize: 16, color: '#333' }}>R$ 31.19</Text>
+      </Header>
+      <List
+        data={formatData(data, numColumns)}
+        renderItem={renderItem}
+        numColumns={numColumns}
+      />
+    </View>
   );
 }

@@ -3,7 +3,9 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  Alert,
   Modal as CustomModal,
+  View,
 } from 'react-native';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
@@ -12,6 +14,8 @@ import { useSelector } from 'react-redux';
 import Header from '~/components/Header';
 import Modal from '~/components/Modal';
 import CustomList from '~/components/List';
+import Carousel from '~/components/Carousel';
+import FontPicker from '~/components/FontPicker';
 
 import PickImage from './PickImage';
 import PickText from './PickText';
@@ -39,6 +43,8 @@ import {
   BottomButtonsContainer,
   Input,
   CustomView,
+  PickTextButton,
+  PickTextButtonText,
 } from './styles';
 
 export default function Design({ navigation }) {
@@ -46,8 +52,18 @@ export default function Design({ navigation }) {
   const customB = useSelector((state) => state.user.bshirt);
   const customH = useSelector((state) => state.user.hoodie);
 
+  const tFronts = useSelector((state) => state.user.tFronts);
+  const tBacks = useSelector((state) => state.user.tBacks);
+  const bFronts = useSelector((state) => state.user.bFronts);
+  const bBacks = useSelector((state) => state.user.bBacks);
+  const hFronts = useSelector((state) => state.user.hFronts);
+  const hBacks = useSelector((state) => state.user.hBacks);
+
   const [data, setData] = useState([]);
+  const [models, setModels] = useState([]);
   const [text, setText] = useState('');
+  const [font, setFont] = useState('');
+  const [disabled, setDisabled] = useState(false);
 
   const batman = resolveAssetSource(bat);
   const superman = resolveAssetSource(sm);
@@ -77,15 +93,29 @@ export default function Design({ navigation }) {
     },
   ]);
 
-  console.tron.log(`images: ${images[0].uri}`);
+  // console.tron.log(`models: ${data}`);
 
   const [stickers, setStickers] = useState([
-    { key: 'F' },
-    { key: 'E' },
-    { key: 'D' },
-    { key: 'C' },
-    { key: 'B' },
-    { key: 'A' },
+    {
+      key: 1,
+      uri: batman.uri,
+      empty: false,
+    },
+    {
+      key: 2,
+      uri: superman.uri,
+      empty: false,
+    },
+    {
+      key: 3,
+      uri: batman.uri,
+      empty: false,
+    },
+    {
+      key: 4,
+      uri: superman.uri,
+      empty: false,
+    },
   ]);
 
   const [shirtType, setShirtType] = useState('tshirt');
@@ -127,17 +157,22 @@ export default function Design({ navigation }) {
   const [visible2, setVisible2] = useState(false);
   const [visible3, setVisible3] = useState(false);
   const [visible4, setVisible4] = useState(false);
+  const [visible5, setVisible5] = useState(false);
+  const [visible6, setVisible6] = useState(false);
 
   useEffect(() => {
     switch (shirtType) {
       case 'tshirt':
         shirtSide === 'front' ? setTShirtImage(tFront) : setTShirtImage(tBack);
+        shirtSide === 'front' ? setModels(tFronts) : setModels(tBacks);
         break;
       case 'babylook':
         shirtSide === 'front' ? setTShirtImage(bFront) : setTShirtImage(bBack);
+        shirtSide === 'front' ? setModels(bFronts) : setModels(bBacks);
         break;
       case 'hoodie':
         shirtSide === 'front' ? setTShirtImage(hFront) : setTShirtImage(hBack);
+        shirtSide === 'front' ? setModels(hFronts) : setModels(hBacks);
         break;
     }
   }, [shirtType, shirtSide]);
@@ -212,7 +247,7 @@ export default function Design({ navigation }) {
           <IconLabel>Imagem</IconLabel>
         </BottomButton>
 
-        <BottomButton onPress={() => {}}>
+        <BottomButton onPress={() => setVisible6(true)}>
           <Image source={iconColor} resizeMode="contain" />
           <IconLabel>Cores</IconLabel>
         </BottomButton>
@@ -236,7 +271,11 @@ export default function Design({ navigation }) {
           <IconLabel>Textos</IconLabel>
         </BottomButton>
       </Bottom>
-      <Modal visible={visible} onRequestClose={() => setVisible(false)}>
+      <Modal
+        visible={visible}
+        disabled={false}
+        onRequestClose={() => setVisible(false)}
+      >
         <CustomList
           data={data}
           handle={(value) => {
@@ -249,7 +288,11 @@ export default function Design({ navigation }) {
           }}
         />
       </Modal>
-      <Modal visible={visible2} onRequestClose={() => setVisible2(false)}>
+      <Modal
+        visible={visible2}
+        disabled={true}
+        onRequestClose={() => setVisible2(false)}
+      >
         <PickImage
           image={{ uri: image }}
           shirt={tShirtImage}
@@ -266,42 +309,103 @@ export default function Design({ navigation }) {
         onRequestClose={() => setVisible3(false)}
       >
         <CustomView>
-          <Input
-            autoFocus
-            value={text}
-            onChangeText={setText}
-            maxLength={15}
-            returnKeyType="send"
-            onSubmitEditing={() => {
-              setVisible3(false);
-              setVisible4(true);
-            }}
-            underlineColorAndroid="transparent"
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setVisible3(false);
-              setVisible4(true);
+          <View
+            style={{
+              backgroundColor: '#333',
+              width: 250,
+              height: 120,
+              borderRadius: 5,
+              alignSelf: 'center',
+              alignItems: 'center',
             }}
           >
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#FFF' }}>
-              Ok
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setVisible3(false)}>
-            <Text style={{ alignItems: 'center', marginTop: 20 }}>
-              Cancelar
-            </Text>
-          </TouchableOpacity>
+            <Input
+              autoFocus
+              value={text}
+              onChangeText={setText}
+              maxLength={15}
+              returnKeyType="send"
+              onSubmitEditing={() => {
+                setVisible3(false);
+                setVisible4(true);
+              }}
+              underlineColorAndroid="transparent"
+            />
+
+            <View
+              style={{
+                marginTop: 5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: 160,
+                height: 50,
+                alignSelf: 'center',
+              }}
+            >
+              <PickTextButton
+                onPress={() => {
+                  setVisible3(false);
+                  setVisible4(true);
+                }}
+              >
+                <PickTextButtonText
+                  style={{
+                    fontWeight: 'bold',
+                  }}
+                >
+                  Selecionar
+                </PickTextButtonText>
+              </PickTextButton>
+              <PickTextButton
+                onPress={() => setVisible3(false)}
+                style={{
+                  backgroundColor: '#d10000',
+                }}
+              >
+                <PickTextButtonText>Cancelar</PickTextButtonText>
+              </PickTextButton>
+            </View>
+          </View>
         </CustomView>
       </CustomModal>
-      <Modal visible={visible4} onRequestClose={() => setVisible4(false)}>
+      <Modal
+        visible={visible4}
+        disabledContent={true}
+        onRequestClose={() => setVisible4(false)}
+      >
+        <FontPicker
+          setFont={(value) => setFont(value)}
+          done={() => {
+            setVisible4(false);
+            setVisible5(true);
+          }}
+        />
+      </Modal>
+      <Modal
+        visible={visible5}
+        disabled={true}
+        onRequestClose={() => setVisible5(false)}
+      >
         <PickText
+          font={font}
           text={text}
           shirt={tShirtImage}
           type={shirtType}
           side={shirtSide}
-          done={() => setVisible4(false)}
+          done={() => setVisible5(false)}
+        />
+      </Modal>
+      <Modal
+        visible={visible6}
+        disabled={false}
+        disabledContent={true}
+        onRequestClose={() => setVisible6(false)}
+      >
+        <Carousel
+          data={models}
+          done={() => setVisible6(false)}
+          type={shirtType}
+          side={shirtSide}
         />
       </Modal>
     </>

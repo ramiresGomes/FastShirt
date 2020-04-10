@@ -3,15 +3,28 @@ import styled from 'styled-components/native';
 export const List = styled.FlatList`
   height: 90%;
   background-color: #fff;
+  border-radius: 8px;
 `;
 
 export const Item = styled.TouchableOpacity`
-  background-color: ${(props) => (props.disabled ? 'transparent' : '#e6b32a')};
+  background-color: ${(props) => (props.disabled ? 'transparent' : '#fff')};
   align-items: center;
   justify-content: center;
+  border-radius: 4px;
   flex: 1;
   margin: 1px;
-  border: 0.8px solid #ccc;
+  border: ${(props) => (props.disabled ? 'transparent' : '0.8px solid #ccc')};
   width: 30px;
   height: 90px;
+`;
+
+export const Header = styled.View`
+  flex: 1;
+  align-self: center;
+  height: 40px;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding: 2px 5px;
+  margin-bottom: 5px;
+  align-items: center;
 `;
