@@ -36,6 +36,7 @@ export default function PickImage({ image, shirt, type, side, done }) {
         type: `@shirts/update_${type}_${side}`,
         payload: { uri },
       });
+
       done();
     }
   }
@@ -55,7 +56,7 @@ export default function PickImage({ image, shirt, type, side, done }) {
         <View ref={captureViewRef} style={{ backgroundColor: '#f2f2f2' }}>
           <Image
             source={{ uri: shirt }}
-            style={{ height: 420, borderRadius: 8 }}
+            style={{ height: 310, borderRadius: 8 }}
           />
           <Draggable
             imageSource={image}

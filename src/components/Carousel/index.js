@@ -27,6 +27,9 @@ export default function ImageCarousel({ data, type, side, done }) {
         height: 400,
       }}
     >
+      <Text style={{ alignSelf: 'center', fontSize: 16, color: '#999' }}>
+        Deslize para selecionar a cor:
+      </Text>
       <Carousel
         layout="default"
         keyExtractor={(item) => String(item.uri)}

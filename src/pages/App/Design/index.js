@@ -260,7 +260,7 @@ export default function Design({ navigation }) {
       </Bottom>
       <Modal
         visible={visible}
-        disabled={false}
+        disabled={true}
         onRequestClose={() => setVisible(false)}
       >
         <CustomList
@@ -270,6 +270,7 @@ export default function Design({ navigation }) {
             console.tron.log(value);
             setImage(value);
           }}
+          close={() => setVisible(false)}
           done={() => {
             setVisible(false);
             setVisible2(true);

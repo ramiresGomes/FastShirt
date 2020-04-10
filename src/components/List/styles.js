@@ -4,6 +4,7 @@ export const List = styled.FlatList`
   height: 90%;
   background-color: #fff;
   border-radius: 8px;
+  margin-top: 5px;
 `;
 
 export const Item = styled.TouchableOpacity`
@@ -25,6 +26,22 @@ export const Header = styled.View`
   flex-direction: row;
   justify-content: space-evenly;
   padding: 2px 5px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   align-items: center;
+`;
+
+export const ContainerActions = styled.View`
+  width: 100%;
+  height: 35px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+export const Actions = styled.TouchableOpacity`
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  margin: 5px;
 `;

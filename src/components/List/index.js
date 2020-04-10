@@ -1,24 +1,9 @@
 import React, { useState } from 'react';
 import { Image, View } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { List, Item, Header } from './styles';
+import { List, Item, Header, ContainerActions, Actions } from './styles';
 
-// const  = [
-//   { key: 'A' },
-//   { key: 'B' },
-//   { key: 'C' },
-//   { key: 'D' },
-//   { key: 'E' },
-//   { key: 'F' },
-//   { key: 'G' },
-//   { key: 'H' },
-//   { key: 'I' },
-//   { key: 'J' },
-//   { key: 'K' },
-//   // { key: 'L' },
-// ];
-
-import image from '~/assets/samples/photo.jpg';
 import { Text } from '../Button/styles';
 
 function formatData(data, numColumns) {
@@ -38,7 +23,11 @@ function formatData(data, numColumns) {
 
 const numColumns = 3;
 
-export default function CustomList({ data, side, handle, done }) {
+export default function CustomList({ data, close, side, handle, done }) {
+  const [price, setPrice] = useState('');
+  const [active, setActive] = useState(false);
+  const [selected, setSelected] = useState(null);
+
   return (
     <View>
       <Header>
@@ -52,7 +41,9 @@ export default function CustomList({ data, side, handle, done }) {
         >
           {side}
         </Text>
-        <Text style={{ fontSize: 16, color: '#333' }}>R$ 21.19</Text>
+        <Text style={{ fontSize: 16, color: '#333' }}>
+          {price === '' ? 'R$0.00' : price}
+        </Text>
       </Header>
       <List
         data={formatData(data, numColumns)}
@@ -60,8 +51,9 @@ export default function CustomList({ data, side, handle, done }) {
         renderItem={({ item }) => (
           <Item
             onPress={() => {
-              handle(item.url);
-              done();
+              setPrice(item.price);
+              setActive(true);
+              setSelected(item);
             }}
           >
             <Image
@@ -73,6 +65,26 @@ export default function CustomList({ data, side, handle, done }) {
         )}
         numColumns={numColumns}
       />
+      <ContainerActions>
+        <Actions
+          onPress={close}
+          style={{ backgroundColor: '#d10000' }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Icon name="close" size={30} color="#FFF" />
+        </Actions>
+        <Actions
+          disabled={!active}
+          onPress={() => {
+            handle(selected.url);
+            done();
+          }}
+          style={{ backgroundColor: '#038311' }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Icon name="done" size={30} color="#FFF" />
+        </Actions>
+      </ContainerActions>
     </View>
   );
 }

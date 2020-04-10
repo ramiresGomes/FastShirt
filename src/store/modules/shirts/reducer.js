@@ -38,12 +38,12 @@ export default function shirts(state = INITIAL_STATE, action) {
         break;
       }
 
-      case '@shirts/update_bshirt_front': {
+      case '@shirts/update_babylook_front': {
         draft.bshirt.front = action.payload.uri;
         break;
       }
 
-      case '@shirts/update_bshirt_back': {
+      case '@shirts/update_babylook_back': {
         draft.bshirt.back = action.payload.uri;
         break;
       }
