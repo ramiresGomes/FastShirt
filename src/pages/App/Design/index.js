@@ -47,17 +47,19 @@ import {
   PickTextButtonText,
 } from './styles';
 
-export default function Design({ navigation }) {
-  const customT = useSelector((state) => state.user.tshirt);
-  const customB = useSelector((state) => state.user.bshirt);
-  const customH = useSelector((state) => state.user.hoodie);
+import api from '~/services/api';
 
-  const tFronts = useSelector((state) => state.user.tFronts);
-  const tBacks = useSelector((state) => state.user.tBacks);
-  const bFronts = useSelector((state) => state.user.bFronts);
-  const bBacks = useSelector((state) => state.user.bBacks);
-  const hFronts = useSelector((state) => state.user.hFronts);
-  const hBacks = useSelector((state) => state.user.hBacks);
+export default function Design({ navigation }) {
+  const customT = useSelector((state) => state.shirts.tshirt);
+  const customB = useSelector((state) => state.shirts.bshirt);
+  const customH = useSelector((state) => state.shirts.hoodie);
+
+  const tFronts = useSelector((state) => state.shirts.tFronts);
+  const tBacks = useSelector((state) => state.shirts.tBacks);
+  const bFronts = useSelector((state) => state.shirts.bFronts);
+  const bBacks = useSelector((state) => state.shirts.bBacks);
+  const hFronts = useSelector((state) => state.shirts.hFronts);
+  const hBacks = useSelector((state) => state.shirts.hBacks);
 
   const [data, setData] = useState([]);
   const [models, setModels] = useState([]);
@@ -70,53 +72,38 @@ export default function Design({ navigation }) {
   const rocket = resolveAssetSource(rs);
   const stitch = resolveAssetSource(stt);
 
-  const [images, setImages] = useState([
-    {
-      key: 1,
-      uri: batman.uri,
-      empty: false,
-    },
-    {
-      key: 2,
-      uri: superman.uri,
-      empty: false,
-    },
-    {
-      key: 3,
-      uri: rocket.uri,
-      empty: false,
-    },
-    {
-      key: 4,
-      uri: stitch.uri,
-      empty: false,
-    },
-  ]);
+  // useEffect pra puxar as ibage
+  const [images, setImages] = useState([]);
+  const [stickers, setStickers] = useState([]);
+
+  useEffect(() => {
+    async function loadImages() {
+      const [imgs, stk] = await Promise.all([
+        api.get('design-shirt/image'),
+        api.get('design-shirt/sticker'),
+      ]);
+
+      console.tron.log(`status 1: ${imgs}`);
+      console.tron.log(`images: ${imgs.data}`);
+
+      console.tron.log(`status 2: ${stk}`);
+      console.tron.log(`sticker 1: ${stk[0]}`);
+      console.tron.log(`sticker 2: ${stk[1]}`);
+
+      setImages(imgs.data);
+      setStickers(stk.data);
+    }
+
+    loadImages();
+  }, []);
 
   // console.tron.log(`models: ${data}`);
 
-  const [stickers, setStickers] = useState([
-    {
-      key: 1,
-      uri: batman.uri,
-      empty: false,
-    },
-    {
-      key: 2,
-      uri: superman.uri,
-      empty: false,
-    },
-    {
-      key: 3,
-      uri: batman.uri,
-      empty: false,
-    },
-    {
-      key: 4,
-      uri: superman.uri,
-      empty: false,
-    },
-  ]);
+  // {
+  //   key: 1,
+  //   uri: batman.uri,
+  //   empty: false,
+  // },
 
   const [shirtType, setShirtType] = useState('tshirt');
   const [shirtSide, setShirtSide] = useState('front');
@@ -278,6 +265,7 @@ export default function Design({ navigation }) {
       >
         <CustomList
           data={data}
+          side={shirtSide}
           handle={(value) => {
             console.tron.log(value);
             setImage(value);
@@ -288,6 +276,7 @@ export default function Design({ navigation }) {
           }}
         />
       </Modal>
+
       <Modal
         visible={visible2}
         disabled={true}

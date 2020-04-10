@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, View } from 'react-native';
 
 import { List, Item, Header } from './styles';
@@ -38,28 +38,7 @@ function formatData(data, numColumns) {
 
 const numColumns = 3;
 
-export default function CustomList({ data, handle, done }) {
-  function renderItem({ item, index }) {
-    if (item.empty === true) {
-      return <Item disabled={true} />;
-    }
-
-    return (
-      <Item
-        onPress={() => {
-          handle(item.uri);
-          done();
-        }}
-      >
-        <Image
-          source={{ uri: item.uri }}
-          resizeMode="contain"
-          style={{ width: 90, height: 90 }}
-        />
-      </Item>
-    );
-  }
-
+export default function CustomList({ data, side, handle, done }) {
   return (
     <View>
       <Header>
@@ -71,13 +50,27 @@ export default function CustomList({ data, handle, done }) {
             marginRight: 5,
           }}
         >
-          Frente
+          {side}
         </Text>
-        <Text style={{ fontSize: 16, color: '#333' }}>R$ 31.19</Text>
+        <Text style={{ fontSize: 16, color: '#333' }}>R$ 21.19</Text>
       </Header>
       <List
         data={formatData(data, numColumns)}
-        renderItem={renderItem}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) => (
+          <Item
+            onPress={() => {
+              handle(item.url);
+              done();
+            }}
+          >
+            <Image
+              source={{ uri: item.thumbnail }}
+              resizeMode="contain"
+              style={{ width: 90, height: 90 }}
+            />
+          </Item>
+        )}
         numColumns={numColumns}
       />
     </View>

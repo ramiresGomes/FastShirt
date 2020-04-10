@@ -23,7 +23,7 @@ export default function PickText({ font, text, shirt, type, side, done }) {
 
   function onDone(uri) {
     dispatch({
-      type: `@user/update_${type}_${side}`,
+      type: `@shirts/update_${type}_${side}`,
       payload: { uri },
     });
     done();

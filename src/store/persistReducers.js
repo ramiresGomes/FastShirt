@@ -6,7 +6,7 @@ export default (reducers) => {
     {
       key: 'kepy',
       storage: AsyncStorage,
-      whitelist: ['auth', 'user'],
+      whitelist: ['auth', 'user', 'shirts'],
     },
     reducers
   );

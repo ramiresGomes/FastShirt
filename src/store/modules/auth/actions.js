@@ -5,33 +5,12 @@ export function signInRequest(email, password) {
   };
 }
 
-export function signInSuccess(
-  token,
-  user,
-  tshirt,
-  bshirt,
-  hoodie,
-  tFronts,
-  tBacks,
-  bFronts,
-  bBacks,
-  hFronts,
-  hBacks
-) {
+export function signInSuccess(token, user) {
   return {
     type: '@auth/SIGN_IN_SUCCESS',
     payload: {
       token,
       user,
-      tshirt,
-      bshirt,
-      hoodie,
-      tFronts,
-      tBacks,
-      bFronts,
-      bBacks,
-      hFronts,
-      hBacks,
     },
   };
 }

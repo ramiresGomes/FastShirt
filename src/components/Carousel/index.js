@@ -37,7 +37,7 @@ export default function ImageCarousel({ data, type, side, done }) {
           <TouchableOpacity
             onPress={() => {
               dispatch({
-                type: `@user/update_${type}_${side}`,
+                type: `@shirts/update_${type}_${side}`,
                 payload: { uri: item.uri },
               });
               done();

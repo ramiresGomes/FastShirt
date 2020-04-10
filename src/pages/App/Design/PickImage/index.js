@@ -33,7 +33,7 @@ export default function PickImage({ image, shirt, type, side, done }) {
       ]);
     } else {
       dispatch({
-        type: `@user/update_${type}_${side}`,
+        type: `@shirts/update_${type}_${side}`,
         payload: { uri },
       });
       done();
