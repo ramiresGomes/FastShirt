@@ -65,7 +65,7 @@ export default function ImageCarousel({ data, done }) {
                   hb: hBacks[index].uri,
                 },
               });
-              done();
+              done(item.uri);
             }}
             style={{ width: 265, height: 280 }}
           >

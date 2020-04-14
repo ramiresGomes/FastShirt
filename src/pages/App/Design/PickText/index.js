@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch } from 'react-redux';
 
@@ -15,9 +15,77 @@ export default function PickText({ font, text, shirt, type, side, done }) {
   const dispatch = useDispatch();
 
   const [size, setSize] = useState(10); // slider de size
-  const [color, setColor] = useState('#000'); // slider de size
+  const [color, setColor] = useState('#000');
+  const [maxSize, setMaxSize] = useState(10);
 
-  const constant = (5.2 * (text.length + 1)) / 10;
+  const constant = (7 * (text.length + 1)) / 10;
+
+  useEffect(() => {
+    switch (text.length) {
+      case 1: {
+        setMaxSize(120);
+        break;
+      }
+      case 2: {
+        setMaxSize(100);
+        break;
+      }
+      case 3: {
+        setMaxSize(75);
+        break;
+      }
+      case 4: {
+        setMaxSize(57);
+        break;
+      }
+      case 5: {
+        setMaxSize(50);
+        break;
+      }
+      case 6: {
+        setMaxSize(50);
+        break;
+      }
+      case 7: {
+        setMaxSize(45);
+        break;
+      }
+      case 8: {
+        setMaxSize(40);
+        break;
+      }
+      case 9: {
+        setMaxSize(40);
+        break;
+      }
+      case 10: {
+        setMaxSize(35);
+        break;
+      }
+      case 11: {
+        setMaxSize(35);
+        break;
+      }
+      case 12: {
+        setMaxSize(30);
+        break;
+      }
+      case 13: {
+        setMaxSize(28);
+        break;
+      }
+      case 14: {
+        setMaxSize(25);
+        break;
+      }
+
+      case 15: {
+        setMaxSize(22);
+        break;
+      }
+      default:
+    }
+  }, []);
 
   const captureViewRef = useRef();
 
@@ -44,20 +112,21 @@ export default function PickText({ font, text, shirt, type, side, done }) {
     <>
       <View style={{ flex: 1 }}>
         <View ref={captureViewRef} style={{ backgroundColor: '#f2f2f2' }}>
-          <Image source={{ uri: shirt }} style={{ height: 380 }} />
+          <Image source={{ uri: shirt }} style={{ height: 310 }} />
           <Draggable
+            renderColor="steelblue"
             renderText={text}
             font={font}
             textColor={color}
-            renderHeight={size}
+            renderHeight={size / 1.016}
             textSize={size}
             renderSize={constant * size}
             x={120}
             y={30}
-            minX={74}
-            maxX={234}
-            minY={60}
-            maxY={320}
+            minX={85}
+            maxX={215}
+            minY={50}
+            maxY={290}
           />
         </View>
         <ContainerActions>
@@ -90,7 +159,7 @@ export default function PickText({ font, text, shirt, type, side, done }) {
         <Slider
           value={size}
           minimumValue={10}
-          maximumValue={21}
+          maximumValue={maxSize}
           onValueChange={(value) => setSize(value)}
         />
       </View>

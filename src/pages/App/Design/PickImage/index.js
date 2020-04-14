@@ -62,11 +62,12 @@ export default function PickImage({ image, shirt, type, side, done }) {
       ]);
     } else {
       dispatch({
-        type: `@shirts/update_${type}_${side}`,
+        type: '@shirts/update_front',
         payload: { uri },
       });
+      console.tron.log(`uri: ${uri}`);
 
-      done();
+      done(uri);
     }
   }
 
@@ -93,8 +94,8 @@ export default function PickImage({ image, shirt, type, side, done }) {
             onDragRelease={(event, gestureState) =>
               console.tron.log(gestureState)
             }
-            x={150}
-            y={150}
+            x={75}
+            y={75}
             minX={position.minX}
             maxX={position.maxX}
             minY={position.minY}

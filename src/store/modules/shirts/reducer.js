@@ -49,6 +49,11 @@ export default function shirts(state = INITIAL_STATE, action) {
         draft.hoodie.back = action.payload.hb;
         break;
       }
+
+      case '@shirts/update_front': {
+        draft.tshirt.front = action.payload.uri;
+        break;
+      }
       // essas 6 actions se tornam uma só
 
       default:

@@ -38,6 +38,8 @@ import {
 import api from '~/services/api';
 
 export default function Design({ navigation }) {
+  console.tron.log('actual render');
+
   const customT = useSelector((state) => state.shirts.tshirt);
   const customB = useSelector((state) => state.shirts.bshirt);
   const customH = useSelector((state) => state.shirts.hoodie);
@@ -122,6 +124,15 @@ export default function Design({ navigation }) {
   const [tShirtImage, setTShirtImage] = useState(tFront);
   const [image, setImage] = useState('');
 
+  // useEffect(() => {
+  //   console.tron.log('ih');
+  //   setTFront(customT.front);
+  //   setTBack(customT.back);
+  //   setBFront(customB.front);
+  //   setBBack(customB.back);
+  //   setHFront(customH.front);
+  //   setHBack(customH.back);
+  // }, [tShirtImage]);
   useEffect(() => {
     setTFront(customT.front);
     setTBack(customT.back);
@@ -136,11 +147,6 @@ export default function Design({ navigation }) {
     setHFront(customH.front);
     setHBack(customH.back);
   }, [customH]);
-
-  // eh uma verificação de 3 campos. deve ser de apenas 1 que representa os 3. tshirt-front
-  // alterar a logica do switch ou monitorar alteração no estado para
-  // renderizar apenas quando não há a camiseta do estado
-  // viabilizar o 'useCallback', 'useMemo', dimnuir funções e ganhar performance
 
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
@@ -165,7 +171,7 @@ export default function Design({ navigation }) {
         break;
     }
   }, [shirtType, shirtSide]);
-
+  console.tron.log(`actual full shirt: ${tShirtImage}`);
   return (
     <>
       <Header navigation={navigation} title="Design" />
@@ -290,7 +296,11 @@ export default function Design({ navigation }) {
           shirt={tShirtImage}
           type={shirtType}
           side={shirtSide}
-          done={() => setVisible2(false)}
+          done={(value) => {
+            console.tron.log(`value: ${value}`);
+            setTShirtImage(value);
+            setVisible2(false);
+          }}
         />
       </Modal>
 
@@ -396,7 +406,11 @@ export default function Design({ navigation }) {
       >
         <Carousel
           data={models}
-          done={() => setVisible6(false)}
+          done={(value) => {
+            console.tron.log(`value image: ${value}`);
+            setTShirtImage(value);
+            setVisible6(false);
+          }}
           type={shirtType}
           side={shirtSide}
         />
