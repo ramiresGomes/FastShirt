@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Image,
-  Text,
-  TouchableOpacity,
-  Alert,
-  Modal as CustomModal,
-  View,
-} from 'react-native';
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+
+import { Image, Modal as CustomModal, View } from 'react-native';
 
 import { useSelector } from 'react-redux';
 
@@ -24,11 +17,6 @@ import iconImage from '~/assets/ico-image.png';
 import iconColor from '~/assets/ico-color.png';
 import iconStickers from '~/assets/ico-sticker.png';
 import iconText from '~/assets/ico-text.png';
-
-import bat from '~/assets/samples/batlogo.png';
-import sm from '~/assets/samples/smlogo.png';
-import rs from '~/assets/samples/rocketseat.png';
-import stt from '~/assets/samples/photo.jpg';
 
 import {
   Container,
@@ -61,20 +49,26 @@ export default function Design({ navigation }) {
   const hFronts = useSelector((state) => state.shirts.hFronts);
   const hBacks = useSelector((state) => state.shirts.hBacks);
 
+  const boomt = useSelector((state) => state.shirts.boomt);
+
   const [data, setData] = useState([]);
   const [models, setModels] = useState([]);
   const [text, setText] = useState('');
   const [font, setFont] = useState('');
   const [disabled, setDisabled] = useState(false);
 
-  const batman = resolveAssetSource(bat);
-  const superman = resolveAssetSource(sm);
-  const rocket = resolveAssetSource(rs);
-  const stitch = resolveAssetSource(stt);
-
   // useEffect pra puxar as ibage
   const [images, setImages] = useState([]);
   const [stickers, setStickers] = useState([]);
+
+  const nw = {
+    id: 5,
+    name: 'Blank One',
+    url: boomt.uri,
+    price: '34,90',
+    thumbnail:
+      'https://clubedocavalo.shop/uploads/design_shirt/printable_images/5/image/indiferente.png/thumbs/indiferente.png',
+  };
 
   useEffect(() => {
     async function loadImages() {
@@ -82,19 +76,27 @@ export default function Design({ navigation }) {
         api.get('design-shirt/image'),
         api.get('design-shirt/sticker'),
       ]);
+      stk.data.push(nw);
 
       console.tron.log(`status 1: ${imgs}`);
       console.tron.log(`images: ${imgs.data}`);
+      console.tron.log(`boomt: ${boomt}`);
 
-      console.tron.log(`status 2: ${stk}`);
-      console.tron.log(`sticker 1: ${stk[0]}`);
-      console.tron.log(`sticker 2: ${stk[1]}`);
-
+      console.tron.log(`status 2: ${stk.data}`);
+      console.tron.log(`sticker 1: ${stk.data[0].url}`);
+      console.tron.log(`sticker 2: ${stk.data[1].url}`);
+      console.tron.log(`sticker 3: ${stk.data[2].url}`);
+      console.tron.log(`new: ${nw}`);
       setImages(imgs.data);
       setStickers(stk.data);
     }
 
     loadImages();
+
+    // write "batata doce" on asyncstorage
+    // resgata em outro componente -- redux pra que né?
+    // se der certo com texto, tenta com um arquivo criado pelo RNFS ou RNFetchBlob
+    // com o passo acima, tenta uma imagem. passe o URI no encoding
   }, []);
 
   // console.tron.log(`models: ${data}`);
@@ -365,6 +367,7 @@ export default function Design({ navigation }) {
       >
         <FontPicker
           setFont={(value) => setFont(value)}
+          example={text}
           done={() => {
             setVisible4(false);
             setVisible5(true);

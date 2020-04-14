@@ -45,6 +45,9 @@ import hoodieBlueBack from '~/assets/models/back/hoodieback2.png';
 import hoodieGreenBack from '~/assets/models/back/hoodieback3.png';
 import hoodiePinkBack from '~/assets/models/back/hoodieback4.png';
 import hoodieYellowBack from '~/assets/models/back/hoodieback5.png';
+
+import boom from '~/assets/boom.png';
+
 import { uploadShirts } from './actions';
 
 export function* upload() {
@@ -54,6 +57,8 @@ export function* upload() {
   let bBacks = [];
   let hFronts = [];
   let hBacks = [];
+
+  const boomt = resolveAssetSource(boom);
 
   const tFront = resolveAssetSource(tShirtFront);
   const tBack = resolveAssetSource(tShirtBack);
@@ -123,7 +128,8 @@ export function* upload() {
       bFronts,
       bBacks,
       hFronts,
-      hBacks
+      hBacks,
+      boomt
     )
   );
 }

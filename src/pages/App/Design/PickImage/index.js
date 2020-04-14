@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch } from 'react-redux';
 import Draggable from 'react-native-draggable';
@@ -16,7 +16,36 @@ Icon.loadFont();
 export default function PickImage({ image, shirt, type, side, done }) {
   const dispatch = useDispatch();
 
-  const [size, setSize] = useState(130); // slider de size
+  const [size, setSize] = useState(115); // slider de size
+
+  const [position, setPosition] = useState({
+    minX: 0,
+    maxX: 0,
+    minY: 0,
+    maxY: 0,
+  });
+
+  // tshirt = 120
+
+  useEffect(() => {
+    switch (type) {
+      case 'tshirt': {
+        side === 'front'
+          ? setPosition({ minX: 85, maxX: 215, minY: 50, maxY: 290 })
+          : setPosition({ minX: 88, maxX: 217, minY: 35, maxY: 285 });
+        break;
+      }
+      case 'babylook': {
+        setPosition({ minX: 90, maxX: 213, minY: 35, maxY: 281 });
+        break;
+      }
+      case 'hoodie': {
+        setPosition({ minX: 89, maxX: 205, minY: 75, maxY: 270 });
+        break;
+      }
+      default:
+    }
+  }, []); // eslint-disable-line
 
   const captureViewRef = useRef();
 
@@ -61,12 +90,15 @@ export default function PickImage({ image, shirt, type, side, done }) {
           <Draggable
             imageSource={image}
             renderSize={size}
-            x={100}
-            y={100}
-            minX={70}
-            maxX={230}
-            minY={60}
-            maxY={320}
+            onDragRelease={(event, gestureState) =>
+              console.tron.log(gestureState)
+            }
+            x={150}
+            y={150}
+            minX={position.minX}
+            maxX={position.maxX}
+            minY={position.minY}
+            maxY={position.maxY}
           />
         </View>
         <ContainerActions>
@@ -95,7 +127,7 @@ export default function PickImage({ image, shirt, type, side, done }) {
         <Slider
           value={size}
           minimumValue={80}
-          maximumValue={160}
+          maximumValue={120}
           onValueChange={(value) => setSize(value)}
         />
       </View>

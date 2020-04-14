@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   bBacks: null,
   hFronts: null,
   hBacks: null,
+  boomt: null,
 };
 
 export default function shirts(state = INITIAL_STATE, action) {
@@ -19,6 +20,7 @@ export default function shirts(state = INITIAL_STATE, action) {
         draft.tshirt = action.payload.tshirt;
         draft.bshirt = action.payload.bshirt;
         draft.hoodie = action.payload.hoodie;
+        draft.boomt = action.payload.boomt;
 
         draft.tFronts = action.payload.tFronts;
         draft.tBacks = action.payload.tBacks;
@@ -28,35 +30,27 @@ export default function shirts(state = INITIAL_STATE, action) {
         draft.hBacks = action.payload.hBacks;
         break;
       }
-      case '@shirts/update_tshirt_front': {
-        draft.tshirt.front = action.payload.uri;
+      case '@shirts/update_color': {
+        draft.tshirt.front = action.payload.tf;
+        draft.tshirt.back = action.payload.tb;
+        draft.bshirt.front = action.payload.bf;
+        draft.bshirt.back = action.payload.bb;
+        draft.hoodie.front = action.payload.hf;
+        draft.hoodie.back = action.payload.hb;
         break;
       }
 
-      case '@shirts/update_tshirt_back': {
-        draft.tshirt.back = action.payload.uri;
+      case '@shirts/update_sticker': {
+        draft.tshirt.front = action.payload.tf;
+        draft.tshirt.back = action.payload.tb;
+        draft.bshirt.front = action.payload.bf;
+        draft.bshirt.back = action.payload.bb;
+        draft.hoodie.front = action.payload.hf;
+        draft.hoodie.back = action.payload.hb;
         break;
       }
+      // essas 6 actions se tornam uma só
 
-      case '@shirts/update_babylook_front': {
-        draft.bshirt.front = action.payload.uri;
-        break;
-      }
-
-      case '@shirts/update_babylook_back': {
-        draft.bshirt.back = action.payload.uri;
-        break;
-      }
-
-      case '@shirts/update_hoodie_front': {
-        draft.hoodie.front = action.payload.uri;
-        break;
-      }
-
-      case '@shirts/update_hoodie_back': {
-        draft.hoodie.back = action.payload.uri;
-        break;
-      }
       default:
     }
   });

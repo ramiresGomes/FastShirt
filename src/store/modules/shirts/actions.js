@@ -7,7 +7,8 @@ export function uploadShirts(
   bFronts,
   bBacks,
   hFronts,
-  hBacks
+  hBacks,
+  boomt
 ) {
   return {
     type: '@shirts/UPLOAD_SHIRTS',
@@ -21,6 +22,7 @@ export function uploadShirts(
       bBacks,
       hFronts,
       hBacks,
+      boomt,
     },
   };
 }

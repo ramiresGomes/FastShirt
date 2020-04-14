@@ -3,13 +3,13 @@ import { Text } from 'react-native';
 
 import { List, Item } from './styles';
 
-export default function FontPicker({ setFont, done }) {
+export default function FontPicker({ example, setFont, done }) {
   const data = [
     { id: 1, font: 'Montserrat' },
-    { id: 2, font: 'Carily' },
+    { id: 2, font: 'Arial' },
     { id: 3, font: 'Hunting' },
     { id: 4, font: 'Oswald' },
-    { id: 5, font: 'Shopie' },
+    { id: 5, font: 'Colibri' },
   ];
 
   return (
@@ -30,7 +30,7 @@ export default function FontPicker({ setFont, done }) {
             <Text
               style={{ color: '#ddd', fontSize: 18, fontFamily: item.font }}
             >
-              Teste
+              {example}
             </Text>
           </Item>
         )}
