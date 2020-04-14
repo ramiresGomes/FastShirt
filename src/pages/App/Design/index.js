@@ -101,14 +101,6 @@ export default function Design({ navigation }) {
     // com o passo acima, tenta uma imagem. passe o URI no encoding
   }, []);
 
-  // console.tron.log(`models: ${data}`);
-
-  // {
-  //   key: 1,
-  //   uri: batman.uri,
-  //   empty: false,
-  // },
-
   const [shirtType, setShirtType] = useState('tshirt');
   const [shirtSide, setShirtSide] = useState('front');
 
@@ -122,7 +114,7 @@ export default function Design({ navigation }) {
   const [hBack, setHBack] = useState(customH.back);
 
   const [tShirtImage, setTShirtImage] = useState(tFront);
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(''); // sticker
 
   // useEffect(() => {
   //   console.tron.log('ih');
