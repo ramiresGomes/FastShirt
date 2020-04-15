@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import Draggable from 'react-native-draggable';
+import CameraRoll from '@react-native-community/cameraroll';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { captureRef } from 'react-native-view-shot';
+
+import ImagePicker from 'react-native-image-picker';
 
 import { Image, Modal as CustomModal, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { useSelector } from 'react-redux';
-
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import Header from '~/components/Header';
 import Modal from '~/components/Modal';
 import CustomList from '~/components/List';
@@ -13,12 +19,12 @@ import FontPicker from '~/components/FontPicker';
 import PickImage from './PickImage';
 import PickText from './PickText';
 
-import iconImage from '~/assets/ico-image.png';
-import iconColor from '~/assets/ico-color.png';
-import iconStickers from '~/assets/ico-sticker.png';
-import iconText from '~/assets/ico-text.png';
+import base from '~/assets/base.png';
 
 import {
+  Actions,
+  ContainerActions,
+  ESlider as Slider,
   Container,
   Bottom,
   BottomButton,
@@ -37,6 +43,8 @@ import {
 
 import api from '~/services/api';
 
+Icon.loadFont();
+
 export default function Design({ navigation }) {
   console.tron.log('actual render');
 
@@ -53,13 +61,25 @@ export default function Design({ navigation }) {
 
   const boomt = useSelector((state) => state.shirts.boomt);
 
+  const captureViewRef = useRef();
+  const dispatch = useDispatch();
+
+  const baseImg = resolveAssetSource(base);
+
   const [data, setData] = useState([]);
   const [models, setModels] = useState([]);
   const [text, setText] = useState('');
   const [font, setFont] = useState('');
   const [disabled, setDisabled] = useState(false);
+  const [size, setSize] = useState(120); // slider de size
 
-  // useEffect pra puxar as ibage
+  const [position, setPosition] = useState({
+    minX: 0,
+    maxX: 0,
+    minY: 0,
+    maxY: 0,
+  });
+
   const [images, setImages] = useState([]);
   const [stickers, setStickers] = useState([]);
 
@@ -71,35 +91,6 @@ export default function Design({ navigation }) {
     thumbnail:
       'https://clubedocavalo.shop/uploads/design_shirt/printable_images/5/image/indiferente.png/thumbs/indiferente.png',
   };
-
-  useEffect(() => {
-    async function loadImages() {
-      const [imgs, stk] = await Promise.all([
-        api.get('design-shirt/image'),
-        api.get('design-shirt/sticker'),
-      ]);
-      stk.data.push(nw);
-
-      console.tron.log(`status 1: ${imgs}`);
-      console.tron.log(`images: ${imgs.data}`);
-      console.tron.log(`boomt: ${boomt}`);
-
-      console.tron.log(`status 2: ${stk.data}`);
-      console.tron.log(`sticker 1: ${stk.data[0].url}`);
-      console.tron.log(`sticker 2: ${stk.data[1].url}`);
-      console.tron.log(`sticker 3: ${stk.data[2].url}`);
-      console.tron.log(`new: ${nw}`);
-      setImages(imgs.data);
-      setStickers(stk.data);
-    }
-
-    loadImages();
-
-    // write "batata doce" on asyncstorage
-    // resgata em outro componente -- redux pra que né?
-    // se der certo com texto, tenta com um arquivo criado pelo RNFS ou RNFetchBlob
-    // com o passo acima, tenta uma imagem. passe o URI no encoding
-  }, []);
 
   const [shirtType, setShirtType] = useState('tshirt');
   const [shirtSide, setShirtSide] = useState('front');
@@ -114,17 +105,29 @@ export default function Design({ navigation }) {
   const [hBack, setHBack] = useState(customH.back);
 
   const [tShirtImage, setTShirtImage] = useState(tFront);
-  const [image, setImage] = useState(''); // sticker
+  const [image, setImage] = useState(baseImg.uri); // sticker
 
-  // useEffect(() => {
-  //   console.tron.log('ih');
-  //   setTFront(customT.front);
-  //   setTBack(customT.back);
-  //   setBFront(customB.front);
-  //   setBBack(customB.back);
-  //   setHFront(customH.front);
-  //   setHBack(customH.back);
-  // }, [tShirtImage]);
+  useEffect(() => {
+    async function loadImages() {
+      const [imgs, stk] = await Promise.all([
+        api.get('design-shirt/image'),
+        api.get('design-shirt/sticker'),
+      ]);
+      stk.data.push(nw);
+
+      setImages(imgs.data);
+      setStickers(stk.data);
+    }
+
+    loadImages();
+
+    // write "batata doce" on asyncstorage
+    // resgata em outro componente -- redux pra que né?
+    // se der certo com texto, tenta com um arquivo criado pelo RNFS ou RNFetchBlob
+    // com o passo acima, tenta uma imagem. passe o URI no encoding
+    // posso usar o mesmo container de buttons e colocar o 'limpar camiseta', 'salvar', 'avançar'
+  }, []);
+
   useEffect(() => {
     setTFront(customT.front);
     setTBack(customT.back);
@@ -146,31 +149,133 @@ export default function Design({ navigation }) {
   const [visible4, setVisible4] = useState(false);
   const [visible5, setVisible5] = useState(false);
   const [visible6, setVisible6] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+
+  const [galleryIcon, setGalleryIcon] = useState('collections');
+  const [colorsIcon, setColorsIcon] = useState('palette');
+  const [editIcon, setEditIcon] = useState('create');
+  const [stickersIcon, setStickersIcon] = useState('mood');
+  const [textIcon, setTextIcon] = useState('title');
 
   useEffect(() => {
     switch (shirtType) {
       case 'tshirt':
         shirtSide === 'front' ? setTShirtImage(tFront) : setTShirtImage(tBack);
         shirtSide === 'front' ? setModels(tFronts) : setModels(tBacks);
+        shirtSide === 'front'
+          ? setPosition({ minX: 92, maxX: 223, minY: 100, maxY: 300 })
+          : setPosition({ minX: 97, maxX: 225, minY: 80, maxY: 310 });
+
         break;
       case 'babylook':
         shirtSide === 'front' ? setTShirtImage(bFront) : setTShirtImage(bBack);
         shirtSide === 'front' ? setModels(bFronts) : setModels(bBacks);
+        setPosition({ minX: 101, maxX: 219, minY: 80, maxY: 301 });
+
         break;
       case 'hoodie':
         shirtSide === 'front' ? setTShirtImage(hFront) : setTShirtImage(hBack);
         shirtSide === 'front' ? setModels(hFronts) : setModels(hBacks);
+        setPosition({ minX: 95, maxX: 219, minY: 130, maxY: 285 });
+
         break;
+      default:
     }
   }, [shirtType, shirtSide]);
+
+  useEffect(() => {
+    if (editMode) {
+      setGalleryIcon('clear');
+      setColorsIcon('delete');
+      setEditIcon('done');
+      setStickersIcon('archive');
+      setTextIcon('straighten');
+    } else {
+      setGalleryIcon('collections');
+      setColorsIcon('palette');
+      setEditIcon('create');
+      setStickersIcon('mood');
+      setTextIcon('title');
+    }
+  }, [editMode]);
+
+  function handleChoosePhoto() {
+    const options = {
+      title: 'Selecionar imagem',
+      cancelButtonTitle: 'Cancelar',
+      takePhotoButtonTitle: 'Tirar foto',
+      chooseFromLibraryButtonTitle: 'Selecionar imagem da galeria',
+      mediaType: 'photo',
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.didCancel) {
+        console.tron.log('User cancelled image picker');
+      } else if (response.error) {
+        console.tron.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = { uri: `data:image/jpeg;base64,${response.data}` };
+        setImage(source.uri);
+        setEditMode(true);
+      }
+    });
+  }
+
+  function onDone(uri, action) {
+    if (action === 'save') {
+      Promise.all([
+        CameraRoll.saveToCameraRoll(uri, 'photo')
+          .then((success) => {
+            // Alert.alert('A imagem foi salva na galeria.');
+            console.tron.log('Save button');
+          })
+          .catch((err) => {
+            // Alert.alert('Ocorreu um erro ao salvar o modelo.');
+            console.tron.log('Erro no salvamento');
+          }),
+      ]);
+    } else {
+      dispatch({
+        type: `@shirts/update_${shirtType}_${shirtSide}`,
+        payload: { uri },
+      });
+    }
+    setEditMode(false);
+  }
+  function onCapture(action) {
+    captureRef(captureViewRef, {
+      format: 'jpg',
+      quality: 0.9,
+    }).then((uri) => {
+      console.tron.log(`action: ${action}`);
+      onDone(uri, action);
+    });
+  }
+
   console.tron.log(`actual full shirt: ${tShirtImage}`);
+  console.tron.log(`editMode: ${editMode}`);
   return (
     <>
       <Header navigation={navigation} title="Design" />
 
       <Container>
-        <TShirtContainer>
+        <TShirtContainer ref={captureViewRef}>
           <TShirtImage source={{ uri: tShirtImage }} resizeMode="contain" />
+          <Draggable
+            disabled={!editMode}
+            imageSource={{ uri: image }}
+            renderSize={size}
+            onDragRelease={(event, gestureState) =>
+              console.tron.log(gestureState)
+            }
+            onLongPress={() => setEditMode(true)}
+            x={position.minX}
+            y={position.minY}
+            minX={position.minX}
+            maxX={position.maxX}
+            minY={position.minY}
+            maxY={position.maxY}
+          />
         </TShirtContainer>
 
         <TopButtonsContainer>
@@ -226,36 +331,64 @@ export default function Design({ navigation }) {
       <Bottom>
         <BottomButton
           onPress={() => {
-            setData(images);
-            setVisible(true);
+            // setData(images);
+            // setVisible(true);
+            if (editMode) setEditMode(false);
+            else handleChoosePhoto();
           }}
         >
-          <Image source={iconImage} resizeMode="contain" />
-          <IconLabel>Imagem</IconLabel>
-        </BottomButton>
+          <Icon name={galleryIcon} size={40} color="#FFF" />
 
-        <BottomButton onPress={() => setVisible6(true)}>
-          <Image source={iconColor} resizeMode="contain" />
-          <IconLabel>Cores</IconLabel>
-        </BottomButton>
-
-        <BottomButton
-          onPress={() => {
-            setData(stickers);
-            setVisible(true);
-          }}
-        >
-          <Image source={iconStickers} resizeMode="contain" />
-          <IconLabel>Stickers</IconLabel>
+          <IconLabel>{editMode ? 'Cancelar' : 'Imagem'}</IconLabel>
         </BottomButton>
 
         <BottomButton
           onPress={() => {
-            setVisible3(true);
+            if (editMode) {
+              console.tron.log('action camiseta branca');
+              setImage(baseImg.uri);
+              setEditMode(false);
+            } else setVisible6(true);
           }}
         >
-          <Image source={iconText} resizeMode="contain" />
-          <IconLabel>Textos</IconLabel>
+          <Icon name={colorsIcon} size={40} color="#FFF" />
+          <IconLabel>{editMode ? 'Desfazer' : 'Cores'}</IconLabel>
+        </BottomButton>
+
+        <BottomButton
+          onPress={() => {
+            if (editMode) onCapture('next');
+            else {
+              setEditMode(true);
+            }
+          }}
+        >
+          <Icon name={editIcon} size={40} color="#FFF" />
+
+          <IconLabel>{editMode ? 'Avançar' : 'Editar'}</IconLabel>
+        </BottomButton>
+        <BottomButton
+          onPress={() => {
+            if (editMode) onCapture('save');
+            else {
+              setData(stickers);
+              setVisible(true);
+            }
+          }}
+        >
+          <Icon name={stickersIcon} size={40} color="#FFF" />
+
+          <IconLabel>{editMode ? 'Salvar' : 'Stickers'}</IconLabel>
+        </BottomButton>
+
+        <BottomButton
+          onPress={() => {
+            if (editMode) console.tron.log('show slider');
+            else setVisible3(true);
+          }}
+        >
+          <Icon name={textIcon} size={40} color="#FFF" />
+          <IconLabel>{editMode ? 'Tamanho' : 'Textos'}</IconLabel>
         </BottomButton>
       </Bottom>
       <Modal
@@ -267,13 +400,12 @@ export default function Design({ navigation }) {
           data={data}
           side={shirtSide}
           handle={(value) => {
-            console.tron.log(value);
             setImage(value);
           }}
           close={() => setVisible(false)}
           done={() => {
             setVisible(false);
-            setVisible2(true);
+            setEditMode(true);
           }}
         />
       </Modal>

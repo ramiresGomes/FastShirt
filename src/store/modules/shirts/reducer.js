@@ -50,8 +50,28 @@ export default function shirts(state = INITIAL_STATE, action) {
         break;
       }
 
-      case '@shirts/update_front': {
+      case '@shirts/update_tshirt_front': {
         draft.tshirt.front = action.payload.uri;
+        break;
+      }
+      case '@shirts/update_tshirt_back': {
+        draft.tshirt.back = action.payload.uri;
+        break;
+      }
+      case '@shirts/update_babylook_front': {
+        draft.bshirt.front = action.payload.uri;
+        break;
+      }
+      case '@shirts/update_babylook_back': {
+        draft.bshirt.back = action.payload.uri;
+        break;
+      }
+      case '@shirts/update_hoodie_front': {
+        draft.hoodie.front = action.payload.uri;
+        break;
+      }
+      case '@shirts/update_hoodie_back': {
+        draft.hoodie.back = action.payload.uri;
         break;
       }
       // essas 6 actions se tornam uma só

@@ -7,7 +7,7 @@ import Toast from 'react-native-tiny-toast';
 
 import { captureRef } from 'react-native-view-shot';
 
-import { View, Image } from 'react-native';
+import { Alert, View, Image } from 'react-native';
 
 import { Actions, ContainerActions, ESlider as Slider } from './styles';
 
