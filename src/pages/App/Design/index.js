@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import Draggable from 'react-native-draggable';
+// import Draggable from 'react-native-draggable';
 import CameraRoll from '@react-native-community/cameraroll';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { captureRef } from 'react-native-view-shot';
@@ -10,6 +10,10 @@ import { Image, Modal as CustomModal, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+
+import ImageResizer from 'react-native-image-resizer';
+import Draggable from './PickText/CustomDraggable';
+
 import Header from '~/components/Header';
 import Modal from '~/components/Modal';
 import CustomList from '~/components/List';
@@ -42,12 +46,11 @@ import {
 } from './styles';
 
 import api from '~/services/api';
+import apt from '~/services/apt';
 
 Icon.loadFont();
 
 export default function Design({ navigation }) {
-  console.tron.log('actual render');
-
   const customT = useSelector((state) => state.shirts.tshirt);
   const customB = useSelector((state) => state.shirts.bshirt);
   const customH = useSelector((state) => state.shirts.hoodie);
@@ -62,6 +65,7 @@ export default function Design({ navigation }) {
   const boomt = useSelector((state) => state.shirts.boomt);
 
   const captureViewRef = useRef();
+  const imgRef = useRef();
   const dispatch = useDispatch();
 
   const baseImg = resolveAssetSource(base);
@@ -105,7 +109,9 @@ export default function Design({ navigation }) {
   const [hBack, setHBack] = useState(customH.back);
 
   const [tShirtImage, setTShirtImage] = useState(tFront);
-  const [image, setImage] = useState(baseImg.uri); // sticker
+  const [image, setImage] = useState(baseImg.uri);
+
+  const [photo, setPhoto] = useState(baseImg.uri);
 
   useEffect(() => {
     async function loadImages() {
@@ -120,12 +126,15 @@ export default function Design({ navigation }) {
     }
 
     loadImages();
-
+    // muda pra 'A', ficando 'Authorization'
+    apt.defaults.headers.authorization =
+      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTg2OTcyNzU1LCJleHAiOjE1ODc1Nzc1NTV9.089AmZc6tMLSzkkJwisOS2j7f_7KIgSjG-xI9QGfG9U';
     // write "batata doce" on asyncstorage
     // resgata em outro componente -- redux pra que né?
     // se der certo com texto, tenta com um arquivo criado pelo RNFS ou RNFetchBlob
     // com o passo acima, tenta uma imagem. passe o URI no encoding
     // posso usar o mesmo container de buttons e colocar o 'limpar camiseta', 'salvar', 'avançar'
+    console.tron.log(apt.defaults.headers.authorization);
   }, []);
 
   useEffect(() => {
@@ -199,6 +208,61 @@ export default function Design({ navigation }) {
     }
   }, [editMode]);
 
+  async function handleChange(photouri) {
+    const upload = new FormData();
+    const picture = new FormData();
+    console.tron.log('deve enviar');
+    // upload.append('file', photo);
+    console.tron.log(`photouri: ${photouri}`);
+    console.tron.log(`image: ${photo}`);
+
+    // usa o RNFS pra gerar uma imagem local usando essa uri
+
+    upload.append('file', {
+      uri: photouri, // here goes the uri
+      type: 'image/jpeg', // trocar pra png
+      name: 'finalprint.jpeg',
+    });
+
+    picture.append('file', {
+      uri: photo, // here goes the uri
+      type: 'image/png', // trocar pra png
+      name: 'photo.png',
+    });
+
+    const response = await apt.post('files', upload); // envia pra api
+    // const respons = await apt.post('files', picture); // envia pra api
+
+    const { id, url } = response.data;
+    console.tron.log(`id: ${id} e url: ${url}`);
+    setImage(baseImg.uri);
+    console.tron.log(response.data);
+    console.tron.log(response.data);
+    setEditMode(false);
+
+    // setFile(id); -- id da imagem retornado pelo banco
+    // setPreview(url); -- seria o setImage -- com a nova uri
+  }
+
+  async function smatch(photouri) {
+    const upload = new FormData();
+
+    upload.append('file', {
+      uri: photouri, // here goes the uri
+      type: 'image/png', // trocar pra png
+      name: 'only_logo.png',
+    });
+
+    const response = await apt.post('files', upload); // envia pra api
+
+    const { id, url } = response.data;
+    console.tron.log('actual upload: ' + response.data);
+
+    console.tron.log(`id img: ${id} e url img: ${url}`);
+
+    setImage(baseImg.uri);
+    setEditMode(false);
+  }
   function handleChoosePhoto() {
     const options = {
       title: 'Selecionar imagem',
@@ -216,44 +280,33 @@ export default function Design({ navigation }) {
       } else {
         const source = { uri: `data:image/jpeg;base64,${response.data}` };
         setImage(source.uri);
+        setPhoto(source.uri);
+        // setPhoto(response.data);
         setEditMode(true);
       }
     });
   }
 
-  function onDone(uri, action) {
-    if (action === 'save') {
-      Promise.all([
-        CameraRoll.saveToCameraRoll(uri, 'photo')
-          .then((success) => {
-            // Alert.alert('A imagem foi salva na galeria.');
-            console.tron.log('Save button');
-          })
-          .catch((err) => {
-            // Alert.alert('Ocorreu um erro ao salvar o modelo.');
-            console.tron.log('Erro no salvamento');
-          }),
-      ]);
-    } else {
-      dispatch({
-        type: `@shirts/update_${shirtType}_${shirtSide}`,
-        payload: { uri },
-      });
-    }
-    setEditMode(false);
-  }
   function onCapture(action) {
     captureRef(captureViewRef, {
       format: 'jpg',
       quality: 0.9,
     }).then((uri) => {
       console.tron.log(`action: ${action}`);
-      onDone(uri, action);
+      handleChange(uri);
     });
   }
 
-  console.tron.log(`actual full shirt: ${tShirtImage}`);
-  console.tron.log(`editMode: ${editMode}`);
+  function cap() {
+    captureRef(imgRef, {
+      format: 'png',
+      quality: 0.9,
+    }).then((uri) => {
+      console.tron.log(`LOOOOOOOOOOOOOOOOOOOOOOOL`);
+      smatch(uri);
+    });
+  }
+
   return (
     <>
       <Header navigation={navigation} title="Design" />
@@ -262,6 +315,7 @@ export default function Design({ navigation }) {
         <TShirtContainer ref={captureViewRef}>
           <TShirtImage source={{ uri: tShirtImage }} resizeMode="contain" />
           <Draggable
+            ref={imgRef}
             disabled={!editMode}
             imageSource={{ uri: image }}
             renderSize={size}
@@ -275,6 +329,13 @@ export default function Design({ navigation }) {
             maxX={position.maxX}
             minY={position.minY}
             maxY={position.maxY}
+            onDrag={() => {}}
+            onShortPressRelease={() => {}}
+            onDragRelease={() => {}}
+            onLongPress={() => {}}
+            onPressIn={() => {}}
+            onPressOut={() => {}}
+            onRelease={() => {}}
           />
         </TShirtContainer>
 
@@ -357,8 +418,10 @@ export default function Design({ navigation }) {
 
         <BottomButton
           onPress={() => {
-            if (editMode) onCapture('next');
-            else {
+            if (editMode) {
+              onCapture('next');
+              cap();
+            } else {
               setEditMode(true);
             }
           }}
@@ -369,8 +432,9 @@ export default function Design({ navigation }) {
         </BottomButton>
         <BottomButton
           onPress={() => {
-            if (editMode) onCapture('save');
-            else {
+            if (editMode) {
+              onCapture('save');
+            } else {
               setData(stickers);
               setVisible(true);
             }

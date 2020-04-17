@@ -4,7 +4,7 @@
  */
 /* eslint-disable */
 
-import React from 'react';
+import React, { forwardRef } from 'react';
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ function clamp(number, min, max) {
   return Math.max(min, Math.min(number, max));
 }
 
-export default function Draggable(props) {
+function Draggable(props, ref) {
   const {
     font,
     renderText,
@@ -219,6 +219,7 @@ export default function Draggable(props) {
     } else if (imageSource) {
       return (
         <Image
+          ref={ref}
           style={{ width: renderSize, height: renderSize }}
           source={imageSource}
         />
@@ -377,3 +378,5 @@ const styles = StyleSheet.create({
     borderWidth: 4,
   },
 });
+
+export default forwardRef(Draggable);
