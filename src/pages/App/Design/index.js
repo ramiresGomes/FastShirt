@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
-import ImageResizer from 'react-native-image-resizer';
 import Draggable from './PickText/CustomDraggable';
 
 import Header from '~/components/Header';
@@ -21,7 +20,6 @@ import Carousel from '~/components/Carousel';
 import FontPicker from '~/components/FontPicker';
 
 import PickImage from './PickImage';
-import PickText from './PickText';
 
 import base from '~/assets/base.png';
 
@@ -29,6 +27,7 @@ import {
   Actions,
   ContainerActions,
   ESlider as Slider,
+  NoSlider,
   Container,
   Bottom,
   BottomButton,
@@ -76,6 +75,8 @@ export default function Design({ navigation }) {
   const [font, setFont] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [size, setSize] = useState(120); // slider de size
+  const [textSize, setTextSize] = useState(10); // slider de size
+  const [slider, setSlider] = useState(1); // slider de size
 
   const [position, setPosition] = useState({
     minX: 0,
@@ -126,14 +127,9 @@ export default function Design({ navigation }) {
     }
 
     loadImages();
-    // muda pra 'A', ficando 'Authorization'
     apt.defaults.headers.authorization =
       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTg2OTcyNzU1LCJleHAiOjE1ODc1Nzc1NTV9.089AmZc6tMLSzkkJwisOS2j7f_7KIgSjG-xI9QGfG9U';
-    // write "batata doce" on asyncstorage
-    // resgata em outro componente -- redux pra que né?
-    // se der certo com texto, tenta com um arquivo criado pelo RNFS ou RNFetchBlob
-    // com o passo acima, tenta uma imagem. passe o URI no encoding
-    // posso usar o mesmo container de buttons e colocar o 'limpar camiseta', 'salvar', 'avançar'
+
     console.tron.log(apt.defaults.headers.authorization);
   }, []);
 
@@ -256,7 +252,7 @@ export default function Design({ navigation }) {
     const response = await apt.post('files', upload); // envia pra api
 
     const { id, url } = response.data;
-    console.tron.log('actual upload: ' + response.data);
+    console.tron.log(`actual upload: ${response.data}`);
 
     console.tron.log(`id img: ${id} e url img: ${url}`);
 
@@ -281,7 +277,7 @@ export default function Design({ navigation }) {
         const source = { uri: `data:image/jpeg;base64,${response.data}` };
         setImage(source.uri);
         setPhoto(source.uri);
-        // setPhoto(response.data);
+
         setEditMode(true);
       }
     });
@@ -303,10 +299,11 @@ export default function Design({ navigation }) {
       quality: 0.9,
     }).then((uri) => {
       console.tron.log(`LOOOOOOOOOOOOOOOOOOOOOOOL`);
+      console.tron.log(uri);
       smatch(uri);
     });
   }
-
+  console.tron.log(textSize);
   return (
     <>
       <Header navigation={navigation} title="Design" />
@@ -319,12 +316,10 @@ export default function Design({ navigation }) {
             disabled={!editMode}
             imageSource={{ uri: image }}
             renderSize={size}
-            onDragRelease={(event, gestureState) =>
-              console.tron.log(gestureState)
-            }
             onLongPress={() => setEditMode(true)}
             x={position.minX}
             y={position.minY}
+            z={0}
             minX={position.minX}
             maxX={position.maxX}
             minY={position.minY}
@@ -332,7 +327,28 @@ export default function Design({ navigation }) {
             onDrag={() => {}}
             onShortPressRelease={() => {}}
             onDragRelease={() => {}}
-            onLongPress={() => {}}
+            onPressIn={() => {}}
+            onPressOut={() => {}}
+            onRelease={() => {}}
+          />
+          <Draggable
+            disabled={!editMode}
+            renderColor="steelblue"
+            renderText={text}
+            textSize={9 * slider}
+            renderHeight={(textSize / 10.016) * slider}
+            renderSize={(textSize / 1.4) * slider}
+            onLongPress={() => setEditMode(true)}
+            x={position.minX + 10}
+            y={position.minY + 30}
+            z={1}
+            minX={position.minX - 3}
+            maxX={position.maxX}
+            minY={position.minY}
+            maxY={position.maxY}
+            onDrag={() => {}}
+            onShortPressRelease={() => {}}
+            onDragRelease={() => {}}
             onPressIn={() => {}}
             onPressOut={() => {}}
             onRelease={() => {}}
@@ -367,6 +383,16 @@ export default function Design({ navigation }) {
             </ActionButtonText>
           </ActionButton>
         </TopButtonsContainer>
+        {editMode ? (
+          <Slider
+            value={slider}
+            minimumValue={1}
+            maximumValue={10}
+            onValueChange={(value) => setSlider(value)}
+          />
+        ) : (
+          <NoSlider />
+        )}
 
         <BottomButtonsContainer>
           <ActionButton
@@ -512,12 +538,19 @@ export default function Design({ navigation }) {
             <Input
               autoFocus
               value={text}
+              onLayout={(event) => {
+                console.tron.log('event properties: ', event);
+                console.tron.log('width: ', event.nativeEvent.layout.width);
+                setTextSize(event.nativeEvent.layout.width);
+              }}
               onChangeText={setText}
-              maxLength={15}
+              // captura e joga no text
+              // tipo de font numa lista scrollavel e cor
+              maxLength={14}
               returnKeyType="send"
               onSubmitEditing={() => {
+                setText(text);
                 setVisible3(false);
-                setVisible4(true);
               }}
               underlineColorAndroid="transparent"
             />
@@ -535,7 +568,8 @@ export default function Design({ navigation }) {
               <PickTextButton
                 onPress={() => {
                   setVisible3(false);
-                  setVisible4(true);
+                  setText(text);
+                  // setVisible4(true);
                 }}
               >
                 <PickTextButtonText
@@ -558,7 +592,7 @@ export default function Design({ navigation }) {
           </View>
         </CustomView>
       </CustomModal>
-      <Modal
+      {/* <Modal //modal de fonte
         visible={visible4}
         disabledContent={true}
         onRequestClose={() => setVisible4(false)}
@@ -572,7 +606,7 @@ export default function Design({ navigation }) {
           }}
         />
       </Modal>
-      <Modal
+      <Modal //modal de camiseta
         visible={visible5}
         disabled={true}
         onRequestClose={() => setVisible5(false)}
@@ -585,7 +619,7 @@ export default function Design({ navigation }) {
           side={shirtSide}
           done={() => setVisible5(false)}
         />
-      </Modal>
+      </Modal> */}
       <Modal
         visible={visible6}
         disabled={false}

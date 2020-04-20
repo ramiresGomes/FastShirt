@@ -81,11 +81,12 @@ export const BottomButtonsContainer = styled.View`
 
 export const Input = styled.TextInput`
   background-color: 'rgba(0, 0, 0, 0.1)';
+  flex: 1;
   border-width: 1px;
   border-color: 'rgba(0, 0, 0, 0.2)';
   border-radius: 5px;
   height: 44px;
-  padding: 2px 10px 2px 10px;
+  padding: 2px 2px 2px 2px;
   margin: 10px 0 10px 0;
   color: #fff;
 `;
@@ -118,6 +119,13 @@ export const ESlider = styled(Slider).attrs({
   minimumTrackTintColor: '#FFFFFF',
   maximumTrackTintColor: '#000000',
 })`
+  width: 100%;
+  height: 45px;
+  margin-top: 5px;
+`;
+
+export const NoSlider = styled.View`
+  background-color: transparent;
   width: 100%;
   height: 45px;
   margin-top: 5px;
