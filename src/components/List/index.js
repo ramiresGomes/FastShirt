@@ -23,10 +23,11 @@ function formatData(data, numColumns) {
 
 const numColumns = 3;
 
-export default function CustomList({ data, close, side, handle, done }) {
+export default function CustomList({ data, close, side, handle, done, setId }) {
   const [price, setPrice] = useState('');
   const [active, setActive] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [id, stId] = useState(null);
 
   return (
     <View>
@@ -54,6 +55,7 @@ export default function CustomList({ data, close, side, handle, done }) {
               setPrice(item.price);
               setActive(true);
               setSelected(item);
+              stId(item.id);
             }}
           >
             <Image
@@ -77,6 +79,7 @@ export default function CustomList({ data, close, side, handle, done }) {
           disabled={!active}
           onPress={() => {
             handle(selected.url);
+            setId(id);
             done();
           }}
           style={{ backgroundColor: '#038311' }}

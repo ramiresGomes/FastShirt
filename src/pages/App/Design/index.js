@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 // import Draggable from 'react-native-draggable';
 import CameraRoll from '@react-native-community/cameraroll';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
+import { ScrollView } from 'react-native-gesture-handler';
 import Draggable from './PickText/CustomDraggable';
 
 import Header from '~/components/Header';
@@ -21,11 +22,15 @@ import FontPicker from '~/components/FontPicker';
 
 import PickImage from './PickImage';
 
+import photoTeste from '~/assets/fu.jpeg';
+
 import base from '~/assets/base.png';
 
 import {
   Actions,
   ContainerActions,
+  Color,
+  ColorList,
   ESlider as Slider,
   NoSlider,
   Container,
@@ -50,18 +55,18 @@ import apt from '~/services/apt';
 Icon.loadFont();
 
 export default function Design({ navigation }) {
-  const customT = useSelector((state) => state.shirts.tshirt);
-  const customB = useSelector((state) => state.shirts.bshirt);
-  const customH = useSelector((state) => state.shirts.hoodie);
+  const customT = useSelector(state => state.shirts.tshirt);
+  const customB = useSelector(state => state.shirts.bshirt);
+  const customH = useSelector(state => state.shirts.hoodie);
 
-  const tFronts = useSelector((state) => state.shirts.tFronts);
-  const tBacks = useSelector((state) => state.shirts.tBacks);
-  const bFronts = useSelector((state) => state.shirts.bFronts);
-  const bBacks = useSelector((state) => state.shirts.bBacks);
-  const hFronts = useSelector((state) => state.shirts.hFronts);
-  const hBacks = useSelector((state) => state.shirts.hBacks);
+  const tFronts = useSelector(state => state.shirts.tFronts);
+  const tBacks = useSelector(state => state.shirts.tBacks);
+  const bFronts = useSelector(state => state.shirts.bFronts);
+  const bBacks = useSelector(state => state.shirts.bBacks);
+  const hFronts = useSelector(state => state.shirts.hFronts);
+  const hBacks = useSelector(state => state.shirts.hBacks);
 
-  const boomt = useSelector((state) => state.shirts.boomt);
+  const boomt = useSelector(state => state.shirts.boomt);
 
   const captureViewRef = useRef();
   const imgRef = useRef();
@@ -75,8 +80,12 @@ export default function Design({ navigation }) {
   const [font, setFont] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [size, setSize] = useState(120); // slider de size
+  const [sizeSticker, setSizeSticker] = useState(120); // slider de size
+  const [maxSize, setMaxSize] = useState(1); // slider de size
   const [textSize, setTextSize] = useState(10); // slider de size
   const [slider, setSlider] = useState(1); // slider de size
+  const [disableslider, setDSlider] = useState(false); // slider de size
+  const [color, setColor] = useState('#fff'); // slider de size
 
   const [position, setPosition] = useState({
     minX: 0,
@@ -111,6 +120,8 @@ export default function Design({ navigation }) {
 
   const [tShirtImage, setTShirtImage] = useState(tFront);
   const [image, setImage] = useState(baseImg.uri);
+  const [sticker, setSticker] = useState(baseImg.uri);
+  const [stickerID, setStickerID] = useState(1);
 
   const [photo, setPhoto] = useState(baseImg.uri);
 
@@ -125,7 +136,8 @@ export default function Design({ navigation }) {
       setImages(imgs.data);
       setStickers(stk.data);
     }
-
+    api.defaults.headers.authorization =
+      'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY2x1YmVkb2NhdmFsby5zaG9wXC9hcGlcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNTg3NDI5NzA0LCJuYmYiOjE1ODc0Mjk3MDQsImp0aSI6IlBLaXNkOHZDc3MzMkxoNjQiLCJzdWIiOjQ3MSwicHJ2IjoiNDZlZGQxMDkyOTRmYzBkOGMwMTkyZjNjM2YxODVjNDhiMDM2ZjNhNyJ9.ftQekN4_JzyquK8iShLutSwiWuMaV-okrkc4qhmcG7o';
     loadImages();
     apt.defaults.headers.authorization =
       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTg2OTcyNzU1LCJleHAiOjE1ODc1Nzc1NTV9.089AmZc6tMLSzkkJwisOS2j7f_7KIgSjG-xI9QGfG9U';
@@ -147,6 +159,22 @@ export default function Design({ navigation }) {
     setHFront(customH.front);
     setHBack(customH.back);
   }, [customH]);
+
+  const finalSize = useMemo(() => {
+    return (textSize / 1.5) * slider;
+  }, [textSize, slider]);
+
+  useEffect(() => {
+    if (finalSize > 140) {
+      setDSlider(true);
+    } else setDSlider(false);
+  }, [finalSize, textSize, slider]);
+
+  useEffect(() => {
+    setMaxSize(154 / textSize);
+    console.tron.log(`max size: ${maxSize}`);
+    setSlider(1);
+  }, [textSize]);
 
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
@@ -189,6 +217,10 @@ export default function Design({ navigation }) {
   }, [shirtType, shirtSide]);
 
   useEffect(() => {
+    setText(`${text} `);
+  }, [color]);
+
+  useEffect(() => {
     if (editMode) {
       setGalleryIcon('clear');
       setColorsIcon('delete');
@@ -204,61 +236,109 @@ export default function Design({ navigation }) {
     }
   }, [editMode]);
 
-  async function handleChange(photouri) {
+  async function handleChange(photouri, idimg) {
     const upload = new FormData();
-    const picture = new FormData();
+    let side = 'lado_principal';
+    let otherSide = 'outro_lado';
+
     console.tron.log('deve enviar');
-    // upload.append('file', photo);
     console.tron.log(`photouri: ${photouri}`);
     console.tron.log(`image: ${photo}`);
+    console.tron.log(`id image: ${idimg}`);
+    console.tron.log(`id sticker: ${stickerID}`);
 
-    // usa o RNFS pra gerar uma imagem local usando essa uri
+    if (shirtSide === 'front') {
+      side = 'front_printscreen';
+      otherSide = 'back_printscreen';
+    } else {
+      side = 'back_printscreen';
+      otherSide = 'front_printscreen';
+    }
 
-    upload.append('file', {
+    upload.append(`${side}`, {
       uri: photouri, // here goes the uri
       type: 'image/jpeg', // trocar pra png
-      name: 'finalprint.jpeg',
+      name: `${photoTeste}.jpeg`,
     });
+    console.tron.log('tudo certo 1');
 
-    picture.append('file', {
-      uri: photo, // here goes the uri
-      type: 'image/png', // trocar pra png
-      name: 'photo.png',
-    });
+    upload.append(`${otherSide}`, null);
 
-    const response = await apt.post('files', upload); // envia pra api
-    // const respons = await apt.post('files', picture); // envia pra api
+    console.tron.log('tudo certo 2');
 
-    const { id, url } = response.data;
-    console.tron.log(`id: ${id} e url: ${url}`);
+    upload.append('front_printable_image_id', idimg);
+    console.tron.log('tudo certo 3');
+
+    upload.append('back_printable_image_id', idimg);
+    console.tron.log('tudo certo 4');
+
+    upload.append('text', text);
+    upload.append('font_family', 'Oswald');
+
+    const response = await api.post('design-shirt/purchase', upload);
+
+    const {
+      id,
+      front_printscreen,
+      back_printscreen,
+      text: txt,
+      font_family,
+    } = response.data;
+    console.tron.log(
+      `id: ${id}, front: ${front_printscreen}, back: ${back_printscreen}, text: ${txt}, font ${font_family}`
+    );
     setImage(baseImg.uri);
-    console.tron.log(response.data);
-    console.tron.log(response.data);
+    setSticker(baseImg.uri);
+
+    setText('');
+    console.tron.log(`response: ${response.data}`);
     setEditMode(false);
 
     // setFile(id); -- id da imagem retornado pelo banco
     // setPreview(url); -- seria o setImage -- com a nova uri
   }
 
-  async function smatch(photouri) {
+  function onCapture(id) {
+    captureRef(captureViewRef, {
+      format: 'jpg',
+      quality: 1,
+    }).then(uri => {
+      handleChange(uri, id);
+    });
+  }
+
+  async function uploadPrintable(photouri) {
     const upload = new FormData();
 
-    upload.append('file', {
+    upload.append('name', `${photouri}.jpeg`);
+    upload.append('image', {
       uri: photouri, // here goes the uri
-      type: 'image/png', // trocar pra png
-      name: 'only_logo.png',
+      type: 'image/jpeg', // trocar pra png
+      name: `${photouri}.jpeg`,
     });
 
-    const response = await apt.post('files', upload); // envia pra api
+    const response = await api.post('design-shirt/printables/sticker', upload); // envia pra api
 
     const { id, url } = response.data;
     console.tron.log(`actual upload: ${response.data}`);
 
-    console.tron.log(`id img: ${id} e url img: ${url}`);
+    console.tron.log(`id img printable: ${id} e url img: ${url}`);
 
-    setImage(baseImg.uri);
+    onCapture(id);
     setEditMode(false);
   }
+
+  function capturePrintable() {
+    captureRef(imgRef, {
+      format: 'png',
+      quality: 1,
+    }).then(uri => {
+      console.tron.log(`LOOOOOOOOOOOOOOOOOOOOOOOL`);
+      console.tron.log(`printable: ${uri}`);
+      uploadPrintable(uri);
+    });
+  }
+
   function handleChoosePhoto() {
     const options = {
       title: 'Selecionar imagem',
@@ -268,7 +348,7 @@ export default function Design({ navigation }) {
       mediaType: 'photo',
     };
 
-    ImagePicker.showImagePicker(options, (response) => {
+    ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
         console.tron.log('User cancelled image picker');
       } else if (response.error) {
@@ -283,27 +363,6 @@ export default function Design({ navigation }) {
     });
   }
 
-  function onCapture(action) {
-    captureRef(captureViewRef, {
-      format: 'jpg',
-      quality: 0.9,
-    }).then((uri) => {
-      console.tron.log(`action: ${action}`);
-      handleChange(uri);
-    });
-  }
-
-  function cap() {
-    captureRef(imgRef, {
-      format: 'png',
-      quality: 0.9,
-    }).then((uri) => {
-      console.tron.log(`LOOOOOOOOOOOOOOOOOOOOOOOL`);
-      console.tron.log(uri);
-      smatch(uri);
-    });
-  }
-  console.tron.log(textSize);
   return (
     <>
       <Header navigation={navigation} title="Design" />
@@ -333,15 +392,34 @@ export default function Design({ navigation }) {
           />
           <Draggable
             disabled={!editMode}
-            renderColor="steelblue"
+            imageSource={{ uri: sticker }}
+            renderSize={sizeSticker}
+            onLongPress={() => setEditMode(true)}
+            x={position.minX}
+            y={position.minY}
+            z={1}
+            minX={position.minX}
+            maxX={position.maxX}
+            minY={position.minY}
+            maxY={position.maxY}
+            onDrag={() => {}}
+            onShortPressRelease={() => {}}
+            onDragRelease={() => {}}
+            onPressIn={() => {}}
+            onPressOut={() => {}}
+            onRelease={() => {}}
+          />
+          <Draggable
+            disabled={!editMode}
             renderText={text}
             textSize={9 * slider}
             renderHeight={(textSize / 10.016) * slider}
-            renderSize={(textSize / 1.4) * slider}
+            renderSize={finalSize}
             onLongPress={() => setEditMode(true)}
+            textColor={color}
             x={position.minX + 10}
             y={position.minY + 30}
-            z={1}
+            z={2}
             minX={position.minX - 3}
             maxX={position.maxX}
             minY={position.minY}
@@ -385,10 +463,11 @@ export default function Design({ navigation }) {
         </TopButtonsContainer>
         {editMode ? (
           <Slider
+            disabled={disableslider}
             value={slider}
             minimumValue={1}
-            maximumValue={10}
-            onValueChange={(value) => setSlider(value)}
+            maximumValue={maxSize}
+            onValueChange={value => setSlider(value)}
           />
         ) : (
           <NoSlider />
@@ -445,8 +524,7 @@ export default function Design({ navigation }) {
         <BottomButton
           onPress={() => {
             if (editMode) {
-              onCapture('next');
-              cap();
+              capturePrintable();
             } else {
               setEditMode(true);
             }
@@ -473,8 +551,10 @@ export default function Design({ navigation }) {
 
         <BottomButton
           onPress={() => {
-            if (editMode) console.tron.log('show slider');
-            else setVisible3(true);
+            if (editMode) {
+              console.tron.log('show slider');
+              console.tron.log('alternar o valor dependendo do selecionado');
+            } else setVisible3(true);
           }}
         >
           <Icon name={textIcon} size={40} color="#FFF" />
@@ -484,13 +564,19 @@ export default function Design({ navigation }) {
       <Modal
         visible={visible}
         disabled={true}
-        onRequestClose={() => setVisible(false)}
+        onRequestClose={() => {
+          setVisible(false);
+        }}
       >
         <CustomList
           data={data}
           side={shirtSide}
-          handle={(value) => {
-            setImage(value);
+          handle={(value, id) => {
+            setSticker(value);
+            setStickerID(id);
+          }}
+          setId={value => {
+            setStickerID(value);
           }}
           close={() => setVisible(false)}
           done={() => {
@@ -510,7 +596,7 @@ export default function Design({ navigation }) {
           shirt={tShirtImage}
           type={shirtType}
           side={shirtSide}
-          done={(value) => {
+          done={value => {
             console.tron.log(`value: ${value}`);
             setTShirtImage(value);
             setVisible2(false);
@@ -529,7 +615,7 @@ export default function Design({ navigation }) {
             style={{
               backgroundColor: '#333',
               width: 250,
-              height: 120,
+              height: 180,
               borderRadius: 5,
               alignSelf: 'center',
               alignItems: 'center',
@@ -538,15 +624,13 @@ export default function Design({ navigation }) {
             <Input
               autoFocus
               value={text}
-              onLayout={(event) => {
+              onLayout={event => {
                 console.tron.log('event properties: ', event);
                 console.tron.log('width: ', event.nativeEvent.layout.width);
                 setTextSize(event.nativeEvent.layout.width);
               }}
               onChangeText={setText}
-              // captura e joga no text
-              // tipo de font numa lista scrollavel e cor
-              maxLength={14}
+              maxLength={12}
               returnKeyType="send"
               onSubmitEditing={() => {
                 setText(text);
@@ -554,7 +638,92 @@ export default function Design({ navigation }) {
               }}
               underlineColorAndroid="transparent"
             />
+            <ScrollView
+              style={{
+                height: 35,
+                backgroundColor: '#222',
+              }}
+              horizontal={true}
+            >
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#ff0000"
+                onPress={() => {
+                  setColor('#ff0000');
+                }}
+              />
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#000ff0"
+                onPress={() => {
+                  setColor('#000ff0');
+                }}
+              />
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#f0f00f"
+                onPress={() => {
+                  setColor('#f0f00f');
+                }}
+              />
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#7159c1"
+                onPress={() => {
+                  setColor('#7159c1');
+                }}
+              />
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#00ff00"
+                onPress={() => {
+                  setColor('#00ff00');
+                }}
+              />
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#ff0000"
+                onPress={() => {
+                  setColor('#ff0000');
+                }}
+              />
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#ff00f0"
+                onPress={() => {
+                  setColor('#ff00f0');
+                }}
+              />
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#e6b32a"
+                onPress={() => {
+                  setColor('#e6b32a');
+                }}
+              />
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#fff"
+                onPress={() => {
+                  setColor('#fff');
+                }}
+              />
 
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#000"
+                onPress={() => {
+                  setColor('#000');
+                }}
+              />
+              <Color
+                hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
+                color="#f0f"
+                onPress={() => {
+                  setColor('#f0f');
+                }}
+              />
+            </ScrollView>
             <View
               style={{
                 marginTop: 5,
@@ -569,6 +738,7 @@ export default function Design({ navigation }) {
                 onPress={() => {
                   setVisible3(false);
                   setText(text);
+
                   // setVisible4(true);
                 }}
               >
@@ -592,34 +762,7 @@ export default function Design({ navigation }) {
           </View>
         </CustomView>
       </CustomModal>
-      {/* <Modal //modal de fonte
-        visible={visible4}
-        disabledContent={true}
-        onRequestClose={() => setVisible4(false)}
-      >
-        <FontPicker
-          setFont={(value) => setFont(value)}
-          example={text}
-          done={() => {
-            setVisible4(false);
-            setVisible5(true);
-          }}
-        />
-      </Modal>
-      <Modal //modal de camiseta
-        visible={visible5}
-        disabled={true}
-        onRequestClose={() => setVisible5(false)}
-      >
-        <PickText
-          font={font}
-          text={text}
-          shirt={tShirtImage}
-          type={shirtType}
-          side={shirtSide}
-          done={() => setVisible5(false)}
-        />
-      </Modal> */}
+
       <Modal
         visible={visible6}
         disabled={false}
@@ -628,7 +771,7 @@ export default function Design({ navigation }) {
       >
         <Carousel
           data={models}
-          done={(value) => {
+          done={value => {
             console.tron.log(`value image: ${value}`);
             setTShirtImage(value);
             setVisible6(false);

@@ -15,20 +15,6 @@ export default function ImageCarousel({ data, done }) {
   const hFronts = useSelector((state) => state.shirts.hFronts);
   const hBacks = useSelector((state) => state.shirts.hBacks);
 
-  // array1[index]
-  // array2[index]
-  // array3[index]
-  // [...]
-  // array6[index]
-  // -- todos terão a mesma cor
-  // deve capturar os uri, e disparar uma action que recebe esse array de uri
-  // customizar as actions. nao eh mais necessario atualizar cor apenas para um type e side de cada vez
-  // o reducer deve guardar as posicoes x e y de cada camiseta, assim como o uri
-  // entao, deve ser efetuado de imediato. atualiza a cor, mapeia o sticker em cima e renderiza a imagem
-  // para isso, talvez eu possa renderizar um modal em cima. só pra ter o componente view, onde a imagem eh criada.
-  // OU ENTAO, muda o componente image pra ter esse image (sticker) como conteudo.
-  // assim, ja permite o longPress (?????)
-
   return (
     <View
       style={{

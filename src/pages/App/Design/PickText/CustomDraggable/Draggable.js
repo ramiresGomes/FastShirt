@@ -206,6 +206,7 @@ function Draggable(props, ref) {
     isCircle,
     renderHeight,
     renderColor,
+    textColor,
     textSize,
     renderSize,
     x,

@@ -146,3 +146,12 @@ export const Actions = styled.TouchableOpacity`
   border-radius: 15px;
   margin: 10px;
 `;
+
+export const Color = styled.TouchableOpacity`
+  height: 25px;
+  width: 25px;
+  border-radius: 12.5px;
+  border-color: #e2e;
+  margin: 2px 5px 0 0;
+  background-color: ${(props) => props.color};
+`;

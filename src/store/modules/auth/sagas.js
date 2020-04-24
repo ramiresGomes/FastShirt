@@ -9,13 +9,15 @@ export function* signIn({ payload }) {
   const { email, password } = payload;
 
   try {
-    const response = yield call(api.post, 'login', { email, password });
+    const response = yield call(api.post, 'auth/login', { email, password });
 
-    const { token, user } = response.data;
+    const token = response.data;
+    console.tron.log(response.data);
+    console.tron.log(`token: ${token}`);
 
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
-    yield put(signInSuccess(token, user));
+    yield put(signInSuccess(token));
   } catch (error) {
     Toast.show('Houve um erro no login, verifique seus dados.');
     yield put(signFailure());
