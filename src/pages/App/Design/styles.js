@@ -54,8 +54,8 @@ export const TopButtonsContainer = styled.View`
 `;
 
 export const ActionButton = styled(TouchableOpacity)`
-  background: ${(props) => (props.active ? '#038841' : '#fff')};
-  border: 1px solid ${(props) => (props.active ? '#038841' : '#dcdcdc')};
+  background: ${props => (props.active ? '#038841' : '#fff')};
+  border: 1px solid ${props => (props.active ? '#038841' : '#dcdcdc')};
   border-radius: 4px;
   padding: 5px 15px;
   min-width: 100px;
@@ -65,8 +65,8 @@ export const ActionButton = styled(TouchableOpacity)`
 
 export const ActionButtonText = styled.Text`
   font-size: 16px;
-  color: ${(props) => (props.active ? '#fff' : '#000')};
-  font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
+  color: ${props => (props.active ? '#fff' : '#000')};
+  font-weight: ${props => (props.active ? 'bold' : 'normal')};
 `;
 
 export const BottomButtonsContainer = styled.View`
@@ -104,6 +104,18 @@ export const PickTextButton = styled.Text`
   margin-right: 5px;
   height: 35px;
   width: 70px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+`;
+
+export const FinishButton = styled.Text`
+  background-color: #038841;
+  padding: 5px;
+  border-radius: 4px;
+  margin-right: 5px;
+  height: 45px;
+  width: 170px;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -153,5 +165,5 @@ export const Color = styled.TouchableOpacity`
   border-radius: 12.5px;
   border-color: #e2e;
   margin: 2px 5px 0 0;
-  background-color: ${(props) => props.color};
+  background-color: ${props => props.color};
 `;

@@ -24,6 +24,7 @@ function clamp(number, min, max) {
 function Draggable(props, ref) {
   const {
     font,
+    selected,
     renderText,
     renderHeight,
     textColor,
@@ -77,7 +78,7 @@ function Draggable(props, ref) {
   }, [x, y]);
 
   const shouldStartDrag = React.useCallback(
-    (gs) => {
+    gs => {
       return !disabled && (Math.abs(gs.dx) > 2 || Math.abs(gs.dy) > 2);
     },
     [disabled]
@@ -157,7 +158,7 @@ function Draggable(props, ref) {
   React.useEffect(() => {
     const curPan = pan.current; // Using an instance to avoid losing the pointer before the cleanup
     if (!shouldReverse) {
-      curPan.addListener((c) => (offsetFromStart.current = c));
+      curPan.addListener(c => (offsetFromStart.current = c));
     }
     return () => {
       curPan.removeAllListeners();
@@ -221,7 +222,11 @@ function Draggable(props, ref) {
       return (
         <Image
           ref={ref}
-          style={{ width: renderSize, height: renderSize }}
+          style={{
+            width: renderSize,
+            height: renderSize,
+            ...(selected ? styles.imageSelected : styles.image),
+          }}
           source={imageSource}
         />
       );
@@ -251,13 +256,13 @@ function Draggable(props, ref) {
     }
   }, [children, imageSource, renderSize, renderHeight, renderText, textSize]);
 
-  const handleOnLayout = React.useCallback((event) => {
+  const handleOnLayout = React.useCallback(event => {
     const { height, width } = event.nativeEvent.layout;
     childSize.current = { x: width, y: height };
   }, []);
 
   const handlePressOut = React.useCallback(
-    (event) => {
+    event => {
       onPressOut(event);
       if (!isDragging.current) {
         onRelease(event, false);
@@ -315,6 +320,7 @@ function Draggable(props, ref) {
 
 Draggable.defaultProps = {
   font: 'Arial',
+  selected: false,
   renderText: '＋',
   textColor: '#fff',
   renderSize: 36,
@@ -338,6 +344,7 @@ Draggable.defaultProps = {
 Draggable.propTypes = {
   /**** props that should probably be removed in favor of "children" */
   renderText: PropTypes.string,
+  selected: PropTypes.bool,
   font: PropTypes.string,
   renderHeight: PropTypes.number,
   textColor: PropTypes.string,
@@ -377,6 +384,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderColor: '#fced0ecc',
     borderWidth: 4,
+  },
+  image: {
+    borderColor: 'transparent',
+    borderWidth: 0,
+    opacity: 1,
+  },
+  imageSelected: {
+    borderColor: '#ff0000',
+    borderWidth: 3,
+    opacity: 0.8,
   },
 });
 

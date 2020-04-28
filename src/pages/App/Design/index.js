@@ -1,13 +1,12 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
-// import Draggable from 'react-native-draggable';
 import CameraRoll from '@react-native-community/cameraroll';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { captureRef } from 'react-native-view-shot';
 
 import ImagePicker from 'react-native-image-picker';
 
-import { Image, Modal as CustomModal, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { Image, Modal as CustomModal, View, Text } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
@@ -30,12 +29,12 @@ import {
   Actions,
   ContainerActions,
   Color,
-  ColorList,
   ESlider as Slider,
   NoSlider,
   Container,
   Bottom,
   BottomButton,
+  FinishButton,
   IconLabel,
   TShirtContainer,
   TShirtImage,
@@ -68,9 +67,10 @@ export default function Design({ navigation }) {
 
   const boomt = useSelector(state => state.shirts.boomt);
 
+  const [main, setMain] = useState('');
+
   const captureViewRef = useRef();
   const imgRef = useRef();
-  const dispatch = useDispatch();
 
   const baseImg = resolveAssetSource(base);
 
@@ -79,13 +79,16 @@ export default function Design({ navigation }) {
   const [text, setText] = useState('');
   const [font, setFont] = useState('');
   const [disabled, setDisabled] = useState(false);
+
+  const [slider, setSlider] = useState(1); // slider de size
+  const [selected, setSelected] = useState('none'); // slider de size
+  const [disableslider, setDSlider] = useState(false); // slider de size
+  const [color, setColor] = useState('#fff'); // slider de size
+
   const [size, setSize] = useState(120); // slider de size
   const [sizeSticker, setSizeSticker] = useState(120); // slider de size
   const [maxSize, setMaxSize] = useState(1); // slider de size
-  const [textSize, setTextSize] = useState(10); // slider de size
-  const [slider, setSlider] = useState(1); // slider de size
-  const [disableslider, setDSlider] = useState(false); // slider de size
-  const [color, setColor] = useState('#fff'); // slider de size
+  const [textSize, setTextSize] = useState(10);
 
   const [position, setPosition] = useState({
     minX: 0,
@@ -136,13 +139,8 @@ export default function Design({ navigation }) {
       setImages(imgs.data);
       setStickers(stk.data);
     }
-    api.defaults.headers.authorization =
-      'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY2x1YmVkb2NhdmFsby5zaG9wXC9hcGlcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNTg3NDI5NzA0LCJuYmYiOjE1ODc0Mjk3MDQsImp0aSI6IlBLaXNkOHZDc3MzMkxoNjQiLCJzdWIiOjQ3MSwicHJ2IjoiNDZlZGQxMDkyOTRmYzBkOGMwMTkyZjNjM2YxODVjNDhiMDM2ZjNhNyJ9.ftQekN4_JzyquK8iShLutSwiWuMaV-okrkc4qhmcG7o';
-    loadImages();
-    apt.defaults.headers.authorization =
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTg2OTcyNzU1LCJleHAiOjE1ODc1Nzc1NTV9.089AmZc6tMLSzkkJwisOS2j7f_7KIgSjG-xI9QGfG9U';
 
-    console.tron.log(apt.defaults.headers.authorization);
+    loadImages();
   }, []);
 
   useEffect(() => {
@@ -219,6 +217,8 @@ export default function Design({ navigation }) {
   useEffect(() => {
     setText(`${text} `);
   }, [color]);
+
+  useEffect(() => {}, [selected]);
 
   useEffect(() => {
     if (editMode) {
@@ -303,6 +303,7 @@ export default function Design({ navigation }) {
       format: 'jpg',
       quality: 1,
     }).then(uri => {
+      setMain(uri);
       handleChange(uri, id);
     });
   }
@@ -363,6 +364,12 @@ export default function Design({ navigation }) {
     });
   }
 
+  function saveToGallery() {
+    CameraRoll.saveToCameraRoll(main, 'photo').then(() => {
+      setVisible4(false);
+    });
+  }
+
   return (
     <>
       <Header navigation={navigation} title="Design" />
@@ -372,10 +379,11 @@ export default function Design({ navigation }) {
           <TShirtImage source={{ uri: tShirtImage }} resizeMode="contain" />
           <Draggable
             ref={imgRef}
+            selected={selected === 'image'}
             disabled={!editMode}
             imageSource={{ uri: image }}
             renderSize={size}
-            onLongPress={() => setEditMode(true)}
+            onLongPress={() => setSelected('image')}
             x={position.minX}
             y={position.minY}
             z={0}
@@ -392,9 +400,10 @@ export default function Design({ navigation }) {
           />
           <Draggable
             disabled={!editMode}
+            selected={selected === 'sticker'}
             imageSource={{ uri: sticker }}
             renderSize={sizeSticker}
-            onLongPress={() => setEditMode(true)}
+            onLongPress={() => setSelected('sticker')}
             x={position.minX}
             y={position.minY}
             z={1}
@@ -465,9 +474,20 @@ export default function Design({ navigation }) {
           <Slider
             disabled={disableslider}
             value={slider}
-            minimumValue={1}
-            maximumValue={maxSize}
-            onValueChange={value => setSlider(value)}
+            minimumValue={40}
+            maximumValue={120}
+            onValueChange={value => {
+              switch (selected) {
+                case 'image':
+                  setSize(value);
+                  break;
+                case 'sticker':
+                  setSizeSticker(value);
+                  break;
+
+                default:
+              }
+            }}
           />
         ) : (
           <NoSlider />
@@ -762,6 +782,60 @@ export default function Design({ navigation }) {
           </View>
         </CustomView>
       </CustomModal>
+      <Modal
+        visible={visible4}
+        disabled={true}
+        disabledContent={true}
+        onRequestClose={() => setVisible4(false)}
+      >
+        <View
+          style={{
+            flexDirection: 'column',
+            alignItems: 'center',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#333',
+            borderRadius: 5,
+            width: 325,
+            height: 400,
+          }}
+        >
+          <Text style={{ alignSelf: 'center', fontSize: 22, color: '#fff' }}>
+            Sua camiseta está pronta! Obrigado por ter utilizado nossos
+            serviços.
+          </Text>
+          <Image
+            source={{ uri: main }}
+            style={{
+              borderRadius: 5,
+              height: 450,
+              width: 270,
+              marginLeft: 5,
+              marginRight: 5,
+              alignSelf: 'center',
+            }}
+            resizeMode="contain"
+          />
+          <ContainerActions>
+            <Actions
+              onPress={saveToGallery}
+              style={{ backgroundColor: '#999' }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Icon name="archive" size={25} color="#FFF" />
+            </Actions>
+            <FinishButton onPress={() => setVisible4(false)}>
+              <PickTextButtonText
+                style={{
+                  fontWeight: 'bold',
+                }}
+              >
+                Ok!
+              </PickTextButtonText>
+            </FinishButton>
+          </ContainerActions>
+        </View>
+      </Modal>
 
       <Modal
         visible={visible6}
@@ -783,11 +857,3 @@ export default function Design({ navigation }) {
     </>
   );
 }
-
-// transformar em styled component
-// usar o HSV picker pra pegar a cor
-// adicionar o header com preço e etc
-// aumentar modal e mudar cor de fundo, arrumar borda de cada imagem
-
-// limitar o posicionamento, provalmente com o draggable com um max de 60% da tela, ou algo assim.
-// ja atua nas bordas entao ao aumentar o texto, ainda se mantem

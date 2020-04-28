@@ -9,7 +9,10 @@ export function* signIn({ payload }) {
   const { email, password } = payload;
 
   try {
+    console.tron.log('aqui');
+
     const response = yield call(api.post, 'auth/login', { email, password });
+    console.tron.log('aqui2');
 
     const token = response.data;
     console.tron.log(response.data);
