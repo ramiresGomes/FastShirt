@@ -10,6 +10,9 @@ export function* signIn({ payload }) {
 
   try {
     console.tron.log('aqui');
+    // api.defaults.headers.authorization =
+    //   'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY2x1YmVkb2NhdmFsby5zaG9wXC9hcGlcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNTg4MTY3MzY1LCJuYmYiOjE1ODgxNjczNjUsImp0aSI6IkZZcVM0Z2I2cjFHS2RPU0oiLCJzdWIiOjQ3MSwicHJ2IjoiNDZlZGQxMDkyOTRmYzBkOGMwMTkyZjNjM2YxODVjNDhiMDM2ZjNhNyJ9.7mEowA-4YSGFyj7PMzfyYZZXsaddNNiXAB0D1Olh3Kk';
+    // console.tron.log(`Token: ${api.defaults.headers.authorization}`);
 
     const response = yield call(api.post, 'auth/login', { email, password });
     console.tron.log('aqui2');

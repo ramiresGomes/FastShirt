@@ -17,7 +17,7 @@ import Header from '~/components/Header';
 import Modal from '~/components/Modal';
 import CustomList from '~/components/List';
 import Carousel from '~/components/Carousel';
-import FontPicker from '~/components/FontPicker';
+// import FontPicker from '~/components/FontPicker';
 
 import PickImage from './PickImage';
 
