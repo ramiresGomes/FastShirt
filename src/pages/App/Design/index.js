@@ -49,7 +49,7 @@ import {
 } from './styles';
 
 import api from '~/services/api';
-import apt from '~/services/apt';
+// import api from '~/services/apt';
 
 Icon.loadFont();
 
