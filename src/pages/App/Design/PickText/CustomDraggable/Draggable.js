@@ -392,8 +392,8 @@ const styles = StyleSheet.create({
   },
   imageSelected: {
     borderColor: '#ff0000',
-    borderWidth: 3,
-    opacity: 0.8,
+    borderWidth: 2.5,
+    opacity: 0.9,
   },
 });
 

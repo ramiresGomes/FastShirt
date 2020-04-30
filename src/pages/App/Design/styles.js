@@ -132,8 +132,8 @@ export const ESlider = styled(Slider).attrs({
   maximumTrackTintColor: '#000000',
 })`
   width: 100%;
-  height: 45px;
-  margin-top: 5px;
+  height: 35px;
+  margin-top: 20px;
 `;
 
 export const NoSlider = styled.View`

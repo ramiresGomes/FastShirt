@@ -48,7 +48,7 @@ export default function CustomList({ data, close, side, handle, done, setId }) {
       </Header>
       <List
         data={formatData(data, numColumns)}
-        keyExtractor={(item) => String(item.id)}
+        keyExtractor={item => String(item.id)}
         renderItem={({ item }) => (
           <Item
             onPress={() => {

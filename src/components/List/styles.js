@@ -8,13 +8,13 @@ export const List = styled.FlatList`
 `;
 
 export const Item = styled.TouchableOpacity`
-  background-color: ${(props) => (props.disabled ? 'transparent' : '#fff')};
+  background-color: ${props => (props.disabled ? 'transparent' : '#fff')};
   align-items: center;
   justify-content: center;
   border-radius: 4px;
   flex: 1;
   margin: 1px;
-  border: ${(props) => (props.disabled ? 'transparent' : '0.8px solid #ccc')};
+  border: ${props => (props.disabled ? 'transparent' : '0.8px solid #ccc')};
   width: 30px;
   height: 90px;
 `;

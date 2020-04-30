@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 import { ScrollView } from 'react-native-gesture-handler';
+import Toast from 'react-native-tiny-toast';
 import Draggable from './PickText/CustomDraggable';
 
 import Header from '~/components/Header';
@@ -85,8 +86,8 @@ export default function Design({ navigation }) {
   const [disableslider, setDSlider] = useState(false); // slider de size
   const [color, setColor] = useState('#fff'); // slider de size
 
-  const [size, setSize] = useState(120); // slider de size
-  const [sizeSticker, setSizeSticker] = useState(120); // slider de size
+  const [size, setSize] = useState(0.1); // slider de size
+  const [sizeSticker, setSizeSticker] = useState(0.1); // slider de size
   const [maxSize, setMaxSize] = useState(1); // slider de size
   const [textSize, setTextSize] = useState(10);
 
@@ -138,8 +139,8 @@ export default function Design({ navigation }) {
 
       setImages(imgs.data);
       setStickers(stk.data);
+      setData(stk.data);
     }
-
     loadImages();
   }, []);
 
@@ -179,6 +180,10 @@ export default function Design({ navigation }) {
   const [visible3, setVisible3] = useState(false);
   const [visible4, setVisible4] = useState(false);
   const [visible5, setVisible5] = useState(false);
+
+  const [zindexImg, setZindexImg] = useState(0);
+  const [zindexSticker, setZindexSticker] = useState(1);
+
   const [visible6, setVisible6] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
@@ -218,15 +223,23 @@ export default function Design({ navigation }) {
     setText(`${text} `);
   }, [color]);
 
-  useEffect(() => {}, [selected]);
+  useEffect(() => {
+    if (selected === 'imagem') {
+      setZindexImg(1);
+      setZindexSticker(0);
+    } else {
+      setZindexImg(0);
+      setZindexSticker(1);
+    }
+  }, [selected]);
 
   useEffect(() => {
     if (editMode) {
       setGalleryIcon('clear');
       setColorsIcon('delete');
-      setEditIcon('done');
+      setEditIcon('info');
       setStickersIcon('archive');
-      setTextIcon('straighten');
+      setTextIcon('done');
     } else {
       setGalleryIcon('collections');
       setColorsIcon('palette');
@@ -357,17 +370,29 @@ export default function Design({ navigation }) {
       } else {
         const source = { uri: `data:image/jpeg;base64,${response.data}` };
         setImage(source.uri);
-        setPhoto(source.uri);
-
         setEditMode(true);
+        setSelected('imagem');
+        setSize(120);
+        setPhoto(source.uri);
       }
     });
   }
 
   function saveToGallery() {
-    CameraRoll.saveToCameraRoll(main, 'photo').then(() => {
-      setVisible4(false);
-    });
+    setSelected('none');
+    captureRef(captureViewRef, {
+      format: 'jpg',
+      quality: 1,
+    })
+      .then(uri => {
+        CameraRoll.saveToCameraRoll(uri, 'photo')
+          .then(() => {
+            console.tron.log('salvou na galeria.');
+            Toast.show('A imagem foi salva na galeria.');
+          })
+          .catch(() => console.tron.log('erro no salvamento'));
+      })
+      .catch(() => console.tron.log('erro no print'));
   }
 
   return (
@@ -379,14 +404,14 @@ export default function Design({ navigation }) {
           <TShirtImage source={{ uri: tShirtImage }} resizeMode="contain" />
           <Draggable
             ref={imgRef}
-            selected={selected === 'image'}
+            selected={editMode && selected === 'imagem'}
             disabled={!editMode}
             imageSource={{ uri: image }}
             renderSize={size}
-            onLongPress={() => setSelected('image')}
+            onLongPress={() => setSelected('imagem')}
             x={position.minX}
             y={position.minY}
-            z={0}
+            z={zindexImg}
             minX={position.minX}
             maxX={position.maxX}
             minY={position.minY}
@@ -400,13 +425,13 @@ export default function Design({ navigation }) {
           />
           <Draggable
             disabled={!editMode}
-            selected={selected === 'sticker'}
+            selected={editMode && selected === 'figura'}
             imageSource={{ uri: sticker }}
             renderSize={sizeSticker}
-            onLongPress={() => setSelected('sticker')}
+            onLongPress={() => setSelected('figura')}
             x={position.minX}
-            y={position.minY}
-            z={1}
+            y={position.minY + 30}
+            z={zindexSticker}
             minX={position.minX}
             maxX={position.maxX}
             minY={position.minY}
@@ -470,25 +495,34 @@ export default function Design({ navigation }) {
             </ActionButtonText>
           </ActionButton>
         </TopButtonsContainer>
-        {editMode ? (
-          <Slider
-            disabled={disableslider}
-            value={slider}
-            minimumValue={40}
-            maximumValue={120}
-            onValueChange={value => {
-              switch (selected) {
-                case 'image':
-                  setSize(value);
-                  break;
-                case 'sticker':
-                  setSizeSticker(value);
-                  break;
+        {editMode && selected !== 'none' ? (
+          <>
+            <Slider
+              value={slider}
+              minimumValue={40}
+              maximumValue={120}
+              onValueChange={value => {
+                switch (selected) {
+                  case 'imagem':
+                    setSize(value);
+                    break;
+                  case 'figura':
+                    setSizeSticker(value);
+                    break;
 
-                default:
-              }
-            }}
-          />
+                  default:
+                }
+              }}
+            />
+            <Text
+              style={{
+                marginTop: -10,
+                fontSize: 14,
+                color: '#333',
+                textAlign: 'center',
+              }}
+            >{`Tamanho da ${selected}`}</Text>
+          </>
         ) : (
           <NoSlider />
         )}
@@ -517,34 +551,36 @@ export default function Design({ navigation }) {
       <Bottom>
         <BottomButton
           onPress={() => {
-            // setData(images);
-            // setVisible(true);
             if (editMode) setEditMode(false);
             else handleChoosePhoto();
           }}
         >
           <Icon name={galleryIcon} size={40} color="#FFF" />
 
-          <IconLabel>{editMode ? 'Cancelar' : 'Imagem'}</IconLabel>
+          <IconLabel>{editMode ? 'Fechar' : 'Imagem'}</IconLabel>
         </BottomButton>
 
         <BottomButton
           onPress={() => {
             if (editMode) {
-              console.tron.log('action camiseta branca');
-              setImage(baseImg.uri);
-              setEditMode(false);
-            } else setVisible6(true);
+              selected === 'imagem'
+                ? setImage(baseImg.uri)
+                : setSticker(baseImg.uri);
+            } else {
+              setVisible6(true);
+            }
+            setSelected('none');
           }}
         >
           <Icon name={colorsIcon} size={40} color="#FFF" />
-          <IconLabel>{editMode ? 'Desfazer' : 'Cores'}</IconLabel>
+          <IconLabel>{editMode ? 'Apagar' : 'Cores'}</IconLabel>
         </BottomButton>
 
         <BottomButton
           onPress={() => {
             if (editMode) {
-              capturePrintable();
+              console.tron.log('show slider');
+              console.tron.log('alternar o valor dependendo do selecionado');
             } else {
               setEditMode(true);
             }
@@ -552,14 +588,14 @@ export default function Design({ navigation }) {
         >
           <Icon name={editIcon} size={40} color="#FFF" />
 
-          <IconLabel>{editMode ? 'Avançar' : 'Editar'}</IconLabel>
+          <IconLabel>{editMode ? 'Tutorial' : 'Editar'}</IconLabel>
         </BottomButton>
         <BottomButton
           onPress={() => {
             if (editMode) {
-              onCapture('save');
+              setSelected('none');
+              saveToGallery();
             } else {
-              setData(stickers);
               setVisible(true);
             }
           }}
@@ -572,13 +608,13 @@ export default function Design({ navigation }) {
         <BottomButton
           onPress={() => {
             if (editMode) {
-              console.tron.log('show slider');
-              console.tron.log('alternar o valor dependendo do selecionado');
+              setSelected('none');
+              capturePrintable();
             } else setVisible3(true);
           }}
         >
           <Icon name={textIcon} size={40} color="#FFF" />
-          <IconLabel>{editMode ? 'Tamanho' : 'Textos'}</IconLabel>
+          <IconLabel>{editMode ? 'Enviar' : 'Textos'}</IconLabel>
         </BottomButton>
       </Bottom>
       <Modal
@@ -593,6 +629,8 @@ export default function Design({ navigation }) {
           side={shirtSide}
           handle={(value, id) => {
             setSticker(value);
+            setSelected('figura');
+            setSizeSticker(120);
             setStickerID(id);
           }}
           setId={value => {
