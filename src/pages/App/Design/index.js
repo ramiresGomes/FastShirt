@@ -5,7 +5,13 @@ import { captureRef } from 'react-native-view-shot';
 
 import ImagePicker from 'react-native-image-picker';
 
-import { Image, Modal as CustomModal, View, Text } from 'react-native';
+import {
+  Image,
+  Modal as CustomModal,
+  View,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
@@ -294,6 +300,7 @@ export default function Design({ navigation }) {
     console.tron.log(`response: ${response.data}`);
     setEditMode(false);
     Toast.show('Sua camiseta foi enviada!');
+    setVisible4(false);
   }
 
   function onCapture(id) {
@@ -590,7 +597,9 @@ export default function Design({ navigation }) {
           onPress={() => {
             if (editMode) {
               setSelected('none');
-              saveToGallery();
+              Toast.show('Clique novamente para salvar a camista');
+
+              if (selected === 'none') saveToGallery();
             } else {
               setVisible(true);
             }
@@ -605,7 +614,11 @@ export default function Design({ navigation }) {
           onPress={() => {
             if (editMode) {
               setSelected('none');
-              capturePrintable();
+              Toast.show('Clique novamente para enviar a camista');
+              if (selected === 'none') {
+                setVisible4(true);
+                capturePrintable();
+              }
             } else setVisible3(true);
           }}
         >
@@ -818,6 +831,31 @@ export default function Design({ navigation }) {
         </CustomView>
       </CustomModal>
 
+      <CustomModal
+        visible={visible4}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setVisible4(false)}
+      >
+        <CustomView>
+          <View
+            style={{
+              backgroundColor: '#333',
+              width: 200,
+              height: 120,
+              borderRadius: 8,
+              alignSelf: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text style={{ fontSize: 12, color: '#fff', textAlign: 'center' }}>
+              Enviando a camiseta, aguarde...
+            </Text>
+            <ActivityIndicator size="large" color="#fff" />
+          </View>
+        </CustomView>
+      </CustomModal>
       <Modal
         visible={visible6}
         disabled={false}
