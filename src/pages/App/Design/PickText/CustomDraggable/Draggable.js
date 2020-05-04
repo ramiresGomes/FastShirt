@@ -240,14 +240,8 @@ function Draggable(props, ref) {
             alignItems: 'center',
             justifyContent: 'center',
           }}
-          onLayout={event => {
-            console.tron.log('width view: ', event.nativeEvent.layout.width);
-          }}
         >
           <Text
-            onLayout={event => {
-              console.tron.log('width text: ', event.nativeEvent.layout.width);
-            }}
             numberOfLines={1}
             style={{
               color: textColor,

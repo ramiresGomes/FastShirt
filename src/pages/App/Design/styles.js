@@ -85,9 +85,9 @@ export const Input = styled.TextInput`
   border-width: 1px;
   border-color: 'rgba(0, 0, 0, 0.2)';
   border-radius: 5px;
-  height: 44px;
+  height: 80px;
   padding: 2px 0 2px 0;
-  margin: 10px 0 10px 0;
+  margin: 5px 0 5px 0;
   color: #fff;
 `;
 

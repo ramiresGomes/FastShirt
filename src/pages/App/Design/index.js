@@ -24,7 +24,7 @@ import Header from '~/components/Header';
 import Modal from '~/components/Modal';
 import CustomList from '~/components/List';
 import Carousel from '~/components/Carousel';
-// import FontPicker from '~/components/FontPicker';
+import FontPicker from '~/components/FontPicker';
 
 import PickImage from './PickImage';
 
@@ -187,11 +187,11 @@ export default function Design({ navigation }) {
   const [visible3, setVisible3] = useState(false);
   const [visible4, setVisible4] = useState(false);
   const [visible5, setVisible5] = useState(false);
+  const [visible6, setVisible6] = useState(false);
 
   const [zindexImg, setZindexImg] = useState(0);
   const [zindexSticker, setZindexSticker] = useState(1);
 
-  const [visible6, setVisible6] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   const [galleryIcon, setGalleryIcon] = useState('collections');
@@ -228,7 +228,7 @@ export default function Design({ navigation }) {
 
   useEffect(() => {
     setText(`${text} `);
-  }, [color]);
+  }, [color, font]); //eslint-disable-line
 
   useEffect(() => {
     if (selected === 'imagem') {
@@ -440,6 +440,7 @@ export default function Design({ navigation }) {
           <Draggable
             disabled={!editMode}
             renderText={text}
+            font={font}
             textSize={11 + finalSize / 5}
             onLongPress={() => setSelected('frase')}
             renderHeight={12}
@@ -677,17 +678,28 @@ export default function Design({ navigation }) {
         transparent
         onRequestClose={() => setVisible3(false)}
       >
-        <CustomView>
+        <CustomView style={{ alignItems: 'center', justifyContent: 'center' }}>
           <View
             style={{
               backgroundColor: '#333',
               width: 250,
-              height: 180,
+              height: 200,
               borderRadius: 5,
               alignSelf: 'center',
               alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
+            <Text
+              style={{
+                marginTop: 3,
+                fontSize: 14,
+                color: '#ddd',
+                textAlign: 'center',
+              }}
+            >
+              Informe o texto:{' '}
+            </Text>
             <Input
               autoFocus
               value={text}
@@ -706,7 +718,21 @@ export default function Design({ navigation }) {
               }}
               underlineColorAndroid="transparent"
             />
+            <Text
+              style={{
+                marginBottom: 5,
+                fontSize: 14,
+                color: '#ddd',
+                textAlign: 'center',
+              }}
+            >
+              Selecione a cor:{' '}
+            </Text>
             <ScrollView
+              contentContainerStyle={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
               style={{
                 height: 35,
                 backgroundColor: '#222',
@@ -824,9 +850,25 @@ export default function Design({ navigation }) {
                   backgroundColor: '#d10000',
                 }}
               >
-                <PickTextButtonText>Cancelar</PickTextButtonText>
+                <PickTextButtonText>Fechar</PickTextButtonText>
               </PickTextButton>
             </View>
+          </View>
+          <View
+            style={{
+              width: 270,
+              height: 180,
+              borderRadius: 5,
+              alignSelf: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <FontPicker
+              example="A frase ficará assim"
+              setFont={value => setFont(value)}
+              done={() => setVisible3(false)}
+            />
           </View>
         </CustomView>
       </CustomModal>
