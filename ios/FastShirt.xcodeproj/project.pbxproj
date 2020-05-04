@@ -66,6 +66,8 @@
 		2313DF749516400499270C4D /* Exo 2.otf in Resources */ = {isa = PBXBuildFile; fileRef = C0373E656B1E4BFB80A5BC1A /* Exo 2.otf */; };
 		D7CED7CD545643B5BB591281 /* League Gothic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0A5417CB6E764B97B4BCEE0B /* League Gothic.otf */; };
 		71F92AF6809446A28171D79B /* Learning Curve.otf in Resources */ = {isa = PBXBuildFile; fileRef = B412C28BC79F448D81A57292 /* Learning Curve.otf */; };
+		4C8C8EE2474C4783BC8E604F /* Dancing Script OT.otf in Resources */ = {isa = PBXBuildFile; fileRef = EE141FC595504EC9A6EDD243 /* Dancing Script OT.otf */; };
+		524F6A4EB08340BDA4786D9F /* Montserrat.otf in Resources */ = {isa = PBXBuildFile; fileRef = 09856AB4121C4706A90B663C /* Montserrat.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,6 +162,8 @@
 		C0373E656B1E4BFB80A5BC1A /* Exo 2.otf */ = {isa = PBXFileReference; name = "Exo 2.otf"; path = "../assets/fonts/Exo 2.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		0A5417CB6E764B97B4BCEE0B /* League Gothic.otf */ = {isa = PBXFileReference; name = "League Gothic.otf"; path = "../assets/fonts/League Gothic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		B412C28BC79F448D81A57292 /* Learning Curve.otf */ = {isa = PBXFileReference; name = "Learning Curve.otf"; path = "../assets/fonts/Learning Curve.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EE141FC595504EC9A6EDD243 /* Dancing Script OT.otf */ = {isa = PBXFileReference; name = "Dancing Script OT.otf"; path = "../assets/fonts/Dancing Script OT.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		09856AB4121C4706A90B663C /* Montserrat.otf */ = {isa = PBXFileReference; name = "Montserrat.otf"; path = "../assets/fonts/Montserrat.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -341,6 +345,8 @@
 				C0373E656B1E4BFB80A5BC1A /* Exo 2.otf */,
 				0A5417CB6E764B97B4BCEE0B /* League Gothic.otf */,
 				B412C28BC79F448D81A57292 /* Learning Curve.otf */,
+				EE141FC595504EC9A6EDD243 /* Dancing Script OT.otf */,
+				09856AB4121C4706A90B663C /* Montserrat.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -544,6 +550,8 @@
 				2313DF749516400499270C4D /* Exo 2.otf in Resources */,
 				D7CED7CD545643B5BB591281 /* League Gothic.otf in Resources */,
 				71F92AF6809446A28171D79B /* Learning Curve.otf in Resources */,
+				4C8C8EE2474C4783BC8E604F /* Dancing Script OT.otf in Resources */,
+				524F6A4EB08340BDA4786D9F /* Montserrat.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

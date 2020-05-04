@@ -865,7 +865,7 @@ export default function Design({ navigation }) {
             }}
           >
             <FontPicker
-              example="A frase ficará assim"
+              example="A frase fica assim"
               setFont={value => setFont(value)}
               done={() => setVisible3(false)}
             />
