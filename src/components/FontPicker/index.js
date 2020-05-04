@@ -6,12 +6,21 @@ import { List, Item } from './styles';
 export default function FontPicker({ example, setFont, done }) {
   const data = [
     { id: 1, font: 'Montserrat' },
-    { id: 2, font: 'Hunting' },
-    { id: 3, font: 'Oswald' },
-    { id: 4, font: 'Rotulona Hand' }, // cu
-    { id: 5, font: 'Shopie' },
-    { id: 6, font: 'Carily' }, // cu
-    { id: 7, font: 'Andis' }, // cu
+    { id: 2, font: 'Learning Curve' },
+    { id: 3, font: 'Hunting' },
+    { id: 4, font: 'Oswald' },
+    { id: 5, font: 'Rotulona Hand' }, // bad fonts
+    { id: 6, font: 'Shopie' },
+    { id: 7, font: 'Andis' }, // bad fonts
+    { id: 8, font: 'Carily' }, // bad fonts
+    { id: 9, font: 'Source Sans Pro' }, // bad fonts
+    { id: 10, font: 'Poppins' }, // bad fonts
+    { id: 11, font: 'Titillium' }, // bad fonts
+    { id: 12, font: 'Sofia' }, // bad fonts
+    { id: 13, font: 'League Gothic' }, // bad fonts
+    { id: 14, font: 'Cinzel' }, // bad fonts
+    { id: 15, font: 'Exo 2' }, // bad fonts
+    { id: 16, font: 'Art Plot' }, // bad fonts
   ];
 
   return (

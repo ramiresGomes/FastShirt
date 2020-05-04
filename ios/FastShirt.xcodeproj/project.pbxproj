@@ -49,6 +49,23 @@
 		4C2E11DDB8C14045BE2A6727 /* Shopie.otf in Resources */ = {isa = PBXBuildFile; fileRef = D7BFF60082A24BE193FE5FB8 /* Shopie.otf */; };
 		357BF29FC2BA4B99BBDD4A2E /* Shrikhand.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BAA3DFB282714C06993DE765 /* Shrikhand.ttf */; };
 		CC9F37EC6C7044E7A7638497 /* Montserrat-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3AB1ABD63E9F4BF68A5AF489 /* Montserrat-Medium.otf */; };
+		DC430AF66E6743E8B77D0484 /* Andis.otf in Resources */ = {isa = PBXBuildFile; fileRef = F0B95151A74F44609FEF3E11 /* Andis.otf */; };
+		FD1AC41FF5D9446EB8B42126 /* Cinzel-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6B1AA85186254F17AC63AC34 /* Cinzel-Regular.otf */; };
+		32DB8B1E763E45908A135A51 /* DancingScript-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AE56D9B1A105457A942FA50C /* DancingScript-Regular.otf */; };
+		C74763AF258843608872959E /* Exo2-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 55CB8F9AB3ED4C209F49679D /* Exo2-Regular.otf */; };
+		671AB654E29E4BBEAE85175E /* LeagueGothic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9EE7BFD59B774C4B9F6BAC4F /* LeagueGothic-Regular.otf */; };
+		EF135ED2D176498099FAFC47 /* learning_curve_regular_ot_ps.otf in Resources */ = {isa = PBXBuildFile; fileRef = 36A979B2D9B040AA89382CFF /* learning_curve_regular_ot_ps.otf */; };
+		54C80BBF6E7A4BF2B434F95E /* Poppins.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9FF488A191114E48B50B170D /* Poppins.otf */; };
+		57AF5FFA2F224E268FE6FCAA /* Rotulona Hand.otf in Resources */ = {isa = PBXBuildFile; fileRef = 21C16CE000104EA39363D377 /* Rotulona Hand.otf */; };
+		B188C2D9DF5E408987D16986 /* Sofia.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2C1104B6069D4F86B2DCCBFC /* Sofia.otf */; };
+		D17A7CF7BDB340E681BF65A8 /* Source Sans Pro.otf in Resources */ = {isa = PBXBuildFile; fileRef = 553CE12EA6EC4E33806CB575 /* Source Sans Pro.otf */; };
+		D60688495F1A4295A340063B /* Titillium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6E564758505A4443A80B9A61 /* Titillium.otf */; };
+		BF3C90C852EA42B0867F7612 /* Art Plot.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9DA5F7AB4F0544539BD952F7 /* Art Plot.otf */; };
+		CC3745C115F549489777E0DA /* Carily.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7F8BA072F5C749088F3E1C7D /* Carily.otf */; };
+		ACB92FB59FEB48EFBF4089C9 /* Cinzel.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3F24A39DCED2441181040FBB /* Cinzel.otf */; };
+		2313DF749516400499270C4D /* Exo 2.otf in Resources */ = {isa = PBXBuildFile; fileRef = C0373E656B1E4BFB80A5BC1A /* Exo 2.otf */; };
+		D7CED7CD545643B5BB591281 /* League Gothic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0A5417CB6E764B97B4BCEE0B /* League Gothic.otf */; };
+		71F92AF6809446A28171D79B /* Learning Curve.otf in Resources */ = {isa = PBXBuildFile; fileRef = B412C28BC79F448D81A57292 /* Learning Curve.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +143,23 @@
 		D7BFF60082A24BE193FE5FB8 /* Shopie.otf */ = {isa = PBXFileReference; name = "Shopie.otf"; path = "../assets/fonts/Shopie.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		BAA3DFB282714C06993DE765 /* Shrikhand.ttf */ = {isa = PBXFileReference; name = "Shrikhand.ttf"; path = "../assets/fonts/Shrikhand.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		3AB1ABD63E9F4BF68A5AF489 /* Montserrat-Medium.otf */ = {isa = PBXFileReference; name = "Montserrat-Medium.otf"; path = "../assets/fonts/Montserrat-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F0B95151A74F44609FEF3E11 /* Andis.otf */ = {isa = PBXFileReference; name = "Andis.otf"; path = "../assets/fonts/Andis.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6B1AA85186254F17AC63AC34 /* Cinzel-Regular.otf */ = {isa = PBXFileReference; name = "Cinzel-Regular.otf"; path = "../assets/fonts/Cinzel-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AE56D9B1A105457A942FA50C /* DancingScript-Regular.otf */ = {isa = PBXFileReference; name = "DancingScript-Regular.otf"; path = "../assets/fonts/DancingScript-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		55CB8F9AB3ED4C209F49679D /* Exo2-Regular.otf */ = {isa = PBXFileReference; name = "Exo2-Regular.otf"; path = "../assets/fonts/Exo2-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9EE7BFD59B774C4B9F6BAC4F /* LeagueGothic-Regular.otf */ = {isa = PBXFileReference; name = "LeagueGothic-Regular.otf"; path = "../assets/fonts/LeagueGothic-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		36A979B2D9B040AA89382CFF /* learning_curve_regular_ot_ps.otf */ = {isa = PBXFileReference; name = "learning_curve_regular_ot_ps.otf"; path = "../assets/fonts/learning_curve_regular_ot_ps.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9FF488A191114E48B50B170D /* Poppins.otf */ = {isa = PBXFileReference; name = "Poppins.otf"; path = "../assets/fonts/Poppins.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		21C16CE000104EA39363D377 /* Rotulona Hand.otf */ = {isa = PBXFileReference; name = "Rotulona Hand.otf"; path = "../assets/fonts/Rotulona Hand.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2C1104B6069D4F86B2DCCBFC /* Sofia.otf */ = {isa = PBXFileReference; name = "Sofia.otf"; path = "../assets/fonts/Sofia.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		553CE12EA6EC4E33806CB575 /* Source Sans Pro.otf */ = {isa = PBXFileReference; name = "Source Sans Pro.otf"; path = "../assets/fonts/Source Sans Pro.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6E564758505A4443A80B9A61 /* Titillium.otf */ = {isa = PBXFileReference; name = "Titillium.otf"; path = "../assets/fonts/Titillium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9DA5F7AB4F0544539BD952F7 /* Art Plot.otf */ = {isa = PBXFileReference; name = "Art Plot.otf"; path = "../assets/fonts/Art Plot.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7F8BA072F5C749088F3E1C7D /* Carily.otf */ = {isa = PBXFileReference; name = "Carily.otf"; path = "../assets/fonts/Carily.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3F24A39DCED2441181040FBB /* Cinzel.otf */ = {isa = PBXFileReference; name = "Cinzel.otf"; path = "../assets/fonts/Cinzel.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C0373E656B1E4BFB80A5BC1A /* Exo 2.otf */ = {isa = PBXFileReference; name = "Exo 2.otf"; path = "../assets/fonts/Exo 2.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0A5417CB6E764B97B4BCEE0B /* League Gothic.otf */ = {isa = PBXFileReference; name = "League Gothic.otf"; path = "../assets/fonts/League Gothic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B412C28BC79F448D81A57292 /* Learning Curve.otf */ = {isa = PBXFileReference; name = "Learning Curve.otf"; path = "../assets/fonts/Learning Curve.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -290,6 +324,23 @@
 				D7BFF60082A24BE193FE5FB8 /* Shopie.otf */,
 				BAA3DFB282714C06993DE765 /* Shrikhand.ttf */,
 				3AB1ABD63E9F4BF68A5AF489 /* Montserrat-Medium.otf */,
+				F0B95151A74F44609FEF3E11 /* Andis.otf */,
+				6B1AA85186254F17AC63AC34 /* Cinzel-Regular.otf */,
+				AE56D9B1A105457A942FA50C /* DancingScript-Regular.otf */,
+				55CB8F9AB3ED4C209F49679D /* Exo2-Regular.otf */,
+				9EE7BFD59B774C4B9F6BAC4F /* LeagueGothic-Regular.otf */,
+				36A979B2D9B040AA89382CFF /* learning_curve_regular_ot_ps.otf */,
+				9FF488A191114E48B50B170D /* Poppins.otf */,
+				21C16CE000104EA39363D377 /* Rotulona Hand.otf */,
+				2C1104B6069D4F86B2DCCBFC /* Sofia.otf */,
+				553CE12EA6EC4E33806CB575 /* Source Sans Pro.otf */,
+				6E564758505A4443A80B9A61 /* Titillium.otf */,
+				9DA5F7AB4F0544539BD952F7 /* Art Plot.otf */,
+				7F8BA072F5C749088F3E1C7D /* Carily.otf */,
+				3F24A39DCED2441181040FBB /* Cinzel.otf */,
+				C0373E656B1E4BFB80A5BC1A /* Exo 2.otf */,
+				0A5417CB6E764B97B4BCEE0B /* League Gothic.otf */,
+				B412C28BC79F448D81A57292 /* Learning Curve.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -476,6 +527,23 @@
 				4C2E11DDB8C14045BE2A6727 /* Shopie.otf in Resources */,
 				357BF29FC2BA4B99BBDD4A2E /* Shrikhand.ttf in Resources */,
 				CC9F37EC6C7044E7A7638497 /* Montserrat-Medium.otf in Resources */,
+				DC430AF66E6743E8B77D0484 /* Andis.otf in Resources */,
+				FD1AC41FF5D9446EB8B42126 /* Cinzel-Regular.otf in Resources */,
+				32DB8B1E763E45908A135A51 /* DancingScript-Regular.otf in Resources */,
+				C74763AF258843608872959E /* Exo2-Regular.otf in Resources */,
+				671AB654E29E4BBEAE85175E /* LeagueGothic-Regular.otf in Resources */,
+				EF135ED2D176498099FAFC47 /* learning_curve_regular_ot_ps.otf in Resources */,
+				54C80BBF6E7A4BF2B434F95E /* Poppins.otf in Resources */,
+				57AF5FFA2F224E268FE6FCAA /* Rotulona Hand.otf in Resources */,
+				B188C2D9DF5E408987D16986 /* Sofia.otf in Resources */,
+				D17A7CF7BDB340E681BF65A8 /* Source Sans Pro.otf in Resources */,
+				D60688495F1A4295A340063B /* Titillium.otf in Resources */,
+				BF3C90C852EA42B0867F7612 /* Art Plot.otf in Resources */,
+				CC3745C115F549489777E0DA /* Carily.otf in Resources */,
+				ACB92FB59FEB48EFBF4089C9 /* Cinzel.otf in Resources */,
+				2313DF749516400499270C4D /* Exo 2.otf in Resources */,
+				D7CED7CD545643B5BB591281 /* League Gothic.otf in Resources */,
+				71F92AF6809446A28171D79B /* Learning Curve.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

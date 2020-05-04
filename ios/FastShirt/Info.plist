@@ -70,6 +70,23 @@
 		<string>Shopie.otf</string>
 		<string>Shrikhand.ttf</string>
 		<string>Montserrat-Medium.otf</string>
+		<string>Andis.otf</string>
+		<string>Cinzel-Regular.otf</string>
+		<string>DancingScript-Regular.otf</string>
+		<string>Exo2-Regular.otf</string>
+		<string>LeagueGothic-Regular.otf</string>
+		<string>learning_curve_regular_ot_ps.otf</string>
+		<string>Poppins.otf</string>
+		<string>Rotulona Hand.otf</string>
+		<string>Sofia.otf</string>
+		<string>Source Sans Pro.otf</string>
+		<string>Titillium.otf</string>
+		<string>Art Plot.otf</string>
+		<string>Carily.otf</string>
+		<string>Cinzel.otf</string>
+		<string>Exo 2.otf</string>
+		<string>League Gothic.otf</string>
+		<string>Learning Curve.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
