@@ -79,6 +79,7 @@ export default function Design({ navigation }) {
   const [models, setModels] = useState([]);
   const [text, setText] = useState('');
   const [font, setFont] = useState('');
+  const [finalSize, setFinalSize] = useState(0);
   const [disabled, setDisabled] = useState(false);
 
   const [slider, setSlider] = useState(1); // slider de size
@@ -159,21 +160,21 @@ export default function Design({ navigation }) {
     setHBack(customH.back);
   }, [customH]);
 
-  const finalSize = useMemo(() => {
-    return (textSize / 1.5) * slider;
-  }, [textSize, slider]);
+  // const finalSize = useMemo(() => {
+  //   return (textSize / 1.5) * slider;
+  // }, [textSize, slider]);
 
-  useEffect(() => {
-    if (finalSize > 140) {
-      setDSlider(true);
-    } else setDSlider(false);
-  }, [finalSize, textSize, slider]);
+  // useEffect(() => {
+  //   if (finalSize > 140) {
+  //     setDSlider(true);
+  //   } else setDSlider(false);
+  // }, [finalSize, textSize, slider]);
 
-  useEffect(() => {
-    setMaxSize(154 / textSize);
-    console.tron.log(`max size: ${maxSize}`);
-    setSlider(1);
-  }, [textSize]);
+  // useEffect(() => {
+  //   setMaxSize(154 / textSize);
+  //   console.tron.log(`max size: ${maxSize}`);
+  //   setSlider(1);
+  // }, [textSize]);
 
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
@@ -254,12 +255,6 @@ export default function Design({ navigation }) {
     let side = 'lado_principal';
     let otherSide = 'outro_lado';
 
-    console.tron.log('deve enviar');
-    console.tron.log(`photouri: ${photouri}`);
-    console.tron.log(`image: ${photo}`);
-    console.tron.log(`id image: ${idimg}`);
-    console.tron.log(`id sticker: ${stickerID}`);
-
     if (shirtSide === 'front') {
       side = 'front_printscreen';
       otherSide = 'back_printscreen';
@@ -273,18 +268,10 @@ export default function Design({ navigation }) {
       type: 'image/jpeg', // trocar pra png
       name: `${photoTeste}.jpeg`,
     });
-    console.tron.log('tudo certo 1');
 
     upload.append(`${otherSide}`, null);
-
-    console.tron.log('tudo certo 2');
-
     upload.append('front_printable_image_id', idimg);
-    console.tron.log('tudo certo 3');
-
     upload.append('back_printable_image_id', idimg);
-    console.tron.log('tudo certo 4');
-
     upload.append('text', text);
     upload.append('font_family', 'Oswald');
 
@@ -306,9 +293,7 @@ export default function Design({ navigation }) {
     setText('');
     console.tron.log(`response: ${response.data}`);
     setEditMode(false);
-
-    // setFile(id); -- id da imagem retornado pelo banco
-    // setPreview(url); -- seria o setImage -- com a nova uri
+    Toast.show('Sua camiseta foi enviada!');
   }
 
   function onCapture(id) {
@@ -395,6 +380,8 @@ export default function Design({ navigation }) {
       .catch(() => console.tron.log('erro no print'));
   }
 
+  console.tron.log('width final: ', finalSize + textSize);
+  console.tron.log('this: ', finalSize);
   return (
     <>
       <Header navigation={navigation} title="Design" />
@@ -446,16 +433,16 @@ export default function Design({ navigation }) {
           <Draggable
             disabled={!editMode}
             renderText={text}
-            textSize={9 * slider}
-            renderHeight={(textSize / 10.016) * slider}
-            renderSize={finalSize}
-            onLongPress={() => setEditMode(true)}
+            textSize={11 + finalSize / 5}
+            onLongPress={() => setSelected('frase')}
+            renderHeight={12}
+            renderSize={textSize + finalSize}
             textColor={color}
             x={position.minX + 10}
             y={position.minY + 30}
             z={2}
-            minX={position.minX - 3}
-            maxX={position.maxX}
+            minX={position.minX - 10}
+            maxX={position.maxX + 10}
             minY={position.minY}
             maxY={position.maxY}
             onDrag={() => {}}
@@ -499,8 +486,8 @@ export default function Design({ navigation }) {
           <>
             <Slider
               value={slider}
-              minimumValue={40}
-              maximumValue={120}
+              minimumValue={2}
+              maximumValue={86}
               onValueChange={value => {
                 switch (selected) {
                   case 'imagem':
@@ -509,7 +496,10 @@ export default function Design({ navigation }) {
                   case 'figura':
                     setSizeSticker(value);
                     break;
+                  case 'frase':
+                    if (finalSize + textSize < 136) setFinalSize(value);
 
+                    break;
                   default:
                 }
               }}
@@ -563,9 +553,16 @@ export default function Design({ navigation }) {
         <BottomButton
           onPress={() => {
             if (editMode) {
-              selected === 'imagem'
-                ? setImage(baseImg.uri)
-                : setSticker(baseImg.uri);
+              if (selected === 'imagem') {
+                setImage(baseImg.uri);
+                setSelected('none');
+              } else if (selected === 'frase') {
+                setText('');
+                setSelected('none');
+              } else {
+                setSticker(baseImg.uri);
+                setSelected('none');
+              }
             } else {
               setVisible6(true);
             }
@@ -579,8 +576,7 @@ export default function Design({ navigation }) {
         <BottomButton
           onPress={() => {
             if (editMode) {
-              console.tron.log('show slider');
-              console.tron.log('alternar o valor dependendo do selecionado');
+              console.tron.log('none');
             } else {
               setEditMode(true);
             }
@@ -686,9 +682,10 @@ export default function Design({ navigation }) {
                 console.tron.log('event properties: ', event);
                 console.tron.log('width: ', event.nativeEvent.layout.width);
                 setTextSize(event.nativeEvent.layout.width);
+                setFinalSize(0);
               }}
               onChangeText={setText}
-              maxLength={12}
+              maxLength={11}
               returnKeyType="send"
               onSubmitEditing={() => {
                 setText(text);
@@ -820,60 +817,6 @@ export default function Design({ navigation }) {
           </View>
         </CustomView>
       </CustomModal>
-      <Modal
-        visible={visible4}
-        disabled={true}
-        disabledContent={true}
-        onRequestClose={() => setVisible4(false)}
-      >
-        <View
-          style={{
-            flexDirection: 'column',
-            alignItems: 'center',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#333',
-            borderRadius: 5,
-            width: 325,
-            height: 400,
-          }}
-        >
-          <Text style={{ alignSelf: 'center', fontSize: 22, color: '#fff' }}>
-            Sua camiseta está pronta! Obrigado por ter utilizado nossos
-            serviços.
-          </Text>
-          <Image
-            source={{ uri: main }}
-            style={{
-              borderRadius: 5,
-              height: 450,
-              width: 270,
-              marginLeft: 5,
-              marginRight: 5,
-              alignSelf: 'center',
-            }}
-            resizeMode="contain"
-          />
-          <ContainerActions>
-            <Actions
-              onPress={saveToGallery}
-              style={{ backgroundColor: '#999' }}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <Icon name="archive" size={25} color="#FFF" />
-            </Actions>
-            <FinishButton onPress={() => setVisible4(false)}>
-              <PickTextButtonText
-                style={{
-                  fontWeight: 'bold',
-                }}
-              >
-                Ok!
-              </PickTextButtonText>
-            </FinishButton>
-          </ContainerActions>
-        </View>
-      </Modal>
 
       <Modal
         visible={visible6}
