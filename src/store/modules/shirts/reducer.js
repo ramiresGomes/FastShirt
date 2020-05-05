@@ -10,11 +10,12 @@ const INITIAL_STATE = {
   bBacks: null,
   hFronts: null,
   hBacks: null,
+  tutorial: null,
   boomt: null,
 };
 
 export default function shirts(state = INITIAL_STATE, action) {
-  return produce(state, (draft) => {
+  return produce(state, draft => {
     switch (action.type) {
       case '@shirts/UPLOAD_SHIRTS': {
         draft.tshirt = action.payload.tshirt;
@@ -28,6 +29,9 @@ export default function shirts(state = INITIAL_STATE, action) {
         draft.bBacks = action.payload.bBacks;
         draft.hFronts = action.payload.hFronts;
         draft.hBacks = action.payload.hBacks;
+
+        draft.tutorial = action.payload.tutorial;
+
         break;
       }
       case '@shirts/update_color': {

@@ -117,6 +117,7 @@ export const FinishButton = styled.Text`
   height: 45px;
   width: 170px;
   align-items: center;
+  align-self: center;
   justify-content: center;
   text-align: center;
 `;
@@ -144,11 +145,11 @@ export const NoSlider = styled.View`
 `;
 
 export const ContainerActions = styled.View`
-  width: 100%;
+  width: 200px;
   height: 35px;
   margin-top: 5px;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
 `;
 

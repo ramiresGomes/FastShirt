@@ -9,17 +9,9 @@ export function* signIn({ payload }) {
   const { email, password } = payload;
 
   try {
-    console.tron.log('aqui');
-
     const response = yield call(api.post, 'auth/login', { email, password });
-    console.tron.log('aqui2');
 
     const { token, user } = response.data;
-    console.tron.log(response.data);
-    console.tron.log(`token: ${token}`);
-
-    api.defaults.headers.Authorization =
-      'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY2x1YmVkb2NhdmFsby5zaG9wXC9hcGlcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNTg4MTY3MzY1LCJuYmYiOjE1ODgxNjczNjUsImp0aSI6IkZZcVM0Z2I2cjFHS2RPU0oiLCJzdWIiOjQ3MSwicHJ2IjoiNDZlZGQxMDkyOTRmYzBkOGMwMTkyZjNjM2YxODVjNDhiMDM2ZjNhNyJ9.7mEowA-4YSGFyj7PMzfyYZZXsaddNNiXAB0D1Olh3Kk';
 
     yield put(signInSuccess(token, user));
   } catch (error) {

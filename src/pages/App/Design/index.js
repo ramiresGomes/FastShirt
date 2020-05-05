@@ -28,8 +28,6 @@ import FontPicker from '~/components/FontPicker';
 
 import PickImage from './PickImage';
 
-import photoTeste from '~/assets/fu.jpeg';
-
 import base from '~/assets/base.png';
 
 import {
@@ -56,7 +54,6 @@ import {
 } from './styles';
 
 import api from '~/services/api';
-// import api from '~/services/apt';
 
 Icon.loadFont();
 
@@ -71,6 +68,8 @@ export default function Design({ navigation }) {
   const bBacks = useSelector(state => state.shirts.bBacks);
   const hFronts = useSelector(state => state.shirts.hFronts);
   const hBacks = useSelector(state => state.shirts.hBacks);
+
+  const tutorial = useSelector(state => state.shirts.tutorial);
 
   const boomt = useSelector(state => state.shirts.boomt);
 
@@ -134,7 +133,7 @@ export default function Design({ navigation }) {
   const [sticker, setSticker] = useState(baseImg.uri);
   const [stickerID, setStickerID] = useState(1);
 
-  const [photo, setPhoto] = useState(baseImg.uri);
+  const [photo, setPhoto] = useState(tutorial[0].uri);
 
   useEffect(() => {
     async function loadImages() {
@@ -166,28 +165,15 @@ export default function Design({ navigation }) {
     setHBack(customH.back);
   }, [customH]);
 
-  // const finalSize = useMemo(() => {
-  //   return (textSize / 1.5) * slider;
-  // }, [textSize, slider]);
-
-  // useEffect(() => {
-  //   if (finalSize > 140) {
-  //     setDSlider(true);
-  //   } else setDSlider(false);
-  // }, [finalSize, textSize, slider]);
-
-  // useEffect(() => {
-  //   setMaxSize(154 / textSize);
-  //   console.tron.log(`max size: ${maxSize}`);
-  //   setSlider(1);
-  // }, [textSize]);
-
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [visible3, setVisible3] = useState(false);
   const [visible4, setVisible4] = useState(false);
   const [visible5, setVisible5] = useState(false);
   const [visible6, setVisible6] = useState(false);
+  const [visible7, setVisible7] = useState(false);
+
+  const [indexTutorial, setIndexTutorial] = useState(0);
 
   const [zindexImg, setZindexImg] = useState(0);
   const [zindexSticker, setZindexSticker] = useState(1);
@@ -199,6 +185,9 @@ export default function Design({ navigation }) {
   const [editIcon, setEditIcon] = useState('create');
   const [stickersIcon, setStickersIcon] = useState('mood');
   const [textIcon, setTextIcon] = useState('title');
+
+  const [tutorialBackIcon, setTutorialBackIcon] = useState('close');
+  const [tutorialNextIcon, setTutorialNextIcon] = useState('arrow-forward');
 
   useEffect(() => {
     switch (shirtType) {
@@ -256,6 +245,38 @@ export default function Design({ navigation }) {
     }
   }, [editMode]);
 
+  useEffect(() => {
+    switch (indexTutorial) {
+      case -1:
+        setPhoto(tutorial[0].uri);
+        setVisible7(false);
+        break;
+      case 0:
+        setPhoto(tutorial[indexTutorial].uri);
+        setTutorialBackIcon('close');
+        break;
+      case 1:
+        setPhoto(tutorial[indexTutorial].uri);
+        setTutorialBackIcon('arrow-back');
+        break;
+      case 9:
+        setPhoto(tutorial[indexTutorial].uri);
+        setTutorialNextIcon('arrow-forward');
+        break;
+      case 10:
+        setPhoto(tutorial[indexTutorial].uri);
+        setTutorialNextIcon('done');
+        break;
+      case 11:
+        setPhoto(tutorial[0].uri);
+        setVisible7(false);
+        break;
+      default:
+        setPhoto(tutorial[indexTutorial].uri);
+        setIndexTutorial(indexTutorial);
+    }
+  }, [indexTutorial]);
+
   async function handleChange(photouri, idimg) {
     const upload = new FormData();
     let side = 'lado_principal';
@@ -272,7 +293,7 @@ export default function Design({ navigation }) {
     upload.append(`${side}`, {
       uri: photouri, // here goes the uri
       type: 'image/jpeg', // trocar pra png
-      name: `${photoTeste}.jpeg`,
+      name: `${photouri}.jpeg`,
     });
 
     upload.append(`${otherSide}`, null);
@@ -290,14 +311,11 @@ export default function Design({ navigation }) {
       text: txt,
       font_family,
     } = response.data;
-    console.tron.log(
-      `id: ${id}, front: ${front_printscreen}, back: ${back_printscreen}, text: ${txt}, font ${font_family}`
-    );
+
     setImage(baseImg.uri);
     setSticker(baseImg.uri);
 
     setText('');
-    console.tron.log(`response: ${response.data}`);
     setEditMode(false);
     Toast.show('Sua camiseta foi enviada!');
     setVisible4(false);
@@ -326,9 +344,6 @@ export default function Design({ navigation }) {
     const response = await api.post('design-shirt/printables/sticker', upload); // envia pra api
 
     const { id, url } = response.data;
-    console.tron.log(`actual upload: ${response.data}`);
-
-    console.tron.log(`id img printable: ${id} e url img: ${url}`);
 
     onCapture(id);
     setEditMode(false);
@@ -339,8 +354,6 @@ export default function Design({ navigation }) {
       format: 'png',
       quality: 1,
     }).then(uri => {
-      console.tron.log(`LOOOOOOOOOOOOOOOOOOOOOOOL`);
-      console.tron.log(`printable: ${uri}`);
       uploadPrintable(uri);
     });
   }
@@ -355,18 +368,11 @@ export default function Design({ navigation }) {
     };
 
     ImagePicker.showImagePicker(options, response => {
-      if (response.didCancel) {
-        console.tron.log('User cancelled image picker');
-      } else if (response.error) {
-        console.tron.log('ImagePicker Error: ', response.error);
-      } else {
-        const source = { uri: `data:image/jpeg;base64,${response.data}` };
-        setImage(source.uri);
-        setEditMode(true);
-        setSelected('imagem');
-        setSize(120);
-        setPhoto(source.uri);
-      }
+      const source = { uri: `data:image/jpeg;base64,${response.data}` };
+      setImage(source.uri);
+      setEditMode(true);
+      setSelected('imagem');
+      setSize(120);
     });
   }
 
@@ -379,16 +385,13 @@ export default function Design({ navigation }) {
       .then(uri => {
         CameraRoll.saveToCameraRoll(uri, 'photo')
           .then(() => {
-            console.tron.log('salvou na galeria.');
             Toast.show('A imagem foi salva na galeria.');
           })
-          .catch(() => console.tron.log('erro no salvamento'));
+          .catch(() => Toast.show('Erro ao salvar imagem.'));
       })
-      .catch(() => console.tron.log('erro no print'));
+      .catch(() => Toast.show('Erro ao salvar imagem.'));
   }
 
-  console.tron.log('width final: ', finalSize + textSize);
-  console.tron.log('this: ', finalSize);
   return (
     <>
       <Header navigation={navigation} title="Design" />
@@ -584,7 +587,8 @@ export default function Design({ navigation }) {
         <BottomButton
           onPress={() => {
             if (editMode) {
-              console.tron.log('none');
+              setPhoto(tutorial[0].uri);
+              setVisible7(true);
             } else {
               setEditMode(true);
             }
@@ -665,14 +669,13 @@ export default function Design({ navigation }) {
           type={shirtType}
           side={shirtSide}
           done={value => {
-            console.tron.log(`value: ${value}`);
             setTShirtImage(value);
             setVisible2(false);
           }}
         />
       </Modal>
 
-      <CustomModal
+      <CustomModal // selecionar texto
         visible={visible3}
         animationType="slide"
         transparent
@@ -704,13 +707,11 @@ export default function Design({ navigation }) {
               autoFocus
               value={text}
               onLayout={event => {
-                console.tron.log('event properties: ', event);
-                console.tron.log('width: ', event.nativeEvent.layout.width);
                 setTextSize(event.nativeEvent.layout.width);
                 setFinalSize(0);
               }}
               onChangeText={setText}
-              maxLength={11}
+              maxLength={13}
               returnKeyType="send"
               onSubmitEditing={() => {
                 setText(text);
@@ -898,6 +899,56 @@ export default function Design({ navigation }) {
           </View>
         </CustomView>
       </CustomModal>
+
+      <CustomModal // tutorial
+        visible={visible7}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setVisible7(false)}
+      >
+        <CustomView style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <View
+            style={{
+              height: 420,
+              width: 400,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Image
+              style={{ width: 380, height: 380 }}
+              source={{ uri: photo }}
+              resizeMode="contain"
+            />
+            <Text
+              style={{
+                // marginTop: -10,
+                fontSize: 14,
+                color: '#ddd',
+                textAlign: 'center',
+              }}
+            >
+              {`${indexTutorial + 1} de 12`}
+            </Text>
+            <ContainerActions>
+              <Actions
+                onPress={() => setIndexTutorial(indexTutorial - 1)}
+                style={{ backgroundColor: '#038311' }}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Icon name={tutorialBackIcon} size={30} color="#FFF" />
+              </Actions>
+              <Actions
+                onPress={() => setIndexTutorial(indexTutorial + 1)}
+                style={{ backgroundColor: '#038311' }}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Icon name={tutorialNextIcon} size={30} color="#FFF" />
+              </Actions>
+            </ContainerActions>
+          </View>
+        </CustomView>
+      </CustomModal>
       <Modal
         visible={visible6}
         disabled={false}
@@ -907,7 +958,6 @@ export default function Design({ navigation }) {
         <Carousel
           data={models}
           done={value => {
-            console.tron.log(`value image: ${value}`);
             setTShirtImage(value);
             setVisible6(false);
           }}

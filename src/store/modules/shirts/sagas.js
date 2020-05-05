@@ -46,6 +46,18 @@ import hoodieGreenBack from '~/assets/models/back/hoodieback3.png';
 import hoodiePinkBack from '~/assets/models/back/hoodieback4.png';
 import hoodieYellowBack from '~/assets/models/back/hoodieback5.png';
 
+import tutorial1 from '~/assets/tutorial/1.png';
+import tutorial2 from '~/assets/tutorial/2.png';
+import tutorial3 from '~/assets/tutorial/3.png';
+import tutorial4 from '~/assets/tutorial/4.png';
+import tutorial5 from '~/assets/tutorial/5.png';
+import tutorial6 from '~/assets/tutorial/6.png';
+import tutorial7 from '~/assets/tutorial/7.png';
+import tutorial8 from '~/assets/tutorial/8.png';
+import tutorial9 from '~/assets/tutorial/9.png';
+import tutorial10 from '~/assets/tutorial/10.png';
+import tutorial11 from '~/assets/tutorial/11.png';
+
 import boom from '~/assets/boom.png';
 
 import { uploadShirts } from './actions';
@@ -57,6 +69,7 @@ export function* upload() {
   let bBacks = [];
   let hFronts = [];
   let hBacks = [];
+  let tutorial = [];
 
   const boomt = resolveAssetSource(boom);
 
@@ -103,6 +116,18 @@ export function* upload() {
   hBacks.push(resolveAssetSource(hoodiePinkBack));
   hBacks.push(resolveAssetSource(hoodieYellowBack));
 
+  tutorial.push(resolveAssetSource(tutorial1));
+  tutorial.push(resolveAssetSource(tutorial2));
+  tutorial.push(resolveAssetSource(tutorial3));
+  tutorial.push(resolveAssetSource(tutorial4));
+  tutorial.push(resolveAssetSource(tutorial5));
+  tutorial.push(resolveAssetSource(tutorial6));
+  tutorial.push(resolveAssetSource(tutorial7));
+  tutorial.push(resolveAssetSource(tutorial8));
+  tutorial.push(resolveAssetSource(tutorial9));
+  tutorial.push(resolveAssetSource(tutorial10));
+  tutorial.push(resolveAssetSource(tutorial11));
+
   const tshirt = {
     front: tFront.uri,
     back: tBack.uri,
@@ -129,6 +154,7 @@ export function* upload() {
       bBacks,
       hFronts,
       hBacks,
+      tutorial,
       boomt
     )
   );

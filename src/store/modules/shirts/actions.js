@@ -8,6 +8,7 @@ export function uploadShirts(
   bBacks,
   hFronts,
   hBacks,
+  tutorial,
   boomt
 ) {
   return {
@@ -22,6 +23,7 @@ export function uploadShirts(
       bBacks,
       hFronts,
       hBacks,
+      tutorial,
       boomt,
     },
   };
