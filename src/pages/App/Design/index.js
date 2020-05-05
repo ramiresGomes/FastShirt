@@ -1,9 +1,11 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
 import CameraRoll from '@react-native-community/cameraroll';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { captureRef } from 'react-native-view-shot';
 
+import { captureRef } from 'react-native-view-shot';
 import ImagePicker from 'react-native-image-picker';
+import Toast from 'react-native-tiny-toast';
 
 import {
   Image,
@@ -16,17 +18,13 @@ import { useSelector } from 'react-redux';
 
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
-import { ScrollView } from 'react-native-gesture-handler';
-import Toast from 'react-native-tiny-toast';
-import Draggable from './PickText/CustomDraggable';
-
 import Header from '~/components/Header';
 import Modal from '~/components/Modal';
 import CustomList from '~/components/List';
 import Carousel from '~/components/Carousel';
 import FontPicker from '~/components/FontPicker';
 
-import PickImage from './PickImage';
+import Draggable from './PickText/CustomDraggable';
 
 import base from '~/assets/base.png';
 
@@ -39,7 +37,7 @@ import {
   Container,
   Bottom,
   BottomButton,
-  FinishButton,
+  // FinishButton,
   IconLabel,
   TShirtContainer,
   TShirtImage,
@@ -71,30 +69,25 @@ export default function Design({ navigation }) {
 
   const tutorial = useSelector(state => state.shirts.tutorial);
 
-  const boomt = useSelector(state => state.shirts.boomt);
+  // const boomt = useSelector(state => state.shirts.boomt);
 
-  const [main, setMain] = useState('');
+  const captureViewRef = useRef(); // ref para capturar a imagem
+  const imgRef = useRef(); // ref repassada ao draggable com 'forwardRef'
 
-  const captureViewRef = useRef();
-  const imgRef = useRef();
-
-  const baseImg = resolveAssetSource(base);
+  const baseImg = resolveAssetSource(base); // imagem transparente para inicializar
 
   const [data, setData] = useState([]);
   const [models, setModels] = useState([]);
   const [text, setText] = useState('');
   const [font, setFont] = useState('');
   const [finalSize, setFinalSize] = useState(0);
-  const [disabled, setDisabled] = useState(false);
 
-  const [slider, setSlider] = useState(1); // slider de size
-  const [selected, setSelected] = useState('none'); // slider de size
-  const [disableslider, setDSlider] = useState(false); // slider de size
-  const [color, setColor] = useState('#fff'); // slider de size
+  const [slider, setSlider] = useState(1);
+  const [selected, setSelected] = useState('none');
+  const [color, setColor] = useState('#fff');
 
-  const [size, setSize] = useState(0.1); // slider de size
-  const [sizeSticker, setSizeSticker] = useState(0.1); // slider de size
-  const [maxSize, setMaxSize] = useState(1); // slider de size
+  const [size, setSize] = useState(0.1);
+  const [sizeSticker, setSizeSticker] = useState(0.1);
   const [textSize, setTextSize] = useState(10);
 
   const [position, setPosition] = useState({
@@ -107,14 +100,14 @@ export default function Design({ navigation }) {
   const [images, setImages] = useState([]);
   const [stickers, setStickers] = useState([]);
 
-  const nw = {
-    id: 5,
-    name: 'Blank One',
-    url: boomt.uri,
-    price: '34,90',
-    thumbnail:
-      'https://clubedocavalo.shop/uploads/design_shirt/printable_images/5/image/indiferente.png/thumbs/indiferente.png',
-  };
+  // const nw = {
+  //   id: 5,
+  //   name: 'Blank One',
+  //   url: boomt.uri,
+  //   price: '34,90',
+  //   thumbnail:
+  //     'https://clubedocavalo.shop/uploads/design_shirt/printable_images/5/image/indiferente.png/thumbs/indiferente.png',
+  // };
 
   const [shirtType, setShirtType] = useState('tshirt');
   const [shirtSide, setShirtSide] = useState('front');
@@ -141,7 +134,7 @@ export default function Design({ navigation }) {
         api.get('design-shirt/image'),
         api.get('design-shirt/sticker'),
       ]);
-      stk.data.push(nw);
+      // stk.data.push(nw);
 
       setImages(imgs.data);
       setStickers(stk.data);
@@ -165,21 +158,21 @@ export default function Design({ navigation }) {
     setHBack(customH.back);
   }, [customH]);
 
+  // modais
   const [visible, setVisible] = useState(false);
-  const [visible2, setVisible2] = useState(false);
   const [visible3, setVisible3] = useState(false);
   const [visible4, setVisible4] = useState(false);
-  const [visible5, setVisible5] = useState(false);
   const [visible6, setVisible6] = useState(false);
   const [visible7, setVisible7] = useState(false);
 
-  const [indexTutorial, setIndexTutorial] = useState(0);
+  const [indexTutorial, setIndexTutorial] = useState(0); // indice do array de imagens no modal de tutorial
 
   const [zindexImg, setZindexImg] = useState(0);
   const [zindexSticker, setZindexSticker] = useState(1);
 
   const [editMode, setEditMode] = useState(false);
 
+  // inicializando icones
   const [galleryIcon, setGalleryIcon] = useState('collections');
   const [colorsIcon, setColorsIcon] = useState('palette');
   const [editIcon, setEditIcon] = useState('create');
@@ -190,6 +183,7 @@ export default function Design({ navigation }) {
   const [tutorialNextIcon, setTutorialNextIcon] = useState('arrow-forward');
 
   useEffect(() => {
+    // definindo posição maxima do draggable de acordo com a imagem selecionada
     switch (shirtType) {
       case 'tshirt':
         shirtSide === 'front' ? setTShirtImage(tFront) : setTShirtImage(tBack);
@@ -216,10 +210,12 @@ export default function Design({ navigation }) {
   }, [shirtType, shirtSide]);
 
   useEffect(() => {
+    // gambiarra pra renderizar o texto após mudar cor ou fonte
     setText(`${text} `);
   }, [color, font]); //eslint-disable-line
 
   useEffect(() => {
+    // alterna qual imagem fica no topo, se a imagem ou a figura
     if (selected === 'imagem') {
       setZindexImg(1);
       setZindexSticker(0);
@@ -230,6 +226,7 @@ export default function Design({ navigation }) {
   }, [selected]);
 
   useEffect(() => {
+    // mudando os icones quando entramos no modo de edição / normal
     if (editMode) {
       setGalleryIcon('clear');
       setColorsIcon('delete');
@@ -248,77 +245,74 @@ export default function Design({ navigation }) {
   useEffect(() => {
     switch (indexTutorial) {
       case -1:
-        setPhoto(tutorial[0].uri);
-        setVisible7(false);
+        setPhoto(tutorial[0].uri); // apos fechar, reseta pro icone normal
+        setVisible7(false); // fecha o modal
         break;
-      case 0:
+      case 0: // primeiro elemento do tutorial. muda o icone e fecha o modal
         setPhoto(tutorial[indexTutorial].uri);
         setTutorialBackIcon('close');
         break;
-      case 1:
+      case 1: // a partir do primeiro elemento do tutorial, muda o icone pra seta
         setPhoto(tutorial[indexTutorial].uri);
         setTutorialBackIcon('arrow-back');
         break;
-      case 9:
+      case 9: // penultimo elemento. muda o icone caso o usuario vá pro done e volte
         setPhoto(tutorial[indexTutorial].uri);
         setTutorialNextIcon('arrow-forward');
         break;
       case 10:
-        setPhoto(tutorial[indexTutorial].uri);
+        setPhoto(tutorial[indexTutorial].uri); // ultimo elemento. muda o icone para 'done' e fecha o modal
         setTutorialNextIcon('done');
         break;
       case 11:
-        setPhoto(tutorial[0].uri);
-        setVisible7(false);
+        setPhoto(tutorial[0].uri); // apos fechar, reseta pro icone normal
+        setVisible7(false); // fecha o modal
         break;
       default:
-        setPhoto(tutorial[indexTutorial].uri);
-        setIndexTutorial(indexTutorial);
+        setPhoto(tutorial[indexTutorial].uri); // apenas altera a foto
+        setIndexTutorial(indexTutorial); // apenas altera o index
     }
   }, [indexTutorial]);
 
   async function handleChange(photouri, idimg) {
-    const upload = new FormData();
-    let side = 'lado_principal';
-    let otherSide = 'outro_lado';
+    try {
+      const upload = new FormData();
+      let side = 'lado_principal';
+      let otherSide = 'outro_lado';
 
-    if (shirtSide === 'front') {
-      side = 'front_printscreen';
-      otherSide = 'back_printscreen';
-    } else {
-      side = 'back_printscreen';
-      otherSide = 'front_printscreen';
+      if (shirtSide === 'front') {
+        side = 'front_printscreen';
+        otherSide = 'back_printscreen';
+      } else {
+        side = 'back_printscreen';
+        otherSide = 'front_printscreen';
+      }
+
+      upload.append(`${side}`, {
+        uri: photouri, // here goes the uri
+        type: 'image/jpeg', // trocar pra png
+        name: `${photouri}.jpeg`,
+      });
+
+      upload.append(`${otherSide}`, null);
+      upload.append('front_printable_image_id', idimg);
+      upload.append('back_printable_image_id', idimg);
+      upload.append('text', text);
+      upload.append('font_family', 'Oswald');
+
+      await api.post('design-shirt/purchase', upload);
+
+      setImage(baseImg.uri); // apaga a imagem - coloca imagem transparente
+      setSticker(baseImg.uri); // apaga o sticker - coloca imagem transparente
+
+      setText('');
+      setEditMode(false);
+      Toast.show('Sua camiseta foi enviada!');
+
+      setVisible4(false); // fecha modal de 'enviando imagem'
+    } catch (err) {
+      Toast.show('Houve um erro no envio da imagem.');
     }
-
-    upload.append(`${side}`, {
-      uri: photouri, // here goes the uri
-      type: 'image/jpeg', // trocar pra png
-      name: `${photouri}.jpeg`,
-    });
-
-    upload.append(`${otherSide}`, null);
-    upload.append('front_printable_image_id', idimg);
-    upload.append('back_printable_image_id', idimg);
-    upload.append('text', text);
-    upload.append('font_family', 'Oswald');
-
-    const response = await api.post('design-shirt/purchase', upload);
-
-    const {
-      id,
-      front_printscreen,
-      back_printscreen,
-      text: txt,
-      font_family,
-    } = response.data;
-
-    setImage(baseImg.uri);
-    setSticker(baseImg.uri);
-
-    setText('');
-    setEditMode(false);
-    Toast.show('Sua camiseta foi enviada!');
-    setVisible4(false);
   }
 
   function onCapture(id) {
@@ -326,7 +320,6 @@ export default function Design({ navigation }) {
       format: 'jpg',
       quality: 1,
     }).then(uri => {
-      setMain(uri);
       handleChange(uri, id);
     });
   }
@@ -343,7 +336,7 @@ export default function Design({ navigation }) {
 
     const response = await api.post('design-shirt/printables/sticker', upload); // envia pra api
 
-    const { id, url } = response.data;
+    const { id } = response.data;
 
     onCapture(id);
     setEditMode(false);
@@ -368,11 +361,16 @@ export default function Design({ navigation }) {
     };
 
     ImagePicker.showImagePicker(options, response => {
-      const source = { uri: `data:image/jpeg;base64,${response.data}` };
-      setImage(source.uri);
-      setEditMode(true);
-      setSelected('imagem');
-      setSize(120);
+      if (response.didCancel) setEditMode(false);
+      else if (response.error)
+        Toast.show('Houve um erro ao selecionar a imagem. ');
+      else {
+        const source = { uri: `data:image/jpeg;base64,${response.data}` };
+        setImage(source.uri);
+        setEditMode(true);
+        setSelected('imagem');
+        setSize(120);
+      }
     });
   }
 
@@ -658,23 +656,6 @@ export default function Design({ navigation }) {
         />
       </Modal>
 
-      <Modal
-        visible={visible2}
-        disabled={true}
-        onRequestClose={() => setVisible2(false)}
-      >
-        <PickImage
-          image={{ uri: image }}
-          shirt={tShirtImage}
-          type={shirtType}
-          side={shirtSide}
-          done={value => {
-            setTShirtImage(value);
-            setVisible2(false);
-          }}
-        />
-      </Modal>
-
       <CustomModal // selecionar texto
         visible={visible3}
         animationType="slide"
@@ -906,7 +887,13 @@ export default function Design({ navigation }) {
         transparent
         onRequestClose={() => setVisible7(false)}
       >
-        <CustomView style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <CustomView
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          }}
+        >
           <View
             style={{
               height: 420,
