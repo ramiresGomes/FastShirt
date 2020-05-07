@@ -435,12 +435,7 @@ export default function Design({ navigation }) {
             console.tron.log(`width shirt: ${layout.width}`);
             console.tron.log(`height shirt: ${layout.height}`);
             console.tron.log(`x shirt: ${layout.x}`);
-            setPosition({
-              minX: layout.x + ((22.5 * layout.width) / 100), // prettier-ignore
-              maxX: layout.x + ((64.4 * layout.width) / 100), // prettier-ignore
-              minY: layout.y + ((15.4 * layout.height) / 100), // prettier-ignore
-              maxY: layout.y + ((90.4 * layout.height) / 100) // prettier-ignore
-            });
+
             setPaddingX(layout.x);
             setPaddingY(layout.y);
             setWidth(layout.width);
