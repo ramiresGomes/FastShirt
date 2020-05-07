@@ -3,7 +3,7 @@ import { TouchableOpacity, Image } from 'react-native';
 import Slider from '@react-native-community/slider';
 
 export const Container = styled.View`
-  background: #f2f2f2;
+  background: #00f2f2;
   flex: 1;
   padding: 20px;
   position: relative;
@@ -35,7 +35,7 @@ export const TShirtContainer = styled.View`
   display: flex;
   justify-content: center;
   padding-top: 20px;
-  background-color: #f2f2f2;
+  background-color: #fff202;
 `;
 
 export const TShirtImage = styled(Image)`

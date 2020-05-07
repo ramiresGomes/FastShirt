@@ -395,10 +395,33 @@ export default function Design({ navigation }) {
       <Header navigation={navigation} title="Design" />
 
       <Container>
-        <TShirtContainer ref={captureViewRef}>
-          <TShirtImage source={{ uri: tShirtImage }} resizeMode="contain" />
+        <TShirtContainer
+          onLayout={({ nativeEvent: { layout } }) => {
+            console.tron.log(`width container: ${layout.width}`);
+            console.tron.log(`height container: ${layout.height}`);
+            console.tron.log(`x container: ${layout.x}`);
+            console.tron.log(`y container: ${layout.y}`);
+          }}
+          ref={captureViewRef}
+        >
+          <TShirtImage
+            onLayout={({ nativeEvent: { layout } }) => {
+              console.tron.log(`width: ${layout.width}`);
+              console.tron.log(`height: ${layout.height}`);
+              console.tron.log(`x: ${layout.x}`);
+              console.tron.log(`y: ${layout.y}`);
+            }}
+            source={{ uri: tShirtImage }}
+            resizeMode="contain"
+          />
           <Draggable
             ref={imgRef}
+            onLayout={({ nativeEvent: { layout } }) => {
+              console.tron.log(`width: ${layout.width}`);
+              console.tron.log(`height: ${layout.height}`);
+              console.tron.log(`x: ${layout.x}`);
+              console.tron.log(`y: ${layout.y}`);
+            }}
             selected={editMode && selected === 'imagem'}
             disabled={!editMode}
             imageSource={{ uri: image }}
