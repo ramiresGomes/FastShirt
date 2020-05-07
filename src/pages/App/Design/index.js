@@ -182,28 +182,54 @@ export default function Design({ navigation }) {
   const [tutorialBackIcon, setTutorialBackIcon] = useState('close');
   const [tutorialNextIcon, setTutorialNextIcon] = useState('arrow-forward');
 
+  const [distanceX, setDistanceX] = useState(0);
+  const [distanceY, setDistanceY] = useState(0);
+
+  const [paddingX, setPaddingX] = useState(0);
+  const [paddingY, setPaddingY] = useState(0);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+  
   useEffect(() => {
     // definindo posição maxima do draggable de acordo com a imagem selecionada
     switch (shirtType) {
       case 'tshirt':
         shirtSide === 'front' ? setTShirtImage(tFront) : setTShirtImage(tBack);
         shirtSide === 'front' ? setModels(tFronts) : setModels(tBacks);
-        shirtSide === 'front'
-          ? setPosition({ minX: 92, maxX: 223, minY: 100, maxY: 300 })
-          : setPosition({ minX: 97, maxX: 225, minY: 80, maxY: 310 });
+         shirtSide === 'front' //eslint-disable-line
+          ? setPosition({
+              minX: paddingX + ((22.5 * width) / 100), // prettier-ignore
+              maxX: paddingX + ((64.4 * width) / 100), // prettier-ignore
+              minY: paddingY + ((15.4 * height) / 100), // prettier-ignore
+              maxY: paddingY + ((90.4 * height) / 100) // prettier-ignore
+            })
+          : setPosition({
+              minX: paddingX + ((24.06 * width) / 100), // prettier-ignore
+              maxX: paddingX + ((64.06 * width) / 100), // prettier-ignore
+              minY: paddingY + ((15.4 * height) / 100), // prettier-ignore
+              maxY: paddingY + ((90.4 * height) / 100) // prettier-ignore
+            });
 
         break;
       case 'babylook':
         shirtSide === 'front' ? setTShirtImage(bFront) : setTShirtImage(bBack);
         shirtSide === 'front' ? setModels(bFronts) : setModels(bBacks);
-        setPosition({ minX: 101, maxX: 219, minY: 80, maxY: 301 });
-
+        setPosition({
+          minX: paddingX + ((25.31 * width) / 100), // prettier-ignore
+          maxX: paddingX + ((62.18 * width) / 100), // prettier-ignore
+          minY: paddingY + ((15.4 * height) / 100), // prettier-ignore
+          maxY: paddingY + ((88.4 * height) / 100) // prettier-ignore
+        });
         break;
       case 'hoodie':
         shirtSide === 'front' ? setTShirtImage(hFront) : setTShirtImage(hBack);
         shirtSide === 'front' ? setModels(hFronts) : setModels(hBacks);
-        setPosition({ minX: 95, maxX: 219, minY: 130, maxY: 285 });
-
+        setPosition({
+          minX: paddingX + ((23.43 * width) / 100), // prettier-ignore
+          maxX: paddingX + ((62.18 * width) / 100), // prettier-ignore
+          minY: paddingY + ((20.4 * height) / 100), // prettier-ignore
+          maxY: paddingY + ((85.4 * height) / 100) // prettier-ignore
+        });
         break;
       default:
     }
@@ -394,22 +420,35 @@ export default function Design({ navigation }) {
     <>
       <Header navigation={navigation} title="Design" />
 
-      <Container>
+      <Container
+          onLayout={({ nativeEvent: { layout } }) => {
+          console.tron.log(`width container: ${layout.width}`);
+          console.tron.log(`height container: ${layout.height}`);
+          console.tron.log(`x container: ${layout.x}`);
+          console.tron.log(`y container: ${layout.y}`);
+          setDistanceX(layout.x);
+          setDistanceY(layout.y);
+        }}
+        >
         <TShirtContainer
           onLayout={({ nativeEvent: { layout } }) => {
-            console.tron.log(`width container: ${layout.width}`);
-            console.tron.log(`height container: ${layout.height}`);
-            console.tron.log(`x container: ${layout.x}`);
-            console.tron.log(`y container: ${layout.y}`);
+            console.tron.log(`width shirt container: ${layout.width}`);
+            console.tron.log(`height shirt container: ${layout.height}`);
+            console.tron.log(`x shirt container: ${layout.x}`);
+            console.tron.log(`y shirt container: ${layout.y}`);
+            setPaddingX(layout.x);
+            setPaddingY(layout.y);
+            setWidth(layout.width);
+            setHeight(layout.height);
           }}
           ref={captureViewRef}
         >
           <TShirtImage
             onLayout={({ nativeEvent: { layout } }) => {
-              console.tron.log(`width: ${layout.width}`);
-              console.tron.log(`height: ${layout.height}`);
-              console.tron.log(`x: ${layout.x}`);
-              console.tron.log(`y: ${layout.y}`);
+              console.tron.log(`width imagem: ${layout.width}`);
+              console.tron.log(`height imagem: ${layout.height}`);
+              console.tron.log(`x imagem: ${layout.x}`);
+              console.tron.log(`y imagem: ${layout.y}`);
             }}
             source={{ uri: tShirtImage }}
             resizeMode="contain"
