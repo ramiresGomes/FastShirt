@@ -239,9 +239,13 @@ function Draggable(props, ref) {
             height: renderHeight,
             alignItems: 'center',
             justifyContent: 'center',
+            ...(selected ? styles.imageSelected : styles.image),
           }}
         >
           <Text
+            onLayout={({ nativeEvent: { layout } }) => {
+              width = layout.width;
+            }}
             numberOfLines={1}
             style={{
               color: textColor,

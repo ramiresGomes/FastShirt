@@ -38,6 +38,7 @@ import {
   Bottom,
   BottomButton,
   // FinishButton,
+  AddToCart,
   IconLabel,
   TShirtContainer,
   TShirtImage,
@@ -85,7 +86,6 @@ export default function Design({ navigation }) {
   const [slider, setSlider] = useState(1);
   const [selected, setSelected] = useState('none');
   const [color, setColor] = useState('#fff');
-
   const [size, setSize] = useState(0.1);
   const [sizeSticker, setSizeSticker] = useState(0.1);
   const [textSize, setTextSize] = useState(10);
@@ -182,28 +182,54 @@ export default function Design({ navigation }) {
   const [tutorialBackIcon, setTutorialBackIcon] = useState('close');
   const [tutorialNextIcon, setTutorialNextIcon] = useState('arrow-forward');
 
+  const [distanceX, setDistanceX] = useState(0);
+  const [distanceY, setDistanceY] = useState(0);
+
+  const [paddingX, setPaddingX] = useState(0);
+  const [paddingY, setPaddingY] = useState(0);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+
   useEffect(() => {
     // definindo posição maxima do draggable de acordo com a imagem selecionada
     switch (shirtType) {
       case 'tshirt':
-        shirtSide === 'front' ? setTShirtImage(tFront) : setTShirtImage(tBack);
-        shirtSide === 'front' ? setModels(tFronts) : setModels(tBacks);
-        shirtSide === 'front'
-          ? setPosition({ minX: 92, maxX: 223, minY: 100, maxY: 300 })
-          : setPosition({ minX: 97, maxX: 225, minY: 80, maxY: 310 });
+        shirtSide === 'front' ? setTShirtImage(tFront) : setTShirtImage(tBack); //eslint-disable-line
+        shirtSide === 'front' ? setModels(tFronts) : setModels(tBacks); //eslint-disable-line
+        shirtSide === 'front' //eslint-disable-line
+          ? setPosition({
+              minX: paddingX + ((22.5 * width) / 100), // prettier-ignore
+              maxX: paddingX + ((64.4 * width) / 100), // prettier-ignore
+              minY: paddingY + ((15.4 * height) / 100), // prettier-ignore
+              maxY: paddingY + ((90.4 * height) / 100) // prettier-ignore
+            })
+          : setPosition({
+              minX: paddingX + ((24.06 * width) / 100), // prettier-ignore
+              maxX: paddingX + ((64.06 * width) / 100), // prettier-ignore
+              minY: paddingY + ((15.4 * height) / 100), // prettier-ignore
+              maxY: paddingY + ((90.4 * height) / 100) // prettier-ignore
+            });
 
         break;
       case 'babylook':
-        shirtSide === 'front' ? setTShirtImage(bFront) : setTShirtImage(bBack);
-        shirtSide === 'front' ? setModels(bFronts) : setModels(bBacks);
-        setPosition({ minX: 101, maxX: 219, minY: 80, maxY: 301 });
-
+        shirtSide === 'front' ? setTShirtImage(bFront) : setTShirtImage(bBack); //eslint-disable-line
+        shirtSide === 'front' ? setModels(bFronts) : setModels(bBacks); //eslint-disable-line
+        setPosition({
+          minX: paddingX + ((25.31 * width) / 100), // prettier-ignore
+          maxX: paddingX + ((62.18 * width) / 100), // prettier-ignore
+          minY: paddingY + ((15.4 * height) / 100), // prettier-ignore
+          maxY: paddingY + ((88.4 * height) / 100) // prettier-ignore
+        });
         break;
       case 'hoodie':
-        shirtSide === 'front' ? setTShirtImage(hFront) : setTShirtImage(hBack);
-        shirtSide === 'front' ? setModels(hFronts) : setModels(hBacks);
-        setPosition({ minX: 95, maxX: 219, minY: 130, maxY: 285 });
-
+        shirtSide === 'front' ? setTShirtImage(hFront) : setTShirtImage(hBack); //eslint-disable-line
+        shirtSide === 'front' ? setModels(hFronts) : setModels(hBacks); //eslint-disable-line
+        setPosition({
+          minX: paddingX + ((23.43 * width) / 100), // prettier-ignore
+          maxX: paddingX + ((62.18 * width) / 100), // prettier-ignore
+          minY: paddingY + ((20.4 * height) / 100), // prettier-ignore
+          maxY: paddingY + ((85.4 * height) / 100) // prettier-ignore
+        });
         break;
       default:
     }
@@ -367,7 +393,7 @@ export default function Design({ navigation }) {
       else {
         const source = { uri: `data:image/jpeg;base64,${response.data}` };
         setImage(source.uri);
-        setEditMode(true);
+        // setEditMode(true);
         setSelected('imagem');
         setSize(120);
       }
@@ -394,13 +420,32 @@ export default function Design({ navigation }) {
     <>
       <Header navigation={navigation} title="Design" />
 
-      <Container>
+      <Container
+        onLayout={({ nativeEvent: { layout } }) => {
+          console.tron.log(`width container: ${layout.width}`);
+          console.tron.log(`height container: ${layout.height}`);
+          console.tron.log(`x container: ${layout.x}`);
+          console.tron.log(`y container: ${layout.y}`);
+          setDistanceX(layout.x);
+          setDistanceY(layout.y);
+        }}
+      >
         <TShirtContainer
           onLayout={({ nativeEvent: { layout } }) => {
-            console.tron.log(`width container: ${layout.width}`);
-            console.tron.log(`height container: ${layout.height}`);
-            console.tron.log(`x container: ${layout.x}`);
-            console.tron.log(`y container: ${layout.y}`);
+            console.tron.log(`width shirt: ${layout.width}`);
+            console.tron.log(`height shirt: ${layout.height}`);
+            console.tron.log(`x shirt: ${layout.x}`);
+            setPosition({
+              minX: layout.x + ((22.5 * layout.width) / 100), // prettier-ignore
+              maxX: layout.x + ((64.4 * layout.width) / 100), // prettier-ignore
+              minY: layout.y + ((15.4 * layout.height) / 100), // prettier-ignore
+              maxY: layout.y + ((90.4 * layout.height) / 100) // prettier-ignore
+            });
+            setPaddingX(layout.x);
+            setPaddingY(layout.y);
+            setWidth(layout.width);
+            setHeight(layout.height);
+            console.tron.log(`y shirt: ${layout.y}`);
           }}
           ref={captureViewRef}
         >
@@ -416,17 +461,15 @@ export default function Design({ navigation }) {
           />
           <Draggable
             ref={imgRef}
-            onLayout={({ nativeEvent: { layout } }) => {
-              console.tron.log(`width: ${layout.width}`);
-              console.tron.log(`height: ${layout.height}`);
-              console.tron.log(`x: ${layout.x}`);
-              console.tron.log(`y: ${layout.y}`);
-            }}
-            selected={editMode && selected === 'imagem'}
-            disabled={!editMode}
+            // disabled={!editMode}
+            selected={selected === 'imagem'}
             imageSource={{ uri: image }}
             renderSize={size}
-            onLongPress={() => setSelected('imagem')}
+            onLongPress={() => {
+              setImage(baseImg.uri);
+              setSelected('none');
+              setSize(0.1);
+            }}
             x={position.minX}
             y={position.minY}
             z={zindexImg}
@@ -437,16 +480,20 @@ export default function Design({ navigation }) {
             onDrag={() => {}}
             onShortPressRelease={() => {}}
             onDragRelease={() => {}}
-            onPressIn={() => {}}
-            onPressOut={() => {}}
+            onPressIn={() => setSelected('imagem')}
+            onPressOut={() => setSelected('imagem')}
             onRelease={() => {}}
           />
           <Draggable
-            disabled={!editMode}
-            selected={editMode && selected === 'figura'}
+            // disabled={!editMode}
+            selected={selected === 'figura'}
             imageSource={{ uri: sticker }}
             renderSize={sizeSticker}
-            onLongPress={() => setSelected('figura')}
+            onLongPress={() => {
+              setSticker(baseImg.uri);
+              setSelected('none');
+              setSizeSticker(0.1);
+            }}
             x={position.minX}
             y={position.minY + 30}
             z={zindexSticker}
@@ -457,17 +504,21 @@ export default function Design({ navigation }) {
             onDrag={() => {}}
             onShortPressRelease={() => {}}
             onDragRelease={() => {}}
-            onPressIn={() => {}}
-            onPressOut={() => {}}
+            onPressIn={() => setSelected('figura')}
+            onPressOut={() => setSelected('figura')}
             onRelease={() => {}}
           />
           <Draggable
-            disabled={!editMode}
+            // disabled={!editMode}
             renderText={text}
             font={font}
-            textSize={11 + finalSize / 5}
-            onLongPress={() => setSelected('frase')}
-            renderHeight={12}
+            textSize={11 + finalSize / 6}
+            selected={selected === 'frase'}
+            onLongPress={() => {
+              setText('');
+              setSelected('none');
+            }}
+            renderHeight={11 + finalSize / 6}
             renderSize={textSize + finalSize}
             textColor={color}
             x={position.minX + 10}
@@ -477,11 +528,11 @@ export default function Design({ navigation }) {
             maxX={position.maxX + 10}
             minY={position.minY}
             maxY={position.maxY}
-            onDrag={() => {}}
+            onDrag={() => setSelected('frase')}
             onShortPressRelease={() => {}}
             onDragRelease={() => {}}
-            onPressIn={() => {}}
-            onPressOut={() => {}}
+            onPressIn={() => setSelected('frase')}
+            onPressOut={() => setSelected('frase')}
             onRelease={() => {}}
           />
         </TShirtContainer>
@@ -514,6 +565,7 @@ export default function Design({ navigation }) {
             </ActionButtonText>
           </ActionButton>
         </TopButtonsContainer>
+
         {editMode && selected !== 'none' ? (
           <>
             <Slider
@@ -529,8 +581,7 @@ export default function Design({ navigation }) {
                     setSizeSticker(value);
                     break;
                   case 'frase':
-                    if (finalSize + textSize < 136) setFinalSize(value);
-
+                    setFinalSize(value);
                     break;
                   default:
                 }
@@ -568,6 +619,22 @@ export default function Design({ navigation }) {
             </ActionButtonText>
           </ActionButton>
         </BottomButtonsContainer>
+        <AddToCart
+          onPress={() => {
+            if (editMode) {
+              setSelected('none');
+              Toast.show('Clique novamente para enviar a camiseta');
+              if (selected === 'none') {
+                setVisible4(true);
+                capturePrintable();
+              }
+            } else setVisible3(true);
+          }}
+        >
+          <Text style={{ fontSize: 14, color: '#fff', fontWeight: 'normal' }}>
+            Adicionar ao carrinho
+          </Text>
+        </AddToCart>
       </Container>
 
       <Bottom>
@@ -611,7 +678,7 @@ export default function Design({ navigation }) {
               setPhoto(tutorial[0].uri);
               setVisible7(true);
             } else {
-              setEditMode(true);
+              // setEditMode(true);
             }
           }}
         >
@@ -623,7 +690,7 @@ export default function Design({ navigation }) {
           onPress={() => {
             if (editMode) {
               setSelected('none');
-              Toast.show('Clique novamente para salvar a camista');
+              Toast.show('Clique novamente para salvar a camiseta');
 
               if (selected === 'none') saveToGallery();
             } else {
@@ -674,7 +741,7 @@ export default function Design({ navigation }) {
           close={() => setVisible(false)}
           done={() => {
             setVisible(false);
-            setEditMode(true);
+            // setEditMode(true);
           }}
         />
       </Modal>

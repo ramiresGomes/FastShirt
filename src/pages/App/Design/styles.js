@@ -137,6 +137,16 @@ export const ESlider = styled(Slider).attrs({
   margin-top: 20px;
 `;
 
+export const AddToCart = styled.TouchableOpacity`
+  background: #038841;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  padding: 5px 15px;
+  min-width: 60px;
+  align-items: center;
+  margin: 0 10px;
+`;
+
 export const NoSlider = styled.View`
   background-color: transparent;
   width: 100%;
