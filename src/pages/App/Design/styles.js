@@ -40,7 +40,8 @@ export const TShirtContainer = styled.View`
 
 export const TShirtImage = styled(Image)`
   width: 100%;
-  height: 480px;
+  background-color: #f04;
+  height: 320px;
 `;
 
 export const TopButtonsContainer = styled.View`

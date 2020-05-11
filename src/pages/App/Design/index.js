@@ -82,7 +82,6 @@ export default function Design({ navigation }) {
   const [font, setFont] = useState('');
   const [finalSize, setFinalSize] = useState(0);
 
-  const [slider, setSlider] = useState(1);
   const [selected, setSelected] = useState('none');
   const [color, setColor] = useState('#fff');
 
@@ -91,10 +90,10 @@ export default function Design({ navigation }) {
   const [textSize, setTextSize] = useState(10);
 
   const [position, setPosition] = useState({
-    minX: 0,
-    maxX: 0,
-    minY: 0,
-    maxY: 0,
+    minX: 300,
+    maxX: 700,
+    minY: 300,
+    maxY: 700,
   });
 
   const [images, setImages] = useState([]);
@@ -123,6 +122,10 @@ export default function Design({ navigation }) {
 
   const [tShirtImage, setTShirtImage] = useState(tFront);
   const [image, setImage] = useState(baseImg.uri);
+
+  const [frontImage, setFrontImage] = useState(baseImg.uri);
+  const [backImage, setBackImage] = useState(baseImg.uri);
+
   const [sticker, setSticker] = useState(baseImg.uri);
   const [stickerID, setStickerID] = useState(1);
 
@@ -189,14 +192,15 @@ export default function Design({ navigation }) {
   const [paddingY, setPaddingY] = useState(0);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  
+
   useEffect(() => {
     // definindo posição maxima do draggable de acordo com a imagem selecionada
     switch (shirtType) {
       case 'tshirt':
         shirtSide === 'front' ? setTShirtImage(tFront) : setTShirtImage(tBack);
         shirtSide === 'front' ? setModels(tFronts) : setModels(tBacks);
-         shirtSide === 'front' //eslint-disable-line
+        shirtSide === 'front' ? setImage(frontImage) : setImage(backImage);
+        shirtSide === 'front' //eslint-disable-line
           ? setPosition({
               minX: paddingX + ((22.5 * width) / 100), // prettier-ignore
               maxX: paddingX + ((64.4 * width) / 100), // prettier-ignore
@@ -214,6 +218,8 @@ export default function Design({ navigation }) {
       case 'babylook':
         shirtSide === 'front' ? setTShirtImage(bFront) : setTShirtImage(bBack);
         shirtSide === 'front' ? setModels(bFronts) : setModels(bBacks);
+        shirtSide === 'front' ? setImage(frontImage) : setImage(backImage);
+
         setPosition({
           minX: paddingX + ((25.31 * width) / 100), // prettier-ignore
           maxX: paddingX + ((62.18 * width) / 100), // prettier-ignore
@@ -224,6 +230,8 @@ export default function Design({ navigation }) {
       case 'hoodie':
         shirtSide === 'front' ? setTShirtImage(hFront) : setTShirtImage(hBack);
         shirtSide === 'front' ? setModels(hFronts) : setModels(hBacks);
+        shirtSide === 'front' ? setImage(frontImage) : setImage(backImage);
+
         setPosition({
           minX: paddingX + ((23.43 * width) / 100), // prettier-ignore
           maxX: paddingX + ((62.18 * width) / 100), // prettier-ignore
@@ -233,7 +241,7 @@ export default function Design({ navigation }) {
         break;
       default:
     }
-  }, [shirtType, shirtSide]);
+  }, [shirtType, selected, shirtSide, image, text, sticker, editMode]);
 
   useEffect(() => {
     // gambiarra pra renderizar o texto após mudar cor ou fonte
@@ -273,6 +281,8 @@ export default function Design({ navigation }) {
       case -1:
         setPhoto(tutorial[0].uri); // apos fechar, reseta pro icone normal
         setVisible7(false); // fecha o modal
+        setIndexTutorial(0); // apenas altera o index
+
         break;
       case 0: // primeiro elemento do tutorial. muda o icone e fecha o modal
         setPhoto(tutorial[indexTutorial].uri);
@@ -293,6 +303,8 @@ export default function Design({ navigation }) {
       case 11:
         setPhoto(tutorial[0].uri); // apos fechar, reseta pro icone normal
         setVisible7(false); // fecha o modal
+        setIndexTutorial(0); // apenas altera o index
+
         break;
       default:
         setPhoto(tutorial[indexTutorial].uri); // apenas altera a foto
@@ -392,8 +404,15 @@ export default function Design({ navigation }) {
         Toast.show('Houve um erro ao selecionar a imagem. ');
       else {
         const source = { uri: `data:image/jpeg;base64,${response.data}` };
+
+        if (shirtSide === 'front') {
+          setFrontImage(source.uri);
+        } else {
+          setBackImage(source.uri);
+        }
+
         setImage(source.uri);
-        setEditMode(true);
+
         setSelected('imagem');
         setSize(120);
       }
@@ -421,15 +440,15 @@ export default function Design({ navigation }) {
       <Header navigation={navigation} title="Design" />
 
       <Container
-          onLayout={({ nativeEvent: { layout } }) => {
-          console.tron.log(`width container: ${layout.width}`);
-          console.tron.log(`height container: ${layout.height}`);
-          console.tron.log(`x container: ${layout.x}`);
-          console.tron.log(`y container: ${layout.y}`);
+        onLayout={({ nativeEvent: { layout } }) => {
+          // console.tron.log(`width container: ${layout.width}`);
+          // console.tron.log(`height container: ${layout.height}`);
+          // console.tron.log(`x container: ${layout.x}`);
+          // console.tron.log(`y container: ${layout.y}`);
           setDistanceX(layout.x);
           setDistanceY(layout.y);
         }}
-        >
+      >
         <TShirtContainer
           onLayout={({ nativeEvent: { layout } }) => {
             console.tron.log(`width shirt container: ${layout.width}`);
@@ -438,8 +457,8 @@ export default function Design({ navigation }) {
             console.tron.log(`y shirt container: ${layout.y}`);
             setPaddingX(layout.x);
             setPaddingY(layout.y);
-            setWidth(layout.width);
-            setHeight(layout.height);
+            // setWidth(layout.width);
+            // setHeight(layout.height);
           }}
           ref={captureViewRef}
         >
@@ -449,18 +468,16 @@ export default function Design({ navigation }) {
               console.tron.log(`height imagem: ${layout.height}`);
               console.tron.log(`x imagem: ${layout.x}`);
               console.tron.log(`y imagem: ${layout.y}`);
+              setPaddingX(layout.x);
+              setPaddingY(layout.y);
+              setWidth(layout.width);
+              setHeight(layout.height);
             }}
             source={{ uri: tShirtImage }}
             resizeMode="contain"
           />
           <Draggable
             ref={imgRef}
-            onLayout={({ nativeEvent: { layout } }) => {
-              console.tron.log(`width: ${layout.width}`);
-              console.tron.log(`height: ${layout.height}`);
-              console.tron.log(`x: ${layout.x}`);
-              console.tron.log(`y: ${layout.y}`);
-            }}
             selected={editMode && selected === 'imagem'}
             disabled={!editMode}
             imageSource={{ uri: image }}
@@ -503,11 +520,13 @@ export default function Design({ navigation }) {
           <Draggable
             disabled={!editMode}
             renderText={text}
+            renderColor="darkgoldenrod"
+            adaptive={value => setTextSize(value)}
             font={font}
-            textSize={11 + finalSize / 5}
+            textSize={14 + finalSize / 4}
             onLongPress={() => setSelected('frase')}
             renderHeight={12}
-            renderSize={textSize + finalSize}
+            renderSize={textSize}
             textColor={color}
             x={position.minX + 10}
             y={position.minY + 30}
@@ -556,9 +575,9 @@ export default function Design({ navigation }) {
         {editMode && selected !== 'none' ? (
           <>
             <Slider
-              value={slider}
-              minimumValue={2}
-              maximumValue={86}
+              value={1}
+              minimumValue={20}
+              maximumValue={120}
               onValueChange={value => {
                 switch (selected) {
                   case 'imagem':
@@ -568,8 +587,7 @@ export default function Design({ navigation }) {
                     setSizeSticker(value);
                     break;
                   case 'frase':
-                    if (finalSize + textSize < 136) setFinalSize(value);
-
+                    setFinalSize(value);
                     break;
                   default:
                 }
@@ -713,7 +731,6 @@ export default function Design({ navigation }) {
           close={() => setVisible(false)}
           done={() => {
             setVisible(false);
-            setEditMode(true);
           }}
         />
       </Modal>
@@ -749,8 +766,8 @@ export default function Design({ navigation }) {
             <Input
               autoFocus
               value={text}
-              onLayout={event => {
-                setTextSize(event.nativeEvent.layout.width);
+              onLayout={({ nativeEvent: { layout } }) => {
+                setTextSize(layout.width);
                 setFinalSize(0);
               }}
               onChangeText={setText}
@@ -758,6 +775,7 @@ export default function Design({ navigation }) {
               returnKeyType="send"
               onSubmitEditing={() => {
                 setText(text);
+
                 setVisible3(false);
               }}
               underlineColorAndroid="transparent"

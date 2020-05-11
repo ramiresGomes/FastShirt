@@ -24,6 +24,7 @@ function clamp(number, min, max) {
 
 function Draggable(props, ref) {
   const {
+    adaptive,
     font,
     selected,
     renderText,
@@ -242,6 +243,9 @@ function Draggable(props, ref) {
           }}
         >
           <Text
+            onLayout={({ nativeEvent: { layout } }) =>
+              adaptive(layout.width + 10)
+            }
             numberOfLines={1}
             style={{
               color: textColor,
