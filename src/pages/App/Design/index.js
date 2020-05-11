@@ -318,14 +318,14 @@ export default function Design({ navigation }) {
     }
   }, [indexTutorial]);
 
-  async function handleChange() {
+  async function handleChange(id, uri) {
     try {
       const upload = new FormData();
       console.tron.log('deve enviar');
 
       upload.append('front_printscreen', {
         // uri: frontPrintscreen, // here goes the uri
-        uri: baseImg.uri, // here goes the uri
+        uri, // here goes the uri
         type: 'image/jpeg', // trocar pra png
         // name: `${frontPrintscreen}.jpeg`,
         name: 'teste.jpeg',
@@ -334,7 +334,7 @@ export default function Design({ navigation }) {
 
       upload.append('back_printscreen', {
         // uri: backPrintscreen, // here goes the uri
-        uri: baseImg.uri, // here goes the uri
+        uri, // here goes the uri
         type: 'image/jpeg', // trocar pra png
         // name: `${backPrintscreen}.jpeg`,
         name: 'teste2.jpeg',
@@ -344,22 +344,20 @@ export default function Design({ navigation }) {
       upload.append('font_family', 'Oswald');
       upload.append('text', text);
       // upload.append('front_printable_image_id', frontPrintableId);
-      upload.append('front_printable_image_id', 33);
+      upload.append('front_printable_image_id', id);
       // upload.append('back_printable_image_id', backPrintableId);
-      upload.append('back_printable_image_id', 33);
+      upload.append('back_printable_image_id', id);
 
       console.tron.log('ok 3');
-      console.tron.log(`front: ${frontPrintscreen}`);
-      console.tron.log(`back  ${backPrintscreen}`);
-      console.tron.log(`front p: ${frontPrintableId}`);
-      console.tron.log(`back p: ${backPrintableId}`);
 
       console.tron.log('enviando...');
 
-      const { url } = await api.post('design-shirt/purchase', upload);
+      const {
+        data: { front_printscreen, back_printscreen },
+      } = await api.post('design-shirt/purchase', upload);
       console.tron.log('serase');
 
-      console.tron.log(`url: ${url}`);
+      console.tron.log(`response: ${front_printscreen} e ${back_printscreen}`);
 
       setImage(baseImg.uri); // apaga a imagem - coloca imagem transparente
       setSticker(baseImg.uri); // apaga o sticker - coloca imagem transparente
@@ -386,9 +384,9 @@ export default function Design({ navigation }) {
   //   });
   // }
 
-  async function captureShirt() {
+  async function captureShirt(id) {
     try {
-      const uri = await captureRef(imgRef, {
+      const uri = await captureRef(captureViewRef, {
         format: 'png',
         quality: 1,
       });
@@ -399,6 +397,7 @@ export default function Design({ navigation }) {
       } else {
         setBackPrintscreen(uri);
       }
+      await handleChange(id, uri);
     } catch (err) {
       console.tron.log('Erro na captura da camiseta');
     }
@@ -429,6 +428,7 @@ export default function Design({ navigation }) {
       } else {
         setBackPrintableId(id);
       }
+      await captureShirt(id);
 
       setEditMode(false);
     } catch (err) {
@@ -442,16 +442,7 @@ export default function Design({ navigation }) {
         format: 'png',
         quality: 1,
       });
-      console.tron.log('indo capturar imagem');
       await uploadPrintable(uri);
-      console.tron.log('indo capturar camiseta');
-      await captureShirt();
-      // setVisible4(false);
-      console.tron.log(`front printscreen: ${frontPrintscreen}`);
-      console.tron.log(`back printscreen: ${backPrintscreen}`);
-      console.tron.log(`front printable: ${frontPrintableId}`);
-      console.tron.log(`back printable: ${backPrintableId}`);
-      await handleChange();
     } catch (err) {
       console.tron.log('Deu ruim foi tudo');
     }
