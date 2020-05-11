@@ -126,6 +126,12 @@ export default function Design({ navigation }) {
   const [frontImage, setFrontImage] = useState(baseImg.uri);
   const [backImage, setBackImage] = useState(baseImg.uri);
 
+  const [frontPrintscreen, setFrontPrintscreen] = useState(null);
+  const [backPrintscreen, setBackPrintscreen] = useState(null);
+
+  const [frontPrintableId, setFrontPrintableId] = useState(null);
+  const [backPrintableId, setBackPrintableId] = useState(null);
+
   const [sticker, setSticker] = useState(baseImg.uri);
   const [stickerID, setStickerID] = useState(1);
 
@@ -312,33 +318,38 @@ export default function Design({ navigation }) {
     }
   }, [indexTutorial]);
 
-  async function handleChange(photouri, idimg) {
+  async function handleChange() {
     try {
       const upload = new FormData();
-      let side = 'lado_principal';
-      let otherSide = 'outro_lado';
+      console.tron.log('deve enviar');
 
-      if (shirtSide === 'front') {
-        side = 'front_printscreen';
-        otherSide = 'back_printscreen';
-      } else {
-        side = 'back_printscreen';
-        otherSide = 'front_printscreen';
-      }
-
-      upload.append(`${side}`, {
-        uri: photouri, // here goes the uri
+      upload.append('front_printscreen', {
+        uri: frontPrintscreen, // here goes the uri
         type: 'image/jpeg', // trocar pra png
-        name: `${photouri}.jpeg`,
+        name: `${frontPrintscreen}.jpeg`,
       });
+      console.tron.log('ok 1');
 
-      upload.append(`${otherSide}`, null);
-      upload.append('front_printable_image_id', idimg);
-      upload.append('back_printable_image_id', idimg);
+      upload.append('back_printscreen', {
+        uri: backPrintscreen, // here goes the uri
+        type: 'image/jpeg', // trocar pra png
+        name: `${backPrintscreen}.jpeg`,
+      });
+      console.tron.log('ok 2');
+
+      upload.append('front_printable_image_id', 33);
+      upload.append('back_printable_image_id', 33);
       upload.append('text', text);
       upload.append('font_family', 'Oswald');
 
-      await api.post('design-shirt/purchase', upload);
+      console.tron.log('ok 3');
+
+      console.tron.log('enviando...');
+
+      const { url } = await api.post('design-shirt/purchase', upload);
+      console.tron.log('serase');
+
+      console.tron.log(`url: ${url}`);
 
       setImage(baseImg.uri); // apaga a imagem - coloca imagem transparente
       setSticker(baseImg.uri); // apaga o sticker - coloca imagem transparente
@@ -349,44 +360,96 @@ export default function Design({ navigation }) {
 
       setVisible4(false); // fecha modal de 'enviando imagem'
     } catch (err) {
+      console.tron.log('Erro no envio da camiseta');
+      setVisible4(false); // fecha modal de 'enviando imagem'
+
       Toast.show('Houve um erro no envio da imagem.');
     }
   }
 
-  function onCapture(id) {
-    captureRef(captureViewRef, {
-      format: 'jpg',
-      quality: 1,
-    }).then(uri => {
-      handleChange(uri, id);
-    });
-  }
+  // function onCapture() {
+  //   captureRef(captureViewRef, {
+  //     format: 'jpg',
+  //     quality: 1,
+  //   }).then(uri => {
+  //     handleChange();
+  //   });
+  // }
 
-  async function uploadPrintable(photouri) {
-    const upload = new FormData();
-
-    upload.append('name', `${photouri}.jpeg`);
-    upload.append('image', {
-      uri: photouri, // here goes the uri
-      type: 'image/jpeg', // trocar pra png
-      name: `${photouri}.jpeg`,
-    });
-
-    const response = await api.post('design-shirt/printables/sticker', upload); // envia pra api
-
-    const { id } = response.data;
-
-    onCapture(id);
-    setEditMode(false);
-  }
-
-  function capturePrintable() {
+  async function captureShirt() {
     captureRef(imgRef, {
       format: 'png',
       quality: 1,
-    }).then(uri => {
-      uploadPrintable(uri);
-    });
+    })
+      .then(uri => {
+        console.tron.log('camiseta capturada');
+        if (shirtSide === 'front') {
+          setFrontPrintscreen(uri);
+        } else {
+          setBackPrintscreen(uri);
+        }
+      })
+      .catch(() => console.tron.log('Erro na captura da camiseta'));
+  }
+
+  async function uploadPrintable(photouri) {
+    try {
+      const upload = new FormData();
+
+      upload.append('name', `${photouri}.jpeg`);
+      upload.append('image', {
+        uri: photouri, // here goes the uri
+        type: 'image/jpeg', // trocar pra png
+        name: `${photouri}.jpeg`,
+      });
+
+      const response = await api.post(
+        'design-shirt/printables/sticker',
+        upload
+      ); // envia pra api
+
+      const { id, url } = response.data;
+      console.tron.log(`url img: ${url}`);
+      console.tron.log('imagem capturada');
+      // onCapture(id);
+      if (shirtSide === 'front') {
+        setFrontPrintableId(id);
+      } else {
+        setBackPrintableId(id);
+      }
+
+      setEditMode(false);
+    } catch (err) {
+      console.tron.log('Erro no envio da imagem'); // printe o err.status
+    }
+  }
+
+  function capturePic() {
+    captureRef(imgRef, {
+      format: 'png',
+      quality: 1,
+    })
+      .then(uri => {
+        console.tron.log('indo capturar imagem');
+        uploadPrintable(uri).then(() => {
+          console.tron.log('indo capturar camiseta');
+          captureShirt().then(() => handleChange);
+        });
+      })
+      .catch(() => console.tron.log('Erro na captura da imagem'));
+  }
+
+  // function capturePrintable() {
+  //   captureRef(imgRef, {
+  //     format: 'png',
+  //     quality: 1,
+  //   }).then(uri => {
+  //     uploadPrintable(uri);
+  //   });
+  // }
+
+  function addToCart() {
+    capturePic();
   }
 
   function handleChoosePhoto() {
@@ -700,7 +763,10 @@ export default function Design({ navigation }) {
               Toast.show('Clique novamente para enviar a camista');
               if (selected === 'none') {
                 setVisible4(true);
-                capturePrintable();
+                // capturePrintable();
+                // inicio
+                addToCart();
+                // deve antes checar os lados
               }
             } else setVisible3(true);
           }}
