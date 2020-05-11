@@ -324,25 +324,35 @@ export default function Design({ navigation }) {
       console.tron.log('deve enviar');
 
       upload.append('front_printscreen', {
-        uri: frontPrintscreen, // here goes the uri
+        // uri: frontPrintscreen, // here goes the uri
+        uri: baseImg.uri, // here goes the uri
         type: 'image/jpeg', // trocar pra png
-        name: `${frontPrintscreen}.jpeg`,
+        // name: `${frontPrintscreen}.jpeg`,
+        name: 'teste.jpeg',
       });
       console.tron.log('ok 1');
 
       upload.append('back_printscreen', {
-        uri: backPrintscreen, // here goes the uri
+        // uri: backPrintscreen, // here goes the uri
+        uri: baseImg.uri, // here goes the uri
         type: 'image/jpeg', // trocar pra png
-        name: `${backPrintscreen}.jpeg`,
+        // name: `${backPrintscreen}.jpeg`,
+        name: 'teste2.jpeg',
       });
       console.tron.log('ok 2');
 
-      upload.append('front_printable_image_id', 33);
-      upload.append('back_printable_image_id', 33);
-      upload.append('text', text);
       upload.append('font_family', 'Oswald');
+      upload.append('text', text);
+      // upload.append('front_printable_image_id', frontPrintableId);
+      upload.append('front_printable_image_id', 33);
+      // upload.append('back_printable_image_id', backPrintableId);
+      upload.append('back_printable_image_id', 33);
 
       console.tron.log('ok 3');
+      console.tron.log(`front: ${frontPrintscreen}`);
+      console.tron.log(`back  ${backPrintscreen}`);
+      console.tron.log(`front p: ${frontPrintableId}`);
+      console.tron.log(`back p: ${backPrintableId}`);
 
       console.tron.log('enviando...');
 
@@ -360,7 +370,7 @@ export default function Design({ navigation }) {
 
       setVisible4(false); // fecha modal de 'enviando imagem'
     } catch (err) {
-      console.tron.log('Erro no envio da camiseta');
+      console.tron.log(`Erro no envio da camiseta: ${err.message}`);
       setVisible4(false); // fecha modal de 'enviando imagem'
 
       Toast.show('Houve um erro no envio da imagem.');
@@ -377,19 +387,21 @@ export default function Design({ navigation }) {
   // }
 
   async function captureShirt() {
-    captureRef(imgRef, {
-      format: 'png',
-      quality: 1,
-    })
-      .then(uri => {
-        console.tron.log('camiseta capturada');
-        if (shirtSide === 'front') {
-          setFrontPrintscreen(uri);
-        } else {
-          setBackPrintscreen(uri);
-        }
-      })
-      .catch(() => console.tron.log('Erro na captura da camiseta'));
+    try {
+      const uri = await captureRef(imgRef, {
+        format: 'png',
+        quality: 1,
+      });
+      console.tron.log('camiseta capturada');
+      console.tron.log(`uri: ${uri}`);
+      if (shirtSide === 'front') {
+        setFrontPrintscreen(uri);
+      } else {
+        setBackPrintscreen(uri);
+      }
+    } catch (err) {
+      console.tron.log('Erro na captura da camiseta');
+    }
   }
 
   async function uploadPrintable(photouri) {
@@ -424,19 +436,25 @@ export default function Design({ navigation }) {
     }
   }
 
-  function capturePic() {
-    captureRef(imgRef, {
-      format: 'png',
-      quality: 1,
-    })
-      .then(uri => {
-        console.tron.log('indo capturar imagem');
-        uploadPrintable(uri).then(() => {
-          console.tron.log('indo capturar camiseta');
-          captureShirt().then(() => handleChange);
-        });
-      })
-      .catch(() => console.tron.log('Erro na captura da imagem'));
+  async function capturePic() {
+    try {
+      const uri = await captureRef(imgRef, {
+        format: 'png',
+        quality: 1,
+      });
+      console.tron.log('indo capturar imagem');
+      await uploadPrintable(uri);
+      console.tron.log('indo capturar camiseta');
+      await captureShirt();
+      // setVisible4(false);
+      console.tron.log(`front printscreen: ${frontPrintscreen}`);
+      console.tron.log(`back printscreen: ${backPrintscreen}`);
+      console.tron.log(`front printable: ${frontPrintableId}`);
+      console.tron.log(`back printable: ${backPrintableId}`);
+      await handleChange();
+    } catch (err) {
+      console.tron.log('Deu ruim foi tudo');
+    }
   }
 
   // function capturePrintable() {
