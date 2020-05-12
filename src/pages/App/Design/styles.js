@@ -70,6 +70,23 @@ export const ActionButtonText = styled.Text`
   font-weight: ${props => (props.active ? 'bold' : 'normal')};
 `;
 
+export const AddToCart = styled(TouchableOpacity)`
+  background: #038841;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  padding: 5px 5px;
+  width: 260px;
+  align-items: center;
+  margin: 10px 0;
+  align-self: center;
+`;
+
+export const AddToCartText = styled.Text`
+  font-size: 14px;
+  color: #fff;
+  font-weight: normal;
+`;
+
 export const BottomButtonsContainer = styled.View`
   position: absolute;
   width: 100%;
@@ -141,8 +158,9 @@ export const ESlider = styled(Slider).attrs({
 export const NoSlider = styled.View`
   background-color: transparent;
   width: 100%;
-  height: 45px;
-  margin-top: 5px;
+  height: 40px;
+  margin-top: 30px;
+  align-self: center;
 `;
 
 export const ContainerActions = styled.View`

@@ -30,6 +30,8 @@ import base from '~/assets/base.png';
 
 import {
   Actions,
+  AddToCart,
+  AddToCartText,
   ContainerActions,
   Color,
   ESlider as Slider,
@@ -492,7 +494,6 @@ export default function Design({ navigation }) {
   }
 
   function saveToGallery() {
-    setSelected('none');
     captureRef(captureViewRef, {
       format: 'jpg',
       quality: 1,
@@ -644,39 +645,6 @@ export default function Design({ navigation }) {
             </ActionButtonText>
           </ActionButton>
         </TopButtonsContainer>
-        {editMode && selected !== 'none' ? (
-          <>
-            <Slider
-              value={1}
-              minimumValue={20}
-              maximumValue={120}
-              onValueChange={value => {
-                switch (selected) {
-                  case 'imagem':
-                    setSize(value);
-                    break;
-                  case 'figura':
-                    setSizeSticker(value);
-                    break;
-                  case 'frase':
-                    setFinalSize(value);
-                    break;
-                  default:
-                }
-              }}
-            />
-            <Text
-              style={{
-                marginTop: -10,
-                fontSize: 14,
-                color: '#333',
-                textAlign: 'center',
-              }}
-            >{`Tamanho da ${selected}`}</Text>
-          </>
-        ) : (
-          <NoSlider />
-        )}
 
         <BottomButtonsContainer>
           <ActionButton
@@ -697,13 +665,54 @@ export default function Design({ navigation }) {
             </ActionButtonText>
           </ActionButton>
         </BottomButtonsContainer>
+        {editMode ? (
+          selected !== 'none' && (
+            <>
+              <Slider
+                value={1}
+                minimumValue={20}
+                maximumValue={120}
+                onValueChange={value => {
+                  switch (selected) {
+                    case 'imagem':
+                      setSize(value);
+                      break;
+                    case 'figura':
+                      setSizeSticker(value);
+                      break;
+                    case 'frase':
+                      setFinalSize(value);
+                      break;
+                    default:
+                  }
+                }}
+              />
+              <Text
+                style={{
+                  marginTop: -10,
+                  fontSize: 14,
+                  color: '#333',
+                  textAlign: 'center',
+                }}
+              >{`Tamanho da ${selected}`}</Text>
+            </>
+          )
+        ) : (
+          <NoSlider>
+            <AddToCart onPress={() => Toast.show('Hell yah negro')}>
+              <AddToCartText>Adicionar ao Carrinho</AddToCartText>
+            </AddToCart>
+          </NoSlider>
+        )}
       </Container>
 
       <Bottom>
         <BottomButton
           onPress={() => {
-            if (editMode) setEditMode(false);
-            else handleChoosePhoto();
+            if (editMode) {
+              setEditMode(false);
+              setSelected('none');
+            } else handleChoosePhoto();
           }}
         >
           <Icon name={galleryIcon} size={40} color="#FFF" />
@@ -716,13 +725,10 @@ export default function Design({ navigation }) {
             if (editMode) {
               if (selected === 'imagem') {
                 setImage(baseImg.uri);
-                setSelected('none');
               } else if (selected === 'frase') {
                 setText('');
-                setSelected('none');
               } else {
                 setSticker(baseImg.uri);
-                setSelected('none');
               }
             } else {
               setVisible6(true);
@@ -751,10 +757,7 @@ export default function Design({ navigation }) {
         <BottomButton
           onPress={() => {
             if (editMode) {
-              setSelected('none');
-              Toast.show('Clique novamente para salvar a camista');
-
-              if (selected === 'none') saveToGallery();
+              saveToGallery();
             } else {
               setVisible(true);
             }
@@ -768,15 +771,11 @@ export default function Design({ navigation }) {
         <BottomButton
           onPress={() => {
             if (editMode) {
-              setSelected('none');
-              Toast.show('Clique novamente para enviar a camista');
-              if (selected === 'none') {
-                setVisible4(true);
-                // capturePrintable();
-                // inicio
-                addToCart();
-                // deve antes checar os lados
-              }
+              setVisible4(true);
+              // capturePrintable();
+              // inicio
+              addToCart();
+              // deve antes checar os lados
             } else setVisible3(true);
           }}
         >
