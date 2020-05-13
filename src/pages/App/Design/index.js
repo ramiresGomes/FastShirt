@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import CameraRoll from '@react-native-community/cameraroll';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -14,7 +15,6 @@ import {
   Text,
   ActivityIndicator,
 } from 'react-native';
-import { useSelector } from 'react-redux';
 
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
@@ -72,6 +72,7 @@ export default function Design({ navigation }) {
   const tutorial = useSelector(state => state.shirts.tutorial);
 
   // const boomt = useSelector(state => state.shirts.boomt);
+  const dispatch = useDispatch();
 
   const captureViewRef = useRef(); // ref para capturar a imagem
   const imgRef = useRef(); // ref repassada ao draggable com 'forwardRef'
@@ -80,7 +81,11 @@ export default function Design({ navigation }) {
 
   const [data, setData] = useState([]);
   const [models, setModels] = useState([]);
+
   const [text, setText] = useState('');
+  const [textFront, setTextFront] = useState('');
+  const [textBack, setTextBack] = useState('');
+
   const [font, setFont] = useState('');
   const [finalSize, setFinalSize] = useState(0);
 
@@ -127,12 +132,6 @@ export default function Design({ navigation }) {
 
   const [frontImage, setFrontImage] = useState(baseImg.uri);
   const [backImage, setBackImage] = useState(baseImg.uri);
-
-  const [frontPrintscreen, setFrontPrintscreen] = useState(null);
-  const [backPrintscreen, setBackPrintscreen] = useState(null);
-
-  const [frontPrintableId, setFrontPrintableId] = useState(null);
-  const [backPrintableId, setBackPrintableId] = useState(null);
 
   const [sticker, setSticker] = useState(baseImg.uri);
   const [stickerID, setStickerID] = useState(1);
@@ -194,12 +193,18 @@ export default function Design({ navigation }) {
   const [tutorialNextIcon, setTutorialNextIcon] = useState('arrow-forward');
 
   const [distanceX, setDistanceX] = useState(0);
-  const [distanceY, setDistanceY] = useState(0);
+  const [distanceY, setDistanceY] = useState(55);
 
   const [paddingX, setPaddingX] = useState(0);
-  const [paddingY, setPaddingY] = useState(0);
+  const [paddingY, setPaddingY] = useState(20);
+
+  const [internalX, setInternalX] = useState(0);
+  const [internalY, setInternalY] = useState(0);
+
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
+
+  const [canSend, setCanSend] = useState(false);
 
   useEffect(() => {
     // definindo posição maxima do draggable de acordo com a imagem selecionada
@@ -208,48 +213,54 @@ export default function Design({ navigation }) {
         shirtSide === 'front' ? setTShirtImage(tFront) : setTShirtImage(tBack);
         shirtSide === 'front' ? setModels(tFronts) : setModels(tBacks);
         shirtSide === 'front' ? setImage(frontImage) : setImage(backImage);
-        shirtSide === 'front' //eslint-disable-line
-          ? setPosition({
-              minX: paddingX + ((22.5 * width) / 100), // prettier-ignore
-              maxX: paddingX + ((64.4 * width) / 100), // prettier-ignore
-              minY: paddingY + ((15.4 * height) / 100), // prettier-ignore
-              maxY: paddingY + ((90.4 * height) / 100) // prettier-ignore
-            })
-          : setPosition({
-              minX: paddingX + ((24.06 * width) / 100), // prettier-ignore
-              maxX: paddingX + ((64.06 * width) / 100), // prettier-ignore
-              minY: paddingY + ((15.4 * height) / 100), // prettier-ignore
-              maxY: paddingY + ((90.4 * height) / 100) // prettier-ignore
-            });
-
+        shirtSide === 'front' ? setText(textFront) : setText(textBack);
+        shirtSide === 'front'; //eslint-disable-line
+        setPosition({
+          minX: distanceX + internalX,
+          maxX: distanceX + paddingX + internalX + width,
+          minY: distanceY + paddingY + internalY,
+          maxY: distanceY + paddingY + internalY + height,
+        });
         break;
       case 'babylook':
         shirtSide === 'front' ? setTShirtImage(bFront) : setTShirtImage(bBack);
         shirtSide === 'front' ? setModels(bFronts) : setModels(bBacks);
         shirtSide === 'front' ? setImage(frontImage) : setImage(backImage);
-
+        shirtSide === 'front' ? setText(textFront) : setText(textBack);
         setPosition({
-          minX: paddingX + ((25.31 * width) / 100), // prettier-ignore
-          maxX: paddingX + ((62.18 * width) / 100), // prettier-ignore
-          minY: paddingY + ((15.4 * height) / 100), // prettier-ignore
-          maxY: paddingY + ((88.4 * height) / 100) // prettier-ignore
+          minX: distanceX + internalX,
+          maxX: distanceX + paddingX + internalX + width,
+          minY: distanceY + paddingY + internalY,
+          maxY: distanceY + paddingY + internalY + height,
         });
         break;
       case 'hoodie':
         shirtSide === 'front' ? setTShirtImage(hFront) : setTShirtImage(hBack);
         shirtSide === 'front' ? setModels(hFronts) : setModels(hBacks);
         shirtSide === 'front' ? setImage(frontImage) : setImage(backImage);
-
+        shirtSide === 'front' ? setText(textFront) : setText(textBack);
         setPosition({
-          minX: paddingX + ((23.43 * width) / 100), // prettier-ignore
-          maxX: paddingX + ((62.18 * width) / 100), // prettier-ignore
-          minY: paddingY + ((20.4 * height) / 100), // prettier-ignore
-          maxY: paddingY + ((85.4 * height) / 100) // prettier-ignore
+          minX: distanceX + internalX,
+          maxX: distanceX + paddingX + internalX + width,
+          minY: distanceY + paddingY + internalY,
+          maxY: distanceY + paddingY + internalY + height,
         });
         break;
       default:
     }
+    if (
+      frontImage === baseImg.uri &&
+      backImage === baseImg.uri &&
+      sticker === baseImg.uri
+    ) {
+      setCanSend(false);
+    }
   }, [shirtType, selected, shirtSide, image, text, sticker, editMode]);
+
+  // useEffect(() => {
+  //   if (shirtSide === 'front') setText(textFront);
+  //   else setText(textBack);
+  // }, [textFront, textBack]);
 
   useEffect(() => {
     // gambiarra pra renderizar o texto após mudar cor ou fonte
@@ -271,9 +282,9 @@ export default function Design({ navigation }) {
     // mudando os icones quando entramos no modo de edição / normal
     if (editMode) {
       setGalleryIcon('clear');
-      setColorsIcon('delete');
-      setEditIcon('info');
-      setStickersIcon('archive');
+      setColorsIcon('add-circle');
+      setEditIcon('remove-circle');
+      setStickersIcon('delete');
       setTextIcon('done');
     } else {
       setGalleryIcon('collections');
@@ -323,25 +334,18 @@ export default function Design({ navigation }) {
   async function handleChange(id, uri) {
     try {
       const upload = new FormData();
-      console.tron.log('deve enviar');
 
       upload.append('front_printscreen', {
-        // uri: frontPrintscreen, // here goes the uri
         uri, // here goes the uri
         type: 'image/jpeg', // trocar pra png
-        // name: `${frontPrintscreen}.jpeg`,
-        name: 'teste.jpeg',
+        name: `${uri}.jpeg`,
       });
-      console.tron.log('ok 1');
 
       upload.append('back_printscreen', {
-        // uri: backPrintscreen, // here goes the uri
         uri, // here goes the uri
         type: 'image/jpeg', // trocar pra png
-        // name: `${backPrintscreen}.jpeg`,
-        name: 'teste2.jpeg',
+        name: `${uri}.jpeg`,
       });
-      console.tron.log('ok 2');
 
       upload.append('font_family', 'Oswald');
       upload.append('text', text);
@@ -350,16 +354,11 @@ export default function Design({ navigation }) {
       // upload.append('back_printable_image_id', backPrintableId);
       upload.append('back_printable_image_id', id);
 
-      console.tron.log('ok 3');
-
-      console.tron.log('enviando...');
-
       const {
         data: { front_printscreen, back_printscreen },
       } = await api.post('design-shirt/purchase', upload);
-      console.tron.log('serase');
 
-      console.tron.log(`response: ${front_printscreen} e ${back_printscreen}`);
+      // console.tron.log(`response: ${front_printscreen} e ${back_printscreen}`);
 
       setImage(baseImg.uri); // apaga a imagem - coloca imagem transparente
       setSticker(baseImg.uri); // apaga o sticker - coloca imagem transparente
@@ -370,7 +369,7 @@ export default function Design({ navigation }) {
 
       setVisible4(false); // fecha modal de 'enviando imagem'
     } catch (err) {
-      console.tron.log(`Erro no envio da camiseta: ${err.message}`);
+      // console.tron.log(`Erro no envio da camiseta: ${err.message}`);
       setVisible4(false); // fecha modal de 'enviando imagem'
 
       Toast.show('Houve um erro no envio da imagem.');
@@ -392,16 +391,10 @@ export default function Design({ navigation }) {
         format: 'png',
         quality: 1,
       });
-      console.tron.log('camiseta capturada');
-      console.tron.log(`uri: ${uri}`);
-      if (shirtSide === 'front') {
-        setFrontPrintscreen(uri);
-      } else {
-        setBackPrintscreen(uri);
-      }
+
       await handleChange(id, uri);
     } catch (err) {
-      console.tron.log('Erro na captura da camiseta');
+      Toast.show('Erro na captura da camiseta');
     }
   }
 
@@ -416,51 +409,32 @@ export default function Design({ navigation }) {
         name: `${photouri}.jpeg`,
       });
 
-      const response = await api.post(
-        'design-shirt/printables/sticker',
-        upload
-      ); // envia pra api
+      const { id } = await api.post('design-shirt/printables/sticker', upload); // envia pra api
 
-      const { id, url } = response.data;
-      console.tron.log(`url img: ${url}`);
-      console.tron.log('imagem capturada');
-      // onCapture(id);
-      if (shirtSide === 'front') {
-        setFrontPrintableId(id);
-      } else {
-        setBackPrintableId(id);
-      }
       await captureShirt(id);
 
       setEditMode(false);
     } catch (err) {
-      console.tron.log('Erro no envio da imagem'); // printe o err.status
+      Toast.show('Erro no envio da imagem'); // printe o err.status
     }
   }
 
   async function capturePic() {
     try {
-      const uri = await captureRef(imgRef, {
-        format: 'png',
-        quality: 1,
-      });
-      await uploadPrintable(uri);
+      if (image === baseImg.uri) {
+        await captureShirt(33); // tem que ver isso dps
+      } else {
+        const uri = await captureRef(imgRef, {
+          format: 'png',
+          quality: 1,
+        });
+
+        await uploadPrintable(uri);
+      }
     } catch (err) {
-      console.tron.log('Deu ruim foi tudo');
+      Toast.show('Verifique sua conexão à internet.');
+      setVisible4(false);
     }
-  }
-
-  // function capturePrintable() {
-  //   captureRef(imgRef, {
-  //     format: 'png',
-  //     quality: 1,
-  //   }).then(uri => {
-  //     uploadPrintable(uri);
-  //   });
-  // }
-
-  function addToCart() {
-    capturePic();
   }
 
   function handleChoosePhoto() {
@@ -489,23 +463,9 @@ export default function Design({ navigation }) {
 
         setSelected('imagem');
         setSize(120);
+        setEditMode(true);
       }
     });
-  }
-
-  function saveToGallery() {
-    captureRef(captureViewRef, {
-      format: 'jpg',
-      quality: 1,
-    })
-      .then(uri => {
-        CameraRoll.saveToCameraRoll(uri, 'photo')
-          .then(() => {
-            Toast.show('A imagem foi salva na galeria.');
-          })
-          .catch(() => Toast.show('Erro ao salvar imagem.'));
-      })
-      .catch(() => Toast.show('Erro ao salvar imagem.'));
   }
 
   return (
@@ -514,95 +474,87 @@ export default function Design({ navigation }) {
 
       <Container
         onLayout={({ nativeEvent: { layout } }) => {
-          // console.tron.log(`width container: ${layout.width}`);
-          // console.tron.log(`height container: ${layout.height}`);
-          // console.tron.log(`x container: ${layout.x}`);
-          // console.tron.log(`y container: ${layout.y}`);
           setDistanceX(layout.x);
           setDistanceY(layout.y);
         }}
       >
         <TShirtContainer
           onLayout={({ nativeEvent: { layout } }) => {
-            console.tron.log(`width shirt container: ${layout.width}`);
-            console.tron.log(`height shirt container: ${layout.height}`);
-            console.tron.log(`x shirt container: ${layout.x}`);
-            console.tron.log(`y shirt container: ${layout.y}`);
             setPaddingX(layout.x);
             setPaddingY(layout.y);
-            // setWidth(layout.width);
-            // setHeight(layout.height);
           }}
           ref={captureViewRef}
         >
           <TShirtImage
             onLayout={({ nativeEvent: { layout } }) => {
-              console.tron.log(`width imagem: ${layout.width}`);
-              console.tron.log(`height imagem: ${layout.height}`);
-              console.tron.log(`x imagem: ${layout.x}`);
-              console.tron.log(`y imagem: ${layout.y}`);
-              setPaddingX(layout.x);
-              setPaddingY(layout.y);
+              setInternalX(layout.x);
+              setInternalY(layout.y); // this
               setWidth(layout.width);
               setHeight(layout.height);
             }}
             source={{ uri: tShirtImage }}
             resizeMode="contain"
           />
-          <Draggable
-            ref={imgRef}
-            selected={editMode && selected === 'imagem'}
-            disabled={!editMode}
-            imageSource={{ uri: image }}
-            renderSize={size}
-            onLongPress={() => setSelected('imagem')}
-            x={position.minX}
-            y={position.minY}
-            z={zindexImg}
-            minX={position.minX}
-            maxX={position.maxX}
-            minY={position.minY}
-            maxY={position.maxY}
-            onDrag={() => {}}
-            onShortPressRelease={() => {}}
-            onDragRelease={() => {}}
-            onPressIn={() => {}}
-            onPressOut={() => {}}
-            onRelease={() => {}}
-          />
-          <Draggable
-            disabled={!editMode}
-            selected={editMode && selected === 'figura'}
-            imageSource={{ uri: sticker }}
-            renderSize={sizeSticker}
-            onLongPress={() => setSelected('figura')}
-            x={position.minX}
-            y={position.minY + 30}
-            z={zindexSticker}
-            minX={position.minX}
-            maxX={position.maxX}
-            minY={position.minY}
-            maxY={position.maxY}
-            onDrag={() => {}}
-            onShortPressRelease={() => {}}
-            onDragRelease={() => {}}
-            onPressIn={() => {}}
-            onPressOut={() => {}}
-            onRelease={() => {}}
-          />
+          {image !== baseImg.uri && (
+            <Draggable
+              ref={imgRef}
+              selected={editMode && selected === 'imagem'}
+              disabled={!editMode}
+              imageSource={{ uri: image }}
+              renderSize={size}
+              onLongPress={() => setSelected('imagem')}
+              x={position.minX + 100}
+              y={position.minY + 100}
+              z={zindexImg}
+              minX={position.minX}
+              maxX={position.maxX}
+              minY={position.minY}
+              maxY={position.maxY}
+              loaded={value => setCanSend(value)}
+              onDrag={() => {}}
+              onShortPressRelease={() => {}}
+              onDragRelease={() => {}}
+              onPressIn={() => {}}
+              onPressOut={() => {}}
+              onRelease={() => {}}
+            />
+          )}
+          {sticker !== baseImg.uri && (
+            <Draggable
+              disabled={!editMode}
+              selected={editMode && selected === 'figura'}
+              imageSource={{ uri: sticker }}
+              renderSize={sizeSticker}
+              onLongPress={() => setSelected('figura')}
+              x={position.minX + 100}
+              y={position.minY + 100}
+              z={zindexSticker}
+              minX={position.minX}
+              maxX={position.maxX}
+              minY={position.minY}
+              maxY={position.maxY}
+              loaded={value => setCanSend(value)}
+              onDrag={() => {}}
+              onShortPressRelease={() => {}}
+              onDragRelease={() => {}}
+              onPressIn={() => {}}
+              onPressOut={() => {}}
+              onRelease={() => {}}
+            />
+          )}
           <Draggable
             disabled={!editMode}
             renderText={text}
-            renderColor="darkgoldenrod"
             adaptive={value => setTextSize(value)}
             font={font}
+            selected={editMode && selected === 'frase'}
             textSize={14 + finalSize / 4}
             onLongPress={() => setSelected('frase')}
             renderHeight={12}
             renderSize={textSize}
             textColor={color}
-            x={position.minX + 10}
-            y={position.minY + 30}
+            x={position.minX + +100}
+            y={position.minY + +100}
             z={2}
             minX={position.minX - 10}
             maxX={position.maxX + 10}
@@ -665,53 +617,63 @@ export default function Design({ navigation }) {
             </ActionButtonText>
           </ActionButton>
         </BottomButtonsContainer>
-        {editMode ? (
-          selected !== 'none' && (
-            <>
-              <Slider
-                value={1}
-                minimumValue={20}
-                maximumValue={120}
-                onValueChange={value => {
-                  switch (selected) {
-                    case 'imagem':
-                      setSize(value);
-                      break;
-                    case 'figura':
-                      setSizeSticker(value);
-                      break;
-                    case 'frase':
-                      setFinalSize(value);
-                      break;
-                    default:
-                  }
-                }}
-              />
-              <Text
-                style={{
-                  marginTop: -10,
-                  fontSize: 14,
-                  color: '#333',
-                  textAlign: 'center',
-                }}
-              >{`Tamanho da ${selected}`}</Text>
-            </>
-          )
-        ) : (
-          <NoSlider>
-            <AddToCart onPress={() => Toast.show('Hell yah negro')}>
+        <NoSlider>
+          {editMode ? (
+            selected !== 'none' && (
+              <>
+                <Slider
+                  value={1}
+                  minimumValue={20}
+                  maximumValue={120}
+                  onValueChange={value => {
+                    switch (selected) {
+                      case 'imagem':
+                        setSize(value);
+                        break;
+                      case 'figura':
+                        setSizeSticker(value);
+                        break;
+                      case 'frase':
+                        setFinalSize(value);
+                        break;
+                      default:
+                    }
+                  }}
+                />
+                <Text
+                  style={{
+                    marginTop: -10,
+                    fontSize: 14,
+                    color: '#333',
+                    textAlign: 'center',
+                  }}
+                >{`Tamanho da ${selected}`}</Text>
+              </>
+            )
+          ) : (
+            <AddToCart
+              onPress={() => {
+                if (canSend) {
+                  setVisible4(true);
+                  capturePic();
+                } else {
+                  Toast.show('Edite alguma camiseta antes de enviar.');
+                  // console.tron.log('ta vazio, nao pode enviar');
+                }
+              }}
+            >
               <AddToCartText>Adicionar ao Carrinho</AddToCartText>
             </AddToCart>
-          </NoSlider>
-        )}
+          )}
+        </NoSlider>
       </Container>
 
       <Bottom>
         <BottomButton
           onPress={() => {
             if (editMode) {
-              setEditMode(false);
               setSelected('none');
+              setEditMode(false);
             } else handleChoosePhoto();
           }}
         >
@@ -720,44 +682,41 @@ export default function Design({ navigation }) {
           <IconLabel>{editMode ? 'Fechar' : 'Imagem'}</IconLabel>
         </BottomButton>
 
+        {!editMode && (
+          <BottomButton onPress={() => setVisible6(true)}>
+            <Icon name={colorsIcon} size={40} color="#FFF" />
+            <IconLabel>Cores</IconLabel>
+          </BottomButton>
+        )}
+
+        {!editMode && (
+          <BottomButton onPress={() => setEditMode(true)}>
+            <Icon name={editIcon} size={40} color="#FFF" />
+            <IconLabel>Editar</IconLabel>
+          </BottomButton>
+        )}
+
         <BottomButton
           onPress={() => {
             if (editMode) {
-              if (selected === 'imagem') {
-                setImage(baseImg.uri);
-              } else if (selected === 'frase') {
-                setText('');
-              } else {
-                setSticker(baseImg.uri);
+              switch (selected) {
+                case 'none':
+                  Toast.show('Selecione uma imagem ou texto para apagar.');
+                  break;
+                case 'imagem':
+                  setImage(baseImg.uri);
+                  setSize(0.1);
+                  break;
+                case 'frase':
+                  setText('');
+                  break;
+                case 'figura':
+                  setSticker(baseImg.uri);
+                  setSizeSticker(0.1);
+                  break;
+                default:
               }
-            } else {
-              setVisible6(true);
-            }
-            setSelected('none');
-          }}
-        >
-          <Icon name={colorsIcon} size={40} color="#FFF" />
-          <IconLabel>{editMode ? 'Apagar' : 'Cores'}</IconLabel>
-        </BottomButton>
-
-        <BottomButton
-          onPress={() => {
-            if (editMode) {
-              setPhoto(tutorial[0].uri);
-              setVisible7(true);
-            } else {
-              setEditMode(true);
-            }
-          }}
-        >
-          <Icon name={editIcon} size={40} color="#FFF" />
-
-          <IconLabel>{editMode ? 'Tutorial' : 'Editar'}</IconLabel>
-        </BottomButton>
-        <BottomButton
-          onPress={() => {
-            if (editMode) {
-              saveToGallery();
+              setSelected('none');
             } else {
               setVisible(true);
             }
@@ -765,23 +724,15 @@ export default function Design({ navigation }) {
         >
           <Icon name={stickersIcon} size={40} color="#FFF" />
 
-          <IconLabel>{editMode ? 'Salvar' : 'Stickers'}</IconLabel>
+          <IconLabel>{editMode ? 'Apagar' : 'Stickers'}</IconLabel>
         </BottomButton>
 
-        <BottomButton
-          onPress={() => {
-            if (editMode) {
-              setVisible4(true);
-              // capturePrintable();
-              // inicio
-              addToCart();
-              // deve antes checar os lados
-            } else setVisible3(true);
-          }}
-        >
-          <Icon name={textIcon} size={40} color="#FFF" />
-          <IconLabel>{editMode ? 'Enviar' : 'Textos'}</IconLabel>
-        </BottomButton>
+        {!editMode && (
+          <BottomButton onPress={() => setVisible3(true)}>
+            <Icon name={textIcon} size={40} color="#FFF" />
+            <IconLabel>Textos</IconLabel>
+          </BottomButton>
+        )}
       </Bottom>
       <Modal
         visible={visible}
@@ -798,6 +749,7 @@ export default function Design({ navigation }) {
             setSelected('figura');
             setSizeSticker(120);
             setStickerID(id);
+            setEditMode(true);
           }}
           setId={value => {
             setStickerID(value);
@@ -844,12 +796,17 @@ export default function Design({ navigation }) {
                 setTextSize(layout.width);
                 setFinalSize(0);
               }}
-              onChangeText={setText}
+              onChangeText={e => setText(e)}
               maxLength={13}
               returnKeyType="send"
               onSubmitEditing={() => {
                 setText(text);
-
+                // if (shirtSide === 'front') {
+                //   setTextFront(text);
+                // } else {
+                //   setTextBack(text);
+                // }
+                setEditMode(true);
                 setVisible3(false);
               }}
               underlineColorAndroid="transparent"
@@ -968,8 +925,12 @@ export default function Design({ navigation }) {
                 onPress={() => {
                   setVisible3(false);
                   setText(text);
-
-                  // setVisible4(true);
+                  // if (shirtSide === 'front') {
+                  //   setTextFront(text);
+                  // } else {
+                  //   setTextBack(text);
+                  // }
+                  setEditMode(true);
                 }}
               >
                 <PickTextButtonText

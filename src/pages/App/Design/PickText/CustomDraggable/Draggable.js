@@ -25,6 +25,7 @@ function clamp(number, min, max) {
 function Draggable(props, ref) {
   const {
     adaptive,
+    loaded,
     font,
     selected,
     renderText,
@@ -227,8 +228,9 @@ function Draggable(props, ref) {
           style={{
             width: renderSize,
             height: renderSize,
-            ...(selected ? styles.imageSelected : styles.image),
+            ...(selected ? styles.imageSelected : {}),
           }}
+          onLayout={() => loaded(true)}
           source={imageSource}
         />
       );
@@ -240,6 +242,7 @@ function Draggable(props, ref) {
             height: renderHeight,
             alignItems: 'center',
             justifyContent: 'center',
+            ...(selected ? styles.imageSelected : styles.image),
           }}
         >
           <Text

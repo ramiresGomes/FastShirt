@@ -27,6 +27,7 @@ export const IconLabel = styled.Text`
   margin-top: 5px;
   color: #fff;
   width: 100%;
+  /* flex:1; */
   text-align: center;
 `;
 
@@ -152,7 +153,7 @@ export const ESlider = styled(Slider).attrs({
 })`
   width: 100%;
   height: 35px;
-  margin-top: 20px;
+  margin-top: 10px;
 `;
 
 export const NoSlider = styled.View`

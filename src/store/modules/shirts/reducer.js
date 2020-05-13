@@ -12,6 +12,8 @@ const INITIAL_STATE = {
   hBacks: null,
   tutorial: null,
   boomt: null,
+  front_final: null,
+  back_final: null,
 };
 
 export default function shirts(state = INITIAL_STATE, action) {
@@ -78,7 +80,17 @@ export default function shirts(state = INITIAL_STATE, action) {
         draft.hoodie.back = action.payload.uri;
         break;
       }
-      // essas 6 actions se tornam uma só
+
+      case '@shirts/set_front_shirt': {
+        draft.front_final.print = action.payload.print;
+        draft.front_final.id = action.payload.id;
+        break;
+      }
+      case '@shirts/set_back_shirt': {
+        draft.back_final.print = action.payload.print;
+        draft.back_final.id = action.payload.id;
+        break;
+      }
 
       default:
     }
