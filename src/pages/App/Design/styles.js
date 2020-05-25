@@ -1,6 +1,5 @@
 import styled from 'styled-components/native';
 import { TouchableOpacity, Image } from 'react-native';
-import Slider from '@react-native-community/slider';
 
 export const Container = styled.View`
   /* background: #00f2f2; */
@@ -140,15 +139,6 @@ export const PickTextButtonText = styled.Text`
   font-size: 12px;
   color: #fff;
   text-align: center;
-`;
-
-export const ESlider = styled(Slider).attrs({
-  minimumTrackTintColor: '#FFFFFF',
-  maximumTrackTintColor: '#000000',
-})`
-  width: 100%;
-  height: 35px;
-  margin-top: 10px;
 `;
 
 export const ChangeSizeContainer = styled.View`

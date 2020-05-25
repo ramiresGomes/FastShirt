@@ -90,7 +90,7 @@ export default function Design({ navigation }) {
     // posição máxima e mínima da imagem ou do sticker
     minX: 300,
     maxX: 900,
-    minY: 300,
+    minY: 10,
     maxY: 900,
   });
 
@@ -108,6 +108,9 @@ export default function Design({ navigation }) {
 
   const [sticker, setSticker] = useState(baseImg.uri); // sticker baixado que está exibido na tela
 
+  const [topLimitReached, setTopLimitReached] = useState(false);
+  const [downLimitReached, setDownLimitReached] = useState(false);
+
   useEffect(() => {
     async function loadImages() {
       const [imgs, stk] = await Promise.all([
@@ -121,6 +124,52 @@ export default function Design({ navigation }) {
 
     loadImages();
   }, []);
+
+  useEffect(() => {
+    if (selected === 'imagem' && size > 130) {
+      setTopLimitReached(true);
+    } else if (selected === 'figura' && sizeSticker > 130) {
+      setTopLimitReached(true);
+    } else {
+      setTopLimitReached(false);
+    }
+  }, [selected, size, sizeSticker]);
+
+  useEffect(() => {
+    switch (selected) {
+      case 'imagem':
+        if (size > 130) setTopLimitReached(true);
+        else setTopLimitReached(false);
+        break;
+      case 'figura':
+        if (sizeSticker > 130) setTopLimitReached(true);
+        else setTopLimitReached(false);
+        break;
+      case 'frase':
+        if (finalSize > 55) setTopLimitReached(true);
+        else setTopLimitReached(false);
+        break;
+      default:
+    }
+  }, [selected, size, sizeSticker, finalSize]);
+
+  useEffect(() => {
+    switch (selected) {
+      case 'imagem':
+        if (size < 50) setDownLimitReached(true);
+        else setDownLimitReached(false);
+        break;
+      case 'figura':
+        if (sizeSticker < 50) setDownLimitReached(true);
+        else setDownLimitReached(false);
+        break;
+      case 'frase':
+        if (finalSize < 2) setDownLimitReached(true);
+        else setDownLimitReached(false);
+        break;
+      default:
+    }
+  }, [selected, size, sizeSticker, finalSize]);
 
   useEffect(() => {
     // sempre que altera a camiseta no estado do redux, reflete aqui
@@ -168,7 +217,7 @@ export default function Design({ navigation }) {
           // calcula os limite da tela
           minX: distanceX + internalX,
           maxX: distanceX + paddingX + internalX + width,
-          minY: /* distanceY + */ paddingY /* + internalY */,
+          minY: /* distanceY + */ 10 /* + internalY */,
           maxY: /* distanceY + */ paddingY + internalY + height,
         });
         break;
@@ -179,7 +228,7 @@ export default function Design({ navigation }) {
         setPosition({
           minX: distanceX + internalX,
           maxX: distanceX + paddingX + internalX + width,
-          minY: /* distanceY + */ paddingY /* + internalY */,
+          minY: /* distanceY + */ 10 /* + internalY */,
           maxY: /* distanceY + */ paddingY + internalY + height,
         });
         break;
@@ -190,7 +239,7 @@ export default function Design({ navigation }) {
         setPosition({
           minX: distanceX + internalX,
           maxX: distanceX + paddingX + internalX + width,
-          minY: /* distanceY + */ paddingY /* + internalY */,
+          minY: /* distanceY + */ 10 /* + internalY */,
           maxY: /* distanceY + */ paddingY + internalY + height,
         });
         break;
@@ -337,18 +386,60 @@ export default function Design({ navigation }) {
     });
   }
 
+  function changeSize(operation) {
+    switch (selected) {
+      case 'imagem':
+        if (operation === 'add') setSize(size + 4);
+        else setSize(size - 4);
+        break;
+      case 'figura':
+        if (operation === 'add') setSizeSticker(sizeSticker + 4);
+        else setSizeSticker(sizeSticker - 4);
+        break;
+      case 'frase':
+        if (operation === 'add') setFinalSize(finalSize + 2);
+        else setFinalSize(finalSize - 2);
+        break;
+      default:
+    }
+  }
+
+  function clearElement() {
+    switch (selected) {
+      case 'imagem':
+        if (canSend) {
+          setImage(baseImg.uri);
+        }
+        setSelected('none');
+        break;
+      case 'figura':
+        setSticker(baseImg.uri); // imagem transparente
+        setSizeSticker(0.1);
+        setSelected('none');
+        break;
+      case 'frase':
+        setText('');
+        setSelected('none');
+        break;
+      default:
+    }
+  }
+
   return (
     <>
       <Header navigation={navigation} title="Design" />
 
       <Container
         onLayout={({ nativeEvent: { layout } }) => {
+          console.tron.log(`distance: ${layout.y}`);
           setDistanceX(layout.x);
           setDistanceY(layout.y);
         }}
       >
         <TShirtContainer
           onLayout={({ nativeEvent: { layout } }) => {
+            console.tron.log(`padding: ${layout.y}`);
+
             setPaddingX(layout.x);
             setPaddingY(layout.y);
           }}
@@ -356,6 +447,8 @@ export default function Design({ navigation }) {
         >
           <TShirtImage
             onLayout={({ nativeEvent: { layout } }) => {
+              console.tron.log(`internal: ${layout.y}`);
+
               setInternalX(layout.x);
               setInternalY(layout.y);
               setWidth(layout.width);
@@ -370,13 +463,7 @@ export default function Design({ navigation }) {
               selected={image !== baseImg.uri && selected === 'imagem'} // aqui sepa
               imageSource={{ uri: image }}
               renderSize={size}
-              onLongPress={() => {
-                // a imagem apaga se clicar e segurar
-                if (canSend) {
-                  setImage(baseImg.uri);
-                }
-                setSelected('none');
-              }}
+              onLongPress={() => {}}
               x={position.minX + 100}
               y={position.minY + 100}
               z={zindexImg}
@@ -389,7 +476,7 @@ export default function Design({ navigation }) {
               onShortPressRelease={() => {}}
               onDragRelease={() => {
                 // depois de 3 segundos sem mexer, ele desseleciona a imagem
-                setTimeout(() => setSelected('none'), 3000);
+                // setTimeout(() => setSelected('none'), 3000);
               }}
               onPressIn={() => setSelected('imagem')} // seleciona a imagem ao clicar em cima
               onPressOut={() => {}}
@@ -401,13 +488,7 @@ export default function Design({ navigation }) {
               selected={selected === 'figura'}
               imageSource={{ uri: sticker }}
               renderSize={sizeSticker}
-              // onLongPress={() => setSelected('figura')}
-              onLongPress={() => {
-                // se clicar e segurar, apaga
-                setSticker(baseImg.uri); // imagem transparente
-                setSizeSticker(0.1);
-                setSelected('none');
-              }}
+              onLongPress={() => {}}
               x={position.minX + 100}
               y={position.minY + 100}
               z={zindexSticker}
@@ -420,7 +501,7 @@ export default function Design({ navigation }) {
               onShortPressRelease={() => {}}
               onDragRelease={() => {
                 // depois de 3 segundos sem mexer, ele desseleciona a imagem
-                setTimeout(() => setSelected('none'), 3000);
+                // setTimeout(() => setSelected('none'), 3000);
               }}
               onPressIn={() => {
                 // seleciona a figura ao clicar em cima
@@ -437,10 +518,7 @@ export default function Design({ navigation }) {
             font={font}
             selected={selected === 'frase'} // aqui sepa
             textSize={20 + finalSize / 4}
-            onLongPress={() => {
-              setText('');
-              setSelected('none');
-            }}
+            onLongPress={() => {}}
             renderHeight={textHeight}
             renderSize={textSize}
             textColor={color}
@@ -455,7 +533,7 @@ export default function Design({ navigation }) {
             onShortPressRelease={() => {}}
             onDragRelease={() => {
               // depois de 3 segundos sem mexer, ele desseleciona a imagem
-              setTimeout(() => setSelected('none'), 3000);
+              // setTimeout(() => setSelected('none'), 3000);
             }}
             onPressIn={() => {
               // quando clicar no texto, ele é selecionado
@@ -496,46 +574,36 @@ export default function Design({ navigation }) {
         <NoSlider>
           {selected !== 'none' ? ( // caso haja elemento selecionado, não mostra a barra de tamanho
             <>
-              {/* <Slider
-                value={60}
-                minimumValue={20}
-                maximumValue={120}
-                onValueChange={value => {
-                  switch (selected) {
-                    case 'imagem':
-                      setSize(value);
-                      break;
-                    case 'figura':
-                      setSizeSticker(value);
-                      break;
-                    case 'frase':
-                      setFinalSize(value);
-                      break;
-                    default:
-                  }
-                }}
-              /> */}
               <ContainerActions>
                 <Actions
-                  onPress={() => {}}
-                  style={{ backgroundColor: '#038311' }}
+                  disabled={topLimitReached}
+                  onPress={() => changeSize('add')}
+                  style={{ backgroundColor: '#333' }}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
                   <Icon name="add-circle" size={30} color="#FFF" />
                 </Actions>
                 <Actions
-                  onPress={() => {}}
-                  style={{ backgroundColor: '#d10000' }}
+                  disabled={downLimitReached}
+                  onPress={() => changeSize('subtract')}
+                  style={{ backgroundColor: '#333' }}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
                   <Icon name="remove-circle" size={30} color="#FFF" />
                 </Actions>
                 <Actions
-                  onPress={() => {}}
-                  style={{ backgroundColor: '#333' }}
+                  onPress={() => clearElement()}
+                  style={{ backgroundColor: '#d10000' }}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
                   <Icon name="delete" size={30} color="#FFF" />
+                </Actions>
+                <Actions
+                  onPress={() => setSelected('none')}
+                  style={{ backgroundColor: '#038311' }}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Icon name="done" size={30} color="#FFF" />
                 </Actions>
               </ContainerActions>
 
