@@ -12,7 +12,7 @@ export const Content = styled.View`
   height: 90%;
   border-radius: 5px;
   align-items: stretch;
-  background-color: ${(props) => (props.disabled ? 'transparent' : '#ddd')};
+  background-color: ${props => (props.disabled ? 'transparent' : '#ddd')};
 `;
 
 export const CancelButton = styled.TouchableOpacity`
@@ -24,5 +24,5 @@ export const CancelButton = styled.TouchableOpacity`
   align-items: center;
   align-self: center;
   justify-content: center;
-  display: ${(props) => (props.disabled ? 'none' : 'flex')};
+  display: ${props => (props.disabled ? 'none' : 'flex')};
 `;

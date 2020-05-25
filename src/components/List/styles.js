@@ -1,10 +1,10 @@
 import styled from 'styled-components/native';
 
 export const List = styled.FlatList`
-  height: 90%;
+  height: 80%;
   background-color: #fff;
   border-radius: 8px;
-  margin-top: 5px;
+  margin-top: 15px;
 `;
 
 export const Item = styled.TouchableOpacity`
@@ -23,7 +23,7 @@ export const Header = styled.View`
   flex: 1;
   align-self: center;
   height: 40px;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-evenly;
   padding: 2px 5px;
   margin-bottom: 10px;
@@ -32,16 +32,41 @@ export const Header = styled.View`
 
 export const ContainerActions = styled.View`
   width: 100%;
-  height: 35px;
+  height: 32px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 5px;
 `;
 
 export const Actions = styled.TouchableOpacity`
   height: 30px;
   width: 30px;
   border-radius: 15px;
-  margin: 5px;
+  margin: 3px;
+`;
+
+export const Border = styled.View`
+  border-bottom-color: black;
+  border-bottom-width: 1px;
+  align-self: stretch;
+  margin-top: 4px;
+  margin-bottom: 4px;
+`;
+
+export const AltText = styled.Text`
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  align-self: center;
+  color: ${props => (props.active ? '#fff' : '#000')};
+  font-weight: ${props => (props.active ? 'bold' : 'normal')};
+`;
+
+export const AltButton = styled.TouchableOpacity`
+  width: 70px;
+  height: 25px;
+  border-radius: 4px;
+  background: ${props => (props.active ? '#038311' : '#fff')};
+  border: 1px solid ${props => (props.active ? '#038311' : '#dcdcdc')};
 `;

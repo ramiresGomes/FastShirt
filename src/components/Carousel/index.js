@@ -8,12 +8,12 @@ export default function ImageCarousel({ data, done }) {
   // baseado no type filtra os indices do array, extrai usando o slice ou sla oq
   const dispatch = useDispatch();
 
-  const tFronts = useSelector((state) => state.shirts.tFronts);
-  const tBacks = useSelector((state) => state.shirts.tBacks);
-  const bFronts = useSelector((state) => state.shirts.bFronts);
-  const bBacks = useSelector((state) => state.shirts.bBacks);
-  const hFronts = useSelector((state) => state.shirts.hFronts);
-  const hBacks = useSelector((state) => state.shirts.hBacks);
+  const tFronts = useSelector(state => state.shirts.tFronts);
+  const tBacks = useSelector(state => state.shirts.tBacks);
+  const bFronts = useSelector(state => state.shirts.bFronts);
+  const bBacks = useSelector(state => state.shirts.bBacks);
+  const hFronts = useSelector(state => state.shirts.hFronts);
+  const hBacks = useSelector(state => state.shirts.hBacks);
 
   return (
     <View
@@ -33,7 +33,7 @@ export default function ImageCarousel({ data, done }) {
       </Text>
       <Carousel
         layout="default"
-        keyExtractor={(item) => String(item.uri)}
+        keyExtractor={item => String(item.uri)}
         data={data}
         sliderWidth={325}
         itemWidth={275}
@@ -44,11 +44,11 @@ export default function ImageCarousel({ data, done }) {
                 type: `@shirts/update_color`,
                 payload: {
                   tf: tFronts[index].uri,
-                  tb: tBacks[index].uri,
+                  // tb: tBacks[index].uri,
                   bf: bFronts[index].uri,
-                  bb: bBacks[index].uri,
+                  // bb: bBacks[index].uri,
                   hf: hFronts[index].uri,
-                  hb: hBacks[index].uri,
+                  // hb: hBacks[index].uri,
                 },
               });
               done(item.uri);

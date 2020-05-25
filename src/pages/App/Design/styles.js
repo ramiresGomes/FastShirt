@@ -36,13 +36,16 @@ export const TShirtContainer = styled.View`
   display: flex;
   justify-content: center;
   padding-top: 20px;
+  margin-top: 35px;
   /* background-color: #fff202; */
 `;
 
 export const TShirtImage = styled(Image)`
   width: 100%;
+  margin-top: 5px;
+
   /* background-color: #f04; */
-  height: 320px;
+  height: 405px;
 `;
 
 export const TopButtonsContainer = styled.View`
@@ -98,16 +101,18 @@ export const BottomButtonsContainer = styled.View`
   justify-content: center;
 `;
 
-export const Input = styled.TextInput`
-  background-color: 'rgba(0, 0, 0, 0.1)';
-  flex: 1;
+export const Input = styled.TextInput.attrs({
+  placeholderTextColor: 'rgba(0,0,0,0.8)',
+})`
+  background-color: 'rgba(255, 255, 255, 0.8)';
+  width: 260px;
   border-width: 1px;
-  border-color: 'rgba(0, 0, 0, 0.2)';
-  border-radius: 5px;
-  height: 80px;
+  border-color: 'rgba(0, 0, 0, 0.4)';
+  border-radius: 2px;
+  height: 35px;
   padding: 2px 0 2px 0;
   margin: 5px 0 5px 0;
-  color: #fff;
+  color: rgba(0, 0, 0, 0.8);
 `;
 
 export const CustomView = styled.KeyboardAvoidingView`
@@ -185,6 +190,6 @@ export const Color = styled.TouchableOpacity`
   width: 25px;
   border-radius: 12.5px;
   border-color: #e2e;
-  margin: 2px 5px 0 0;
+  margin: 5px 5px;
   background-color: ${props => props.color};
 `;

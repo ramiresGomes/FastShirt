@@ -25,6 +25,7 @@ function clamp(number, min, max) {
 function Draggable(props, ref) {
   const {
     adaptive,
+    adaptiveHeight,
     loaded,
     font,
     selected,
@@ -242,19 +243,22 @@ function Draggable(props, ref) {
             height: renderHeight,
             alignItems: 'center',
             justifyContent: 'center',
-            ...(selected ? styles.imageSelected : styles.image),
+            paddingRight: 3,
           }}
         >
           <Text
-            onLayout={({ nativeEvent: { layout } }) =>
-              adaptive(layout.width + 10)
-            }
+            onLayout={({ nativeEvent: { layout } }) => {
+              adaptive(layout.width + 10);
+              adaptiveHeight(layout.height + 5);
+            }}
             numberOfLines={1}
             style={{
               color: textColor,
               fontSize: textSize,
               fontFamily: font,
               textAlign: 'center',
+              backgroundColor: 'transparent',
+              ...(selected ? styles.imageSelected : styles.image),
             }}
           >
             {renderText}
@@ -400,7 +404,7 @@ const styles = StyleSheet.create({
   },
   imageSelected: {
     borderColor: '#ff0000',
-    borderWidth: 2.5,
+    borderWidth: 3,
     opacity: 0.9,
   },
 });

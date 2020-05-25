@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { View, Text } from 'react-native';
 
 import { List, Item } from './styles';
 
@@ -26,16 +26,36 @@ export default function FontPicker({ example, setFont, done }) {
 
   return (
     <>
+      <View
+        style={{
+          borderBottomColor: 'black',
+          borderBottomWidth: 1,
+          alignSelf: 'stretch',
+          marginTop: 4,
+          marginBottom: 4,
+        }}
+      />
       <Text
         style={{
           fontFamily: 'Colibri',
           alignSelf: 'center',
-          fontSize: 18,
-          color: '#ddd',
+          fontSize: 14,
+          color: '#111',
+          marginTop: 5,
+          marginBottom: 5,
         }}
       >
         Selecione a fonte:
       </Text>
+      <View
+        style={{
+          borderBottomColor: 'black',
+          borderBottomWidth: 1,
+          alignSelf: 'stretch',
+          marginTop: 4,
+          marginBottom: 4,
+        }}
+      />
       <List
         data={data}
         keyExtractor={item => String(item.id)}
@@ -47,7 +67,7 @@ export default function FontPicker({ example, setFont, done }) {
             }}
           >
             <Text
-              style={{ color: '#ddd', fontSize: 18, fontFamily: item.font }}
+              style={{ color: '#111', fontSize: 18, fontFamily: item.font }}
             >
               {example}
             </Text>

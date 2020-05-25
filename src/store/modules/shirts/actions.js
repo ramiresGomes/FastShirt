@@ -3,12 +3,8 @@ export function uploadShirts(
   bshirt,
   hoodie,
   tFronts,
-  tBacks,
   bFronts,
-  bBacks,
   hFronts,
-  hBacks,
-  tutorial,
   boomt
 ) {
   return {
@@ -18,12 +14,8 @@ export function uploadShirts(
       bshirt,
       hoodie,
       tFronts,
-      tBacks,
       bFronts,
-      bBacks,
       hFronts,
-      hBacks,
-      tutorial,
       boomt,
     },
   };
