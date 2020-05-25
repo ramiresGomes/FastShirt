@@ -4,10 +4,9 @@ const INITIAL_STATE = {
   tshirt: null,
   bshirt: null,
   hoodie: null,
-  tFronts: null,
-  bFronts: null,
+  tFronts: null, // array de tshirts
+  bFronts: null, // array de babyloook
   hFronts: null,
-  boomt: null,
   front_final: null,
 };
 
@@ -18,7 +17,6 @@ export default function shirts(state = INITIAL_STATE, action) {
         draft.tshirt = action.payload.tshirt;
         draft.bshirt = action.payload.bshirt;
         draft.hoodie = action.payload.hoodie;
-        draft.boomt = action.payload.boomt;
 
         draft.tFronts = action.payload.tFronts;
         draft.bFronts = action.payload.bFronts;

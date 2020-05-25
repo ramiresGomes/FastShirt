@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, View, TouchableOpacity } from 'react-native';
+import { Image, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import {
@@ -10,6 +10,8 @@ import {
   Header,
   ContainerActions,
   Actions,
+  TextPriceContainer,
+  ImgStickerButtonsContainer,
 } from './styles';
 
 import { Text } from '../Button/styles';
@@ -38,30 +40,17 @@ export default function CustomList({
   side,
   handle,
   done,
-  setId,
 }) {
   const [data, setData] = useState(stickers);
   const [price, setPrice] = useState('');
   const [active, setActive] = useState(false);
   const [altButton, setAltButton] = useState('stickers');
   const [selected, setSelected] = useState(null);
-  const [id, stId] = useState(null);
 
   return (
     <View>
       <Header>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignSelf: 'center',
-            width: 130,
-            height: 30,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 15,
-            marginBottom: 15,
-          }}
-        >
+        <TextPriceContainer>
           <Text
             style={{
               fontSize: 18,
@@ -75,19 +64,8 @@ export default function CustomList({
           <Text style={{ fontSize: 14, color: '#333' }}>
             {price === '' ? 'R$0.00' : price}
           </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignSelf: 'center',
-            width: 150,
-            height: 30,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: 15,
-            marginBottom: 15,
-          }}
-        >
+        </TextPriceContainer>
+        <ImgStickerButtonsContainer>
           <AltButton
             active={altButton === 'estampas'}
             onPress={() => {
@@ -106,7 +84,7 @@ export default function CustomList({
           >
             <AltText active={altButton === 'stickers'}>Stickers</AltText>
           </AltButton>
-        </View>
+        </ImgStickerButtonsContainer>
       </Header>
       <List
         data={formatData(data, numColumns)}
@@ -118,7 +96,6 @@ export default function CustomList({
                 setPrice(item.price);
                 setActive(true);
                 setSelected(item);
-                stId(item.id);
               }}
             >
               <Image
@@ -143,7 +120,6 @@ export default function CustomList({
           disabled={!active}
           onPress={() => {
             handle(selected.url);
-            setId(id);
             done();
           }}
           style={{ backgroundColor: '#038311' }}

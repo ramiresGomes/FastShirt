@@ -23,16 +23,12 @@ import hoodieGreen from '~/assets/models/hoodie3.png';
 import hoodiePink from '~/assets/models/hoodie4.png';
 import hoodieYellow from '~/assets/models/hoodie5.png';
 
-import boom from '~/assets/boom.png';
-
 import { uploadShirts } from './actions';
 
 export function* upload() {
   let tFronts = [];
   let bFronts = [];
   let hFronts = [];
-
-  const boomt = resolveAssetSource(boom);
 
   const tFront = resolveAssetSource(tShirtFront);
 
@@ -73,9 +69,7 @@ export function* upload() {
     front: hFront.uri,
   };
 
-  yield put(
-    uploadShirts(tshirt, bshirt, hoodie, tFronts, bFronts, hFronts, boomt)
-  );
+  yield put(uploadShirts(tshirt, bshirt, hoodie, tFronts, bFronts, hFronts));
 }
 
 export function* popShirts({ payload }) {

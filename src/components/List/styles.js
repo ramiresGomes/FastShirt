@@ -70,3 +70,25 @@ export const AltButton = styled.TouchableOpacity`
   background: ${props => (props.active ? '#038311' : '#fff')};
   border: 1px solid ${props => (props.active ? '#038311' : '#dcdcdc')};
 `;
+
+export const TextPriceContainer = styled.View`
+  flex-direction: row;
+  align-self: center;
+  width: 130px;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+`;
+
+export const ImgStickerButtonsContainer = styled.View`
+  flex-direction: row;
+  align-self: center;
+  width: 150px;
+  height: 30px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+`;

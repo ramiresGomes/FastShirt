@@ -4,8 +4,7 @@ export function uploadShirts(
   hoodie,
   tFronts,
   bFronts,
-  hFronts,
-  boomt
+  hFronts
 ) {
   return {
     type: '@shirts/UPLOAD_SHIRTS',
@@ -16,7 +15,6 @@ export function uploadShirts(
       tFronts,
       bFronts,
       hFronts,
-      boomt,
     },
   };
 }

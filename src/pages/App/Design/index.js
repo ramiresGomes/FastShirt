@@ -1,19 +1,19 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { captureRef } from 'react-native-view-shot';
-import ImagePicker from 'react-native-image-picker';
-import Toast from 'react-native-tiny-toast';
+import { captureRef } from 'react-native-view-shot'; // tirar um screenshot
+import ImagePicker from 'react-native-image-picker'; // puxar imagem da galeria ou tirar foto
+import Toast from 'react-native-tiny-toast'; // toast de notificação após o envio da camisa, ou caso de erro
 
 import {
   Modal as CustomModal,
   View,
   Text,
-  ActivityIndicator,
+  ActivityIndicator, // loading no momento do envio
 } from 'react-native';
 
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'; // pega imagem e cria uma URI (caminho local da imagem)
 
 import Header from '~/components/Header';
 import Modal from '~/components/Modal';
@@ -22,19 +22,19 @@ import Carousel from '~/components/Carousel';
 import FontPicker from '~/components/FontPicker';
 
 import Draggable from './PickText/CustomDraggable';
-
 import base from '~/assets/base.png';
 
 import {
   AddToCart,
   AddToCartText,
+  Actions,
   Color,
-  ESlider as Slider,
+  ESlider as Slider, // barra de tamanho da imagem/figura, ou texto
   NoSlider,
   Container,
+  ContainerActions,
   Bottom,
   BottomButton,
-  // FinishButton,
   IconLabel,
   TShirtContainer,
   TShirtImage,
@@ -43,6 +43,13 @@ import {
   ActionButtonText,
   Input,
   CustomView,
+  UploadShirtLoading,
+  FontList,
+  ColorsContainer,
+  Separator,
+  ChooseColorText,
+  FontMenu,
+  TypeInText,
 } from './styles';
 
 import api from '~/services/api';
@@ -50,76 +57,73 @@ import api from '~/services/api';
 Icon.loadFont();
 
 export default function Design({ navigation }) {
-  const customT = useSelector(state => state.shirts.tshirt);
-  const customB = useSelector(state => state.shirts.bshirt);
+  const customT = useSelector(state => state.shirts.tshirt); // puxa camisetas do redux
+  const customB = useSelector(state => state.shirts.bshirt); // puxa camisetas babylook do redux
   const customH = useSelector(state => state.shirts.hoodie);
 
-  const tFronts = useSelector(state => state.shirts.tFronts);
+  const tFronts = useSelector(state => state.shirts.tFronts); // puxa array de camisetas do redux
   const bFronts = useSelector(state => state.shirts.bFronts);
   const hFronts = useSelector(state => state.shirts.hFronts);
 
-  // const boomt = useSelector(state => state.shirts.boomt);
-
-  const captureViewRef = useRef(); // ref para capturar a imagem
+  const captureViewRef = useRef(); // ref para capturar a view (container) e a imagem
   const imgRef = useRef(); // ref repassada ao draggable com 'forwardRef'
 
   const baseImg = resolveAssetSource(base); // imagem transparente para inicializar
 
-  const [data, setData] = useState([]);
-  const [models, setModels] = useState([]);
+  const [models, setModels] = useState([]); // array com as cores de camisetas
 
-  const [text, setText] = useState('');
+  const [text, setText] = useState(''); // estado pra salvar o texto da camiseta
 
-  const [font, setFont] = useState('');
+  const [font, setFont] = useState(''); // guardar a fonte
 
-  const [finalSize, setFinalSize] = useState(0);
-  const [textHeight, setTextHeight] = useState(0);
+  const [finalSize, setFinalSize] = useState(0); // valor unitário pra somar à fonte.
+  const [textHeight, setTextHeight] = useState(0); // altura do texto após o render
 
-  const [selected, setSelected] = useState('none');
-  const [color, setColor] = useState('#fff');
+  const [selected, setSelected] = useState('none'); // alterna aquela borda vermelha de seleção entre imagem/sticker
+  const [color, setColor] = useState('#fff'); // cor do texto
 
-  const [size, setSize] = useState(0.1);
-  const [sizeSticker, setSizeSticker] = useState(0.1);
-  const [textSize, setTextSize] = useState(10);
+  const [size, setSize] = useState(0.1); // tamanho da imagem. começa pequeno pro usuário não clicar e selecionar
+  const [sizeSticker, setSizeSticker] = useState(0.1); // tamanho do sticker
+  const [textSize, setTextSize] = useState(10); // tamanho do texto
 
   const [position, setPosition] = useState({
+    // posição máxima e mínima da imagem ou do sticker
     minX: 300,
     maxX: 900,
     minY: 300,
     maxY: 900,
   });
 
-  const [images, setImages] = useState([]);
-  const [stickers, setStickers] = useState([]);
+  const [images, setImages] = useState([]); // array de imagens puxados da api
+  const [stickers, setStickers] = useState([]); // array de stickers que também puxa da api
 
   const [shirtType, setShirtType] = useState('tshirt');
 
-  const [tFront, setTFront] = useState(customT.front);
-  const [bFront, setBFront] = useState(customB.front);
-  const [hFront, setHFront] = useState(customH.front);
+  const [tFront, setTFront] = useState(customT.front); // caḿpo para salvar a camiseta t-hirt
+  const [bFront, setBFront] = useState(customB.front); // campo para salvar a camiseta babylook
+  const [hFront, setHFront] = useState(customH.front); // campo para salvar o moletom
 
-  const [tShirtImage, setTShirtImage] = useState(tFront);
-  const [image, setImage] = useState(baseImg.uri);
+  const [tShirtImage, setTShirtImage] = useState(tFront); // imagem da camisa que aparece, começa mostrando a tshirt na tela
+  const [image, setImage] = useState(baseImg.uri); // imagem transparente para botar no lugar da imagem, pra 'apagar' a imagem
 
-  const [sticker, setSticker] = useState(baseImg.uri);
-  const [stickerID, setStickerID] = useState(1);
+  const [sticker, setSticker] = useState(baseImg.uri); // sticker baixado que está exibido na tela
 
   useEffect(() => {
     async function loadImages() {
       const [imgs, stk] = await Promise.all([
-        api.get('design-shirt/image'),
-        api.get('design-shirt/sticker'),
+        api.get('design-shirt/image'), // puxar da rota de imagens
+        api.get('design-shirt/sticker'), // puxa da rota de stickers
       ]);
-      // stk.data.push(nw);
 
-      setImages(imgs.data);
+      setImages(imgs.data); // salva o que recebe da api, no estado
       setStickers(stk.data);
-      setData(stk.data);
     }
+
     loadImages();
   }, []);
 
   useEffect(() => {
+    // sempre que altera a camiseta no estado do redux, reflete aqui
     setTFront(customT.front);
   }, [customT]);
 
@@ -132,29 +136,27 @@ export default function Design({ navigation }) {
   }, [customH]);
 
   // modais
-  const [visible, setVisible] = useState(false);
-  const [visible3, setVisible3] = useState(false);
-  const [visible4, setVisible4] = useState(false);
-  const [visible6, setVisible6] = useState(false);
+  const [visibleStickerModal, setStickerModalVisible] = useState(false);
+  const [visibleTextModal, setTextModalVisible] = useState(false);
+  const [visibleUploadingModal, setUploadingModalVisible] = useState(false);
+  const [visibleChooseColor, setChooseColorVisible] = useState(false);
 
-  const [zindexImg, setZindexImg] = useState(0);
-  const [zindexSticker, setZindexSticker] = useState(1);
-
-  const [editMode, setEditMode] = useState(false);
+  const [zindexImg, setZindexImg] = useState(0); // alterna a sobreposição de imagem e figura, quem fica por cima
+  const [zindexSticker, setZindexSticker] = useState(1); // zindex do sticker
 
   const [distanceX, setDistanceX] = useState(0);
-  const [distanceY, setDistanceY] = useState(55);
+  const [distanceY, setDistanceY] = useState(55); // variavel que calcula o tamanho da tela pra definir o limite minimo superior
 
   const [paddingX, setPaddingX] = useState(0);
   const [paddingY, setPaddingY] = useState(20);
 
   const [internalX, setInternalX] = useState(0);
-  const [internalY, setInternalY] = useState(0);
+  const [internalY, setInternalY] = useState(0); // limitar tamanho que o usuario pode movimentar a imagem
 
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(0); // largura do container de camiseta
+  const [height, setHeight] = useState(0); // altura do container de camiseta
 
-  const [canSend, setCanSend] = useState(false);
+  const [canSend, setCanSend] = useState(false); // boolean que só permite enviar a camisa após ela aparecer na tela, em caso de lag
 
   useEffect(() => {
     // definindo posição maxima do draggable de acordo com a imagem selecionada
@@ -163,6 +165,7 @@ export default function Design({ navigation }) {
         setTShirtImage(tFront);
         setModels(tFronts);
         setPosition({
+          // calcula os limite da tela
           minX: distanceX + internalX,
           maxX: distanceX + paddingX + internalX + width,
           minY: /* distanceY + */ paddingY /* + internalY */,
@@ -199,14 +202,14 @@ export default function Design({ navigation }) {
   }, [shirtType, selected, image, sticker]); // aqui sepa
 
   useEffect(() => {
+    // pra atualizar o texto, muda o tamanho do texto pra forçar o render (refresh)
     if (selected === 'none' || selected === 'frase') {
-      // setTextB(`${text} `);
       setFinalSize(finalSize + 0.01);
     }
   }, [selected]); //eslint-disable-line
 
   useEffect(() => {
-    // setTextB(`${text} `);
+    // pra atualizar a fonte ou a cor, muda o tamanho do texto pra forçar o render
     setFinalSize(finalSize + 0.01);
   }, [color, font]); //eslint-disable-line
 
@@ -221,7 +224,8 @@ export default function Design({ navigation }) {
     }
   }, [selected]);
 
-  async function handleChange(id, uri) {
+  async function uploadShirt(id, uri) {
+    // envio da camiseta pra api
     try {
       const upload = new FormData();
 
@@ -239,38 +243,34 @@ export default function Design({ navigation }) {
 
       upload.append('font_family', 'Oswald');
       upload.append('text', text);
-      // upload.append('front_printable_image_id', frontPrintableId);
       upload.append('front_printable_image_id', id);
-      // upload.append('back_printable_image_id', backPrintableId);
       upload.append('back_printable_image_id', id);
 
-      // const {
-      //   data: { front_printscreen, back_printscreen },
-      // } =
-      await api.post('design-shirt/purchase', upload);
+      await api.post('design-shirt/purchase', upload); // envia pra api
 
       setImage(baseImg.uri); // apaga a imagem - coloca imagem transparente
       setSticker(baseImg.uri); // apaga o sticker - coloca imagem transparente
 
-      setText('');
+      setText(''); // apaga o texto
       Toast.show('Sua camiseta foi enviada!');
 
-      setVisible4(false); // fecha modal de 'enviando imagem'
+      setUploadingModalVisible(false); // fecha modal de 'enviando imagem'
     } catch (err) {
-      setVisible4(false); // fecha modal de 'enviando imagem'
+      setUploadingModalVisible(false); // fecha modal de 'enviando imagem'
 
-      Toast.show('Houve um erro no envio da imagem.');
+      Toast.show('Houve um erro no envio da imagem.'); // toast pra erro no envio
     }
   }
 
   async function captureShirt(id) {
     try {
       const uri = await captureRef(captureViewRef, {
+        // tirar o print da camiseta
         format: 'png',
         quality: 1,
       });
 
-      await handleChange(id, uri);
+      await uploadShirt(id, uri);
     } catch (err) {
       Toast.show('Erro na captura da camiseta');
     }
@@ -282,16 +282,14 @@ export default function Design({ navigation }) {
 
       upload.append('name', `${photouri}.jpeg`);
       upload.append('image', {
-        uri: photouri, // here goes the uri
-        type: 'image/jpeg', // trocar pra png
+        uri: photouri,
+        type: 'image/jpeg',
         name: `${photouri}.jpeg`,
       });
 
       const { id } = await api.post('design-shirt/printables/sticker', upload); // envia pra api
 
-      await captureShirt(id);
-
-      setEditMode(false);
+      await captureShirt(id); // tira print da camiseta
     } catch (err) {
       Toast.show('Erro no envio da imagem'); // printe o err.status
     }
@@ -300,9 +298,11 @@ export default function Design({ navigation }) {
   async function capturePic() {
     try {
       if (image === baseImg.uri) {
-        await captureShirt(33); // tem que ver isso dps
+        await captureShirt(33); // caso nao tenha adicionado imagem, printa com o sticker.
+        // passa esse id pro campo 'id' do upload não ficar em branco
       } else {
         const uri = await captureRef(imgRef, {
+          // captura a imagem que o usuário acrescentou da galeria
           format: 'png',
           quality: 1,
         });
@@ -311,7 +311,7 @@ export default function Design({ navigation }) {
       }
     } catch (err) {
       Toast.show('Verifique sua conexão à internet.');
-      setVisible4(false);
+      setUploadingModalVisible(false);
     }
   }
 
@@ -325,16 +325,14 @@ export default function Design({ navigation }) {
     };
 
     ImagePicker.showImagePicker(options, response => {
-      if (response.didCancel) setEditMode(false);
-      else if (response.error)
-        Toast.show('Houve um erro ao selecionar a imagem. ');
+      if (response.error) Toast.show('Houve um erro ao selecionar a imagem. ');
       else {
         const source = { uri: `data:image/jpeg;base64,${response.data}` };
 
-        setImage(source.uri);
+        setImage(source.uri); // salva a imagem selecionada
 
-        setSelected('imagem');
-        setSize(120);
+        setSelected('imagem'); // selecionar a imagem e aparecer a borda vermelha
+        setSize(80);
       }
     });
   }
@@ -366,14 +364,14 @@ export default function Design({ navigation }) {
             source={{ uri: tShirtImage }}
             resizeMode="cover"
           />
-          {image !== baseImg.uri && (
+          {image !== baseImg.uri && ( // foto da camiseta, puxada da galeria
             <Draggable
               ref={imgRef}
               selected={image !== baseImg.uri && selected === 'imagem'} // aqui sepa
               imageSource={{ uri: image }}
               renderSize={size}
-              // onLongPress={() => setSelected('imagem')}
               onLongPress={() => {
+                // a imagem apaga se clicar e segurar
                 if (canSend) {
                   setImage(baseImg.uri);
                 }
@@ -390,21 +388,23 @@ export default function Design({ navigation }) {
               onDrag={() => {}}
               onShortPressRelease={() => {}}
               onDragRelease={() => {
+                // depois de 3 segundos sem mexer, ele desseleciona a imagem
                 setTimeout(() => setSelected('none'), 3000);
               }}
-              onPressIn={() => setSelected('imagem')}
+              onPressIn={() => setSelected('imagem')} // seleciona a imagem ao clicar em cima
               onPressOut={() => {}}
               onRelease={() => {}}
             />
           )}
-          {sticker !== baseImg.uri && (
+          {sticker !== baseImg.uri && ( // puxa a figura da galeria de stickers
             <Draggable
               selected={selected === 'figura'}
               imageSource={{ uri: sticker }}
               renderSize={sizeSticker}
               // onLongPress={() => setSelected('figura')}
               onLongPress={() => {
-                setSticker(baseImg.uri);
+                // se clicar e segurar, apaga
+                setSticker(baseImg.uri); // imagem transparente
                 setSizeSticker(0.1);
                 setSelected('none');
               }}
@@ -419,16 +419,18 @@ export default function Design({ navigation }) {
               onDrag={() => {}}
               onShortPressRelease={() => {}}
               onDragRelease={() => {
+                // depois de 3 segundos sem mexer, ele desseleciona a imagem
                 setTimeout(() => setSelected('none'), 3000);
               }}
               onPressIn={() => {
+                // seleciona a figura ao clicar em cima
                 setSelected('figura');
               }}
               onPressOut={() => {}}
               onRelease={() => {}}
             />
           )}
-          <Draggable
+          <Draggable // draggable de texto
             renderText={text}
             adaptive={value => setTextSize(value)}
             adaptiveHeight={value => setTextHeight(value)}
@@ -439,7 +441,7 @@ export default function Design({ navigation }) {
               setText('');
               setSelected('none');
             }}
-            renderHeight={textHeight} // alt1
+            renderHeight={textHeight}
             renderSize={textSize}
             textColor={color}
             x={position.minX + 100}
@@ -452,16 +454,17 @@ export default function Design({ navigation }) {
             onDrag={() => {}}
             onShortPressRelease={() => {}}
             onDragRelease={() => {
+              // depois de 3 segundos sem mexer, ele desseleciona a imagem
               setTimeout(() => setSelected('none'), 3000);
             }}
             onPressIn={() => {
+              // quando clicar no texto, ele é selecionado
               setSelected('frase');
             }}
             onPressOut={() => {}}
             onRelease={() => {}}
           />
         </TShirtContainer>
-
         <TopButtonsContainer>
           <ActionButton
             active={shirtType === 'tshirt'}
@@ -490,19 +493,17 @@ export default function Design({ navigation }) {
             </ActionButtonText>
           </ActionButton>
         </TopButtonsContainer>
-
         <NoSlider>
-          {selected !== 'none' ? (
+          {selected !== 'none' ? ( // caso haja elemento selecionado, não mostra a barra de tamanho
             <>
-              <Slider
-                value={1}
+              {/* <Slider
+                value={60}
                 minimumValue={20}
                 maximumValue={120}
                 onValueChange={value => {
                   switch (selected) {
                     case 'imagem':
                       setSize(value);
-
                       break;
                     case 'figura':
                       setSizeSticker(value);
@@ -513,10 +514,34 @@ export default function Design({ navigation }) {
                     default:
                   }
                 }}
-              />
+              /> */}
+              <ContainerActions>
+                <Actions
+                  onPress={() => {}}
+                  style={{ backgroundColor: '#038311' }}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Icon name="add-circle" size={30} color="#FFF" />
+                </Actions>
+                <Actions
+                  onPress={() => {}}
+                  style={{ backgroundColor: '#d10000' }}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Icon name="remove-circle" size={30} color="#FFF" />
+                </Actions>
+                <Actions
+                  onPress={() => {}}
+                  style={{ backgroundColor: '#333' }}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Icon name="delete" size={30} color="#FFF" />
+                </Actions>
+              </ContainerActions>
+
               <Text
                 style={{
-                  marginTop: -10,
+                  marginTop: -5,
                   fontSize: 14,
                   color: '#333',
                   textAlign: 'center',
@@ -527,8 +552,8 @@ export default function Design({ navigation }) {
             <AddToCart
               onPress={() => {
                 if (canSend) {
-                  setVisible4(true);
-                  capturePic();
+                  setUploadingModalVisible(true); // abre o modal de 'enviando camiseta...aguarde
+                  capturePic(); // função que tira o print da camiseta
                 } else {
                   Toast.show('Edite alguma camiseta antes de enviar.');
                 }
@@ -538,95 +563,65 @@ export default function Design({ navigation }) {
             </AddToCart>
           )}
         </NoSlider>
+        {/** adicionar lixeira pra apagar o elemento */}
       </Container>
 
       <Bottom>
-        <BottomButton
-          onPress={() => {
-            if (editMode) {
-              // aqui sepa -- nao vai utilizar mais
-              setSelected('none');
-              setEditMode(false);
-            } else handleChoosePhoto();
-          }}
-        >
+        <BottomButton onPress={() => handleChoosePhoto()}>
+          {/** função de puxar imagem da galeria */}
           <Icon name="collections" size={40} color="#FFF" />
-
           <IconLabel>Imagem</IconLabel>
         </BottomButton>
 
-        <BottomButton onPress={() => setVisible6(true)}>
+        <BottomButton onPress={() => setChooseColorVisible(true)}>
           <Icon name="palette" size={40} color="#FFF" />
           <IconLabel>Cores</IconLabel>
         </BottomButton>
 
-        <BottomButton onPress={() => setVisible(true)}>
+        <BottomButton onPress={() => setStickerModalVisible(true)}>
           <Icon name="mood" size={40} color="#FFF" />
 
           <IconLabel>Stickers</IconLabel>
         </BottomButton>
 
-        <BottomButton onPress={() => setVisible3(true)}>
+        <BottomButton onPress={() => setTextModalVisible(true)}>
           <Icon name="title" size={40} color="#FFF" />
           <IconLabel>Textos</IconLabel>
         </BottomButton>
       </Bottom>
-      <Modal
-        visible={visible}
+
+      <Modal // modal da galeria dos stickers
+        visible={visibleStickerModal}
         disabled={true}
         onRequestClose={() => {
-          setVisible(false);
+          setStickerModalVisible(false);
         }}
       >
-        <CustomList
-          images={images}
-          stickers={stickers}
+        <CustomList // galeria de stickers
+          images={images} // estampas
+          stickers={stickers} // stickers
           side="front"
-          handle={(value, id) => {
+          handle={value => {
             setSticker(value);
             setSelected('figura');
-            setSizeSticker(120);
-            setStickerID(id);
+            setSizeSticker(80);
           }}
-          setId={value => {
-            setStickerID(value);
-          }}
-          close={() => setVisible(false)}
+          close={() => setStickerModalVisible(false)}
           done={() => {
-            setVisible(false);
+            setStickerModalVisible(false);
           }}
         />
       </Modal>
 
       <CustomModal // selecionar texto
-        visible={visible3}
+        visible={visibleTextModal}
         animationType="slide"
         transparent
-        onRequestClose={() => setVisible3(false)}
+        onRequestClose={() => setTextModalVisible(false)}
       >
         <CustomView style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <View
-            style={{
-              padding: 10,
-              backgroundColor: '#eee',
-              width: 280,
-              height: 395,
-              borderRadius: 5,
-              alignSelf: 'center',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              style={{
-                marginTop: 3,
-                fontSize: 14,
-                color: '#111',
-                textAlign: 'center',
-              }}
-            >
-              Informe o texto abaixo:
-            </Text>
+          <FontMenu>
+            <TypeInText>Informe o texto abaixo:</TypeInText>
             <Input
               autoFocus
               value={text}
@@ -641,47 +636,14 @@ export default function Design({ navigation }) {
               onSubmitEditing={() => {
                 setSelected('frase');
                 setText(text);
-                setVisible3(false);
+                setTextModalVisible(false);
               }}
               underlineColorAndroid="transparent"
             />
-            <View
-              style={{
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                alignSelf: 'stretch',
-                marginTop: 4,
-                marginBottom: 4,
-              }}
-            />
-            <Text
-              style={{
-                marginTop: 5,
-                marginBottom: 5,
-                fontSize: 14,
-                color: '#111',
-                textAlign: 'center',
-              }}
-            >
-              Selecione a cor do texto:
-            </Text>
-            <View
-              style={{
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-                alignSelf: 'stretch',
-                marginTop: 4,
-                marginBottom: 4,
-              }}
-            />
-            <View
-              style={{
-                height: 51,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
+            <Separator />
+            <ChooseColorText>Selecione a cor do texto:</ChooseColorText>
+            <Separator />
+            <ColorsContainer>
               <Color
                 hitSlop={{ top: 2, bottom: 2, left: 2, right: 2 }}
                 color="#000"
@@ -720,99 +682,46 @@ export default function Design({ navigation }) {
                 color="#fff"
                 onPress={() => setColor('#fff')}
               />
-            </View>
-            {/* <View
-              style={{
-                marginTop: 5,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                width: 160,
-                height: 50,
-                alignSelf: 'center',
-              }}
-            >
-              <PickTextButton
-                onPress={() => {
-                  // setSelected('frase');
-                  setVisible3(false);
-                  setText(text);
-                }}
-              >
-                <PickTextButtonText
-                  style={{
-                    fontWeight: 'bold',
-                  }}
-                >
-                  Selecionar
-                </PickTextButtonText>
-              </PickTextButton>
-              <PickTextButton
-                onPress={() => setVisible3(false)}
-                style={{
-                  backgroundColor: '#d10000',
-                }}
-              >
-                <PickTextButtonText>Fechar</PickTextButtonText>
-              </PickTextButton>
-            </View> */}
-            {/* </View> */}
-            <View
-              style={{
-                width: 270,
-                height: 230,
-                borderRadius: 5,
-                alignSelf: 'center',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <FontPicker
+            </ColorsContainer>
+
+            <FontList>
+              <FontPicker // lista de fontes
                 example="A frase fica assim"
                 setFont={value => setFont(value)}
-                done={() => setVisible3(false)}
+                done={() => setTextModalVisible(false)}
               />
-            </View>
-          </View>
+            </FontList>
+          </FontMenu>
         </CustomView>
       </CustomModal>
 
-      <CustomModal
-        visible={visible4}
+      <CustomModal // modal de envio da camiseta aparece escrito 'enviando...aguarde'
+        visible={visibleUploadingModal}
         animationType="slide"
         transparent
-        onRequestClose={() => setVisible4(false)}
+        onRequestClose={() => setUploadingModalVisible(false)}
       >
         <CustomView>
-          <View
-            style={{
-              backgroundColor: '#333',
-              width: 200,
-              height: 120,
-              borderRadius: 8,
-              alignSelf: 'center',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
+          <UploadShirtLoading>
             <Text style={{ fontSize: 12, color: '#fff', textAlign: 'center' }}>
               Enviando a camiseta, aguarde...
             </Text>
             <ActivityIndicator size="large" color="#fff" />
-          </View>
+          </UploadShirtLoading>
         </CustomView>
       </CustomModal>
 
-      <Modal
-        visible={visible6}
+      <Modal // modal de selecionar cores da camiseta
+        visible={visibleChooseColor}
         disabled={false}
         disabledContent={true}
-        onRequestClose={() => setVisible6(false)}
+        onRequestClose={() => setChooseColorVisible(false)}
       >
         <Carousel
-          data={models}
+          data={models} // array de camisetas.
           done={value => {
             setTShirtImage(value);
-            setVisible6(false);
+            setChooseColorVisible(false);
           }}
           type={shirtType}
           side="front"
