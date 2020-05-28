@@ -2,7 +2,6 @@ import styled from 'styled-components/native';
 import { TouchableOpacity, Image } from 'react-native';
 
 export const Container = styled.View`
-  /* background: #00f2f2; */
   flex: 1;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -45,9 +44,6 @@ export const TShirtContainer = styled.View`
 export const TShirtImage = styled(Image)`
   width: 100%;
   margin-top: 5px;
-
-  /* background-color: #f04; */
-  height: 450px;
 `;
 
 export const TopButtonsContainer = styled.View`

@@ -8,9 +8,9 @@ import Toast from 'react-native-tiny-toast'; // toast de notificação após o e
 
 import {
   Modal as CustomModal,
-  View,
   Text,
   ActivityIndicator, // loading no momento do envio
+  Dimensions,
 } from 'react-native';
 
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'; // pega imagem e cria uma URI (caminho local da imagem)
@@ -29,7 +29,6 @@ import {
   AddToCartText,
   Actions,
   Color,
-  ESlider as Slider, // barra de tamanho da imagem/figura, ou texto
   NoSlider,
   Container,
   ContainerActions,
@@ -121,6 +120,11 @@ export default function Design({ navigation }) {
       setImages(imgs.data); // salva o que recebe da api, no estado
       setStickers(stk.data);
     }
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
+
+    console.tron.log(`largura tela: ${windowWidth}`);
+    console.tron.log(`altura tela: ${windowHeight}`);
 
     loadImages();
   }, []);
@@ -427,19 +431,22 @@ export default function Design({ navigation }) {
 
   return (
     <>
-      <Header navigation={navigation} title="Design" />
+      <Header
+        onLayout={({ nativeEvent: { layout } }) => {
+          console.tron.log(`header: ${layout.height}`);
+        }}
+        navigation={navigation}
+        title="Design"
+      />
 
       <Container
         onLayout={({ nativeEvent: { layout } }) => {
-          console.tron.log(`distance: ${layout.y}`);
           setDistanceX(layout.x);
           setDistanceY(layout.y);
         }}
       >
         <TShirtContainer
           onLayout={({ nativeEvent: { layout } }) => {
-            console.tron.log(`padding: ${layout.y}`);
-
             setPaddingX(layout.x);
             setPaddingY(layout.y);
           }}
@@ -447,13 +454,12 @@ export default function Design({ navigation }) {
         >
           <TShirtImage
             onLayout={({ nativeEvent: { layout } }) => {
-              console.tron.log(`internal: ${layout.y}`);
-
               setInternalX(layout.x);
               setInternalY(layout.y);
               setWidth(layout.width);
               setHeight(layout.height);
             }}
+            style={{ height: Dimensions.get('window').height - 174 }}
             source={{ uri: tShirtImage }}
             resizeMode="contain"
           />
@@ -474,10 +480,7 @@ export default function Design({ navigation }) {
               loaded={value => setCanSend(value)}
               onDrag={() => {}}
               onShortPressRelease={() => {}}
-              onDragRelease={() => {
-                // depois de 3 segundos sem mexer, ele desseleciona a imagem
-                // setTimeout(() => setSelected('none'), 3000);
-              }}
+              onDragRelease={() => {}}
               onPressIn={() => setSelected('imagem')} // seleciona a imagem ao clicar em cima
               onPressOut={() => {}}
               onRelease={() => {}}
@@ -499,10 +502,7 @@ export default function Design({ navigation }) {
               loaded={value => setCanSend(value)}
               onDrag={() => {}}
               onShortPressRelease={() => {}}
-              onDragRelease={() => {
-                // depois de 3 segundos sem mexer, ele desseleciona a imagem
-                // setTimeout(() => setSelected('none'), 3000);
-              }}
+              onDragRelease={() => {}}
               onPressIn={() => {
                 // seleciona a figura ao clicar em cima
                 setSelected('figura');
@@ -531,10 +531,7 @@ export default function Design({ navigation }) {
             maxY={position.maxY}
             onDrag={() => {}}
             onShortPressRelease={() => {}}
-            onDragRelease={() => {
-              // depois de 3 segundos sem mexer, ele desseleciona a imagem
-              // setTimeout(() => setSelected('none'), 3000);
-            }}
+            onDragRelease={() => {}}
             onPressIn={() => {
               // quando clicar no texto, ele é selecionado
               setSelected('frase');
@@ -543,7 +540,11 @@ export default function Design({ navigation }) {
             onRelease={() => {}}
           />
         </TShirtContainer>
-        <TopButtonsContainer>
+        <TopButtonsContainer
+          onLayout={({ nativeEvent: { layout } }) => {
+            console.tron.log(`top container: ${layout.height}`);
+          }}
+        >
           <ActionButton
             active={shirtType === 'tshirt'}
             onPress={() => setShirtType('tshirt')}
@@ -635,7 +636,12 @@ export default function Design({ navigation }) {
       </Container>
 
       <Bottom>
-        <BottomButton onPress={() => handleChoosePhoto()}>
+        <BottomButton
+          onLayout={({ nativeEvent: { layout } }) => {
+            console.tron.log(`bottom container: ${layout.height}`);
+          }}
+          onPress={() => handleChoosePhoto()}
+        >
           {/** função de puxar imagem da galeria */}
           <Icon name="collections" size={40} color="#FFF" />
           <IconLabel>Imagem</IconLabel>
