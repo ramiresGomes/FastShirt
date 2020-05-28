@@ -455,7 +455,7 @@ export default function Design({ navigation }) {
               setHeight(layout.height);
             }}
             source={{ uri: tShirtImage }}
-            resizeMode="cover"
+            resizeMode="contain"
           />
           {image !== baseImg.uri && ( // foto da camiseta, puxada da galeria
             <Draggable
