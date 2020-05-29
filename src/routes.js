@@ -12,8 +12,6 @@ import SignUp from '~/pages/Auth/SignUp';
 
 import Profile from '~/pages/App/Profile';
 import Design from '~/pages/App/Design';
-import About from '~/pages/App/About';
-import Question from '~/pages/App/Question';
 import Contact from '~/pages/App/Contact';
 
 const Stack = createStackNavigator();
@@ -26,7 +24,7 @@ function createIcon({ color, size }, name) {
 export default function createRouter(isSigned = false) {
   return !isSigned ? (
     <>
-      <StatusBar barStyle="light-content" backgroundColor="#038841" />
+      <StatusBar barStyle="light-content" backgroundColor="#5BAE59" />
       <Stack.Navigator headerMode="none">
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
@@ -56,57 +54,57 @@ export default function createRouter(isSigned = false) {
         initialRouteName="Design"
       >
         <Drawer.Screen
-          name="Profile"
-          component={Profile}
+          name="Design"
+          component={Design}
           options={{
-            title: 'Minha Conta',
+            title: 'Home',
             drawerIcon: ({ color, size }) =>
               createIcon({ color, size }, 'person-outline'),
           }}
         />
         <Drawer.Screen
-          name="Design"
+          name="Profile"
+          component={Profile}
+          options={{
+            title: 'Ver conta',
+            drawerIcon: ({ color, size }) =>
+              createIcon({ color, size }, 'person-outline'),
+          }}
+        />
+        <Drawer.Screen
+          name="Payment"
           component={Design}
           options={{
-            title: 'Criação',
+            title: 'Pagamento',
             drawerIcon: ({ color, size }) =>
               createIcon({ color, size }, 'dashboard'),
           }}
         />
         <Drawer.Screen
-          name="Purchase"
+          name="Bag"
+          component={Design}
+          options={{
+            title: 'Cesta de compra',
+            drawerIcon: ({ color, size }) =>
+              createIcon({ color, size }, 'dashboard'),
+          }}
+        />
+        <Drawer.Screen
+          name="Purchases"
+          component={Design}
+          options={{
+            title: 'Minhas compras',
+            drawerIcon: ({ color, size }) =>
+              createIcon({ color, size }, 'dashboard'),
+          }}
+        />
+        <Drawer.Screen
+          name="Help"
           component={Contact}
           options={{
-            title: 'Compras',
+            title: 'Ajuda',
             drawerIcon: ({ color, size }) =>
               createIcon({ color, size }, 'shopping-basket'),
-          }}
-        />
-        <Drawer.Screen
-          name="About"
-          component={About}
-          options={{
-            title: 'Sobre',
-            drawerIcon: ({ color, size }) =>
-              createIcon({ color, size }, 'info-outline'),
-          }}
-        />
-        <Drawer.Screen
-          name="Question"
-          component={Question}
-          options={{
-            title: 'Dúvidas',
-            drawerIcon: ({ color, size }) =>
-              createIcon({ color, size }, 'help-outline'),
-          }}
-        />
-        <Drawer.Screen
-          name="Contact"
-          component={Contact}
-          options={{
-            title: 'Contato',
-            drawerIcon: ({ color, size }) =>
-              createIcon({ color, size }, 'contacts'),
           }}
         />
       </Drawer.Navigator>

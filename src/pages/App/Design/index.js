@@ -431,13 +431,7 @@ export default function Design({ navigation }) {
 
   return (
     <>
-      <Header
-        onLayout={({ nativeEvent: { layout } }) => {
-          console.tron.log(`header: ${layout.height}`);
-        }}
-        navigation={navigation}
-        title="Design"
-      />
+      <Header navigation={navigation} title="Design" />
 
       <Container
         onLayout={({ nativeEvent: { layout } }) => {
@@ -540,11 +534,7 @@ export default function Design({ navigation }) {
             onRelease={() => {}}
           />
         </TShirtContainer>
-        <TopButtonsContainer
-          onLayout={({ nativeEvent: { layout } }) => {
-            console.tron.log(`top container: ${layout.height}`);
-          }}
-        >
+        <TopButtonsContainer>
           <ActionButton
             active={shirtType === 'tshirt'}
             onPress={() => setShirtType('tshirt')}
@@ -636,30 +626,25 @@ export default function Design({ navigation }) {
       </Container>
 
       <Bottom>
-        <BottomButton
-          onLayout={({ nativeEvent: { layout } }) => {
-            console.tron.log(`bottom container: ${layout.height}`);
-          }}
-          onPress={() => handleChoosePhoto()}
-        >
+        <BottomButton onPress={() => handleChoosePhoto()}>
           {/** função de puxar imagem da galeria */}
-          <Icon name="collections" size={40} color="#FFF" />
+          <Icon name="collections" size={40} color="#000" />
           <IconLabel>Imagem</IconLabel>
         </BottomButton>
 
         <BottomButton onPress={() => setChooseColorVisible(true)}>
-          <Icon name="palette" size={40} color="#FFF" />
+          <Icon name="palette" size={40} color="#000" />
           <IconLabel>Cores</IconLabel>
         </BottomButton>
 
         <BottomButton onPress={() => setStickerModalVisible(true)}>
-          <Icon name="mood" size={40} color="#FFF" />
+          <Icon name="mood" size={40} color="#000" />
 
           <IconLabel>Stickers</IconLabel>
         </BottomButton>
 
         <BottomButton onPress={() => setTextModalVisible(true)}>
-          <Icon name="title" size={40} color="#FFF" />
+          <Icon name="title" size={40} color="#000" />
           <IconLabel>Textos</IconLabel>
         </BottomButton>
       </Bottom>

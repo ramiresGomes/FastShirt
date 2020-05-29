@@ -1,0 +1,13 @@
+<svg id="ico_ajuda" data-name="ico ajuda" xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <path id="Caminho_1135" data-name="Caminho 1135" d="M239.893,0l-3.909,52.131L239.893,100a50,50,0,0,0,0-100Z" transform="translate(-189.893)" fill="#fe8100"/>
+  <path id="Caminho_1136" data-name="Caminho 1136" d="M0,50a50,50,0,0,0,50,50V0A50,50,0,0,0,0,50Z" fill="#ffb742"/>
+  <g id="Grupo_718" data-name="Grupo 718" transform="translate(46.091 12.53)">
+    <path id="Caminho_1137" data-name="Caminho 1137" d="M239.9,64.153h-.006l-3.909,6.806,3.909,5.643h.006a8.983,8.983,0,0,1,0,17.966h-.006l-3.909,9.186,3.909,9.186h6.224V106.1A21.432,21.432,0,0,0,239.9,64.153Z" transform="translate(-235.984 -64.153)" fill="#114378"/>
+    <path id="Caminho_1138" data-name="Caminho 1138" d="M246.118,390.179V377.73h-6.224l-3.909,6.224,3.909,6.224Z" transform="translate(-235.984 -316.485)" fill="#114378"/>
+  </g>
+  <g id="Grupo_719" data-name="Grupo 719" transform="translate(30.206 12.53)">
+    <rect id="Retângulo_324" data-name="Retângulo 324" width="6.224" height="12.449" transform="translate(13.569 61.245)" fill="#266cb2"/>
+    <rect id="Retângulo_325" data-name="Retângulo 325" width="6.224" height="18.371" transform="translate(13.569 30.415)" fill="#266cb2"/>
+    <path id="Caminho_1139" data-name="Caminho 1139" d="M154.657,77.384l11.5,4.763a8.984,8.984,0,0,1,8.295-5.545V64.154A21.464,21.464,0,0,0,154.657,77.384Z" transform="translate(-154.657 -64.154)" fill="#266cb2"/>
+  </g>
+</svg>

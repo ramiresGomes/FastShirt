@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Image } from 'react-native';
+import { Image, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { signInRequest } from '~/store/modules/auth/actions';
@@ -13,8 +13,14 @@ import {
   Form,
   FormInput,
   SubmitButton,
-  SignLink,
-  SignLinkText,
+  SubmitButtonText,
+  TitleText,
+  SubtitleText,
+  RecoveryButton,
+  RecoveryText,
+  FacebookButton,
+  FacebookButtonText,
+  FacebookButtonIcon,
 } from './styles';
 
 export default function SignIn({ navigation }) {
@@ -34,11 +40,15 @@ export default function SignIn({ navigation }) {
     <Background>
       <Container>
         <Image source={logo} />
+
+        <TitleText>Bem-vindo</TitleText>
+        <SubtitleText>Cadastre-se gratuitamente em 15 segundos</SubtitleText>
+
         <Form>
           <FormInput
             autoFocus
             icon="person-outline"
-            placeholder="Digite seu e-mail"
+            placeholder="Seu email"
             keyboardType="email-address"
             autoCorrect={false}
             autoCapitalize="none"
@@ -49,7 +59,7 @@ export default function SignIn({ navigation }) {
           />
           <FormInput
             icon="lock-outline"
-            placeholder="Sua senha secreta"
+            placeholder="Sua senha"
             secureTextEntry
             ref={passwordRef}
             returnKeyType="send"
@@ -57,19 +67,31 @@ export default function SignIn({ navigation }) {
             value={password}
             onChangeText={setPassword}
           />
-
-          <SubmitButton loading={loading} onPress={handleSubmit}>
-            Acessar
+          <RecoveryButton
+            onPress={() => {
+              navigation.navigate('SignUp');
+            }}
+          >
+            <RecoveryText>Recuperar Senha?</RecoveryText>
+          </RecoveryButton>
+          <SubmitButton onPress={handleSubmit}>
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <SubmitButtonText>Entrar ou Cadastrar</SubmitButtonText>
+            )}
           </SubmitButton>
+          <FacebookButton onPress={() => {}}>
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <>
+                <FacebookButtonIcon name="facebook-f" />
+                <FacebookButtonText>Entrar com Facebook</FacebookButtonText>
+              </>
+            )}
+          </FacebookButton>
         </Form>
-
-        <SignLink
-          onPress={() => {
-            navigation.navigate('SignUp');
-          }}
-        >
-          <SignLinkText>Criar conta gratuita</SignLinkText>
-        </SignLink>
       </Container>
     </Background>
   );

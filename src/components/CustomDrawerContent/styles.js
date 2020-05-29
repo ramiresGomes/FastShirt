@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 
 export const Container = styled.View`
-  background: #038841;
+  background: #5bae59;
   flex: 1;
   margin: 0;
 `;

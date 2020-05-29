@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
 
-import Input from '~/components/Input';
+import AuthInput from '~/components/AuthInput';
 import Button from '~/components/Button';
 
 export const Container = styled.KeyboardAvoidingView.attrs({
@@ -19,7 +19,7 @@ export const Form = styled.View`
   margin-top: 50px;
 `;
 
-export const FormInput = styled(Input)`
+export const FormInput = styled(AuthInput)`
   margin-bottom: 10px;
 `;
 

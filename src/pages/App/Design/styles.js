@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 import { TouchableOpacity, Image } from 'react-native';
 
 export const Container = styled.View`
+  background: #fff;
   flex: 1;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -11,7 +12,7 @@ export const Container = styled.View`
 `;
 
 export const Bottom = styled.View`
-  background: #252424;
+  background: #fff;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -26,9 +27,8 @@ export const BottomButton = styled(TouchableOpacity)`
 
 export const IconLabel = styled.Text`
   margin-top: 5px;
-  color: #fff;
+  color: #000;
   width: 100%;
-  /* flex:1; */
   text-align: center;
 `;
 
@@ -38,7 +38,6 @@ export const TShirtContainer = styled.View`
   justify-content: center;
   padding-top: 20px;
   margin-top: 35px;
-  /* background-color: #fff202; */
 `;
 
 export const TShirtImage = styled(Image)`
@@ -49,7 +48,7 @@ export const TShirtImage = styled(Image)`
 export const TopButtonsContainer = styled.View`
   position: absolute;
   width: 100%;
-  margin: 0 20px;
+  margin: 0 5px;
   top: 20px;
   display: flex;
   flex-direction: row;
@@ -57,19 +56,18 @@ export const TopButtonsContainer = styled.View`
 `;
 
 export const ActionButton = styled(TouchableOpacity)`
-  background: ${props => (props.active ? '#038841' : '#fff')};
-  border: 1px solid ${props => (props.active ? '#038841' : '#dcdcdc')};
-  border-radius: 4px;
-  padding: 5px 15px;
-  min-width: 100px;
+  background: ${props => (props.active ? '#E58230' : '#fff')};
+  border: 1px solid ${props => (props.active ? '#E58230' : '#dcdcdc')};
+  border-radius: 50px;
+  padding: 8px 20px;
   align-items: center;
   margin: 0 10px;
+  min-width: 100px;
 `;
 
 export const ActionButtonText = styled.Text`
-  font-size: 16px;
+  font-size: 15px;
   color: ${props => (props.active ? '#fff' : '#000')};
-  font-weight: ${props => (props.active ? 'bold' : 'normal')};
 `;
 
 export const AddToCart = styled(TouchableOpacity)`
@@ -87,16 +85,6 @@ export const AddToCartText = styled.Text`
   font-size: 14px;
   color: #fff;
   font-weight: normal;
-`;
-
-export const BottomButtonsContainer = styled.View`
-  position: absolute;
-  width: 100%;
-  margin: 10px 20px 0;
-  bottom: 60px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
 `;
 
 export const Input = styled.TextInput.attrs({
