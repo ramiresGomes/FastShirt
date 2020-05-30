@@ -7,41 +7,51 @@ import ImagePicker from 'react-native-image-picker'; // puxar imagem da galeria 
 import Toast from 'react-native-tiny-toast'; // toast de notificação após o envio da camisa, ou caso de erro
 
 import {
-  Modal as CustomModal,
+  Modal as RNModal,
   Text,
   ActivityIndicator, // loading no momento do envio
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'; // pega imagem e cria uma URI (caminho local da imagem)
 
+import ImageIcon from '~/assets/ico-image.svg';
+import ColorIcon from '~/assets/ico-colors.svg';
+import StickerIcon from '~/assets/ico-stickers.svg';
+import TextIcon from '~/assets/ico-text.svg';
+
+import MinusIcon from '~/assets/ico-minus.svg';
+import MoreIcon from '~/assets/ico-more.svg';
+import TrashIcon from '~/assets/ico-trash.svg';
+import ConfirmationIcon from '~/assets/ico-confirm.svg';
+
 import Header from '~/components/Header';
 import Modal from '~/components/Modal';
+import ColorModal from '~/components/ColorModal';
 import CustomList from '~/components/List';
-import Carousel from '~/components/Carousel';
 import FontPicker from '~/components/FontPicker';
 
 import Draggable from './PickText/CustomDraggable';
 import base from '~/assets/base.png';
 
 import {
-  AddToCart,
-  AddToCartText,
-  Actions,
-  Color,
-  NoSlider,
   Container,
-  ContainerActions,
   Bottom,
   BottomButton,
-  IconLabel,
   TShirtContainer,
   TShirtImage,
   TopButtonsContainer,
   ActionButton,
   ActionButtonText,
+  AddToCart,
+  AddToCartText,
+  CannotSendAlert,
   Input,
   CustomView,
+  NoSlider,
+  ContainerActions,
+  Color,
   UploadShirtLoading,
   FontList,
   ColorsContainer,
@@ -120,11 +130,6 @@ export default function Design({ navigation }) {
       setImages(imgs.data); // salva o que recebe da api, no estado
       setStickers(stk.data);
     }
-    const windowWidth = Dimensions.get('window').width;
-    const windowHeight = Dimensions.get('window').height;
-
-    console.tron.log(`largura tela: ${windowWidth}`);
-    console.tron.log(`altura tela: ${windowHeight}`);
 
     loadImages();
   }, []);
@@ -192,7 +197,7 @@ export default function Design({ navigation }) {
   const [visibleStickerModal, setStickerModalVisible] = useState(false);
   const [visibleTextModal, setTextModalVisible] = useState(false);
   const [visibleUploadingModal, setUploadingModalVisible] = useState(false);
-  const [visibleChooseColor, setChooseColorVisible] = useState(false);
+  const [visibleModalColor, setVisibleModalColor] = useState(false);
 
   const [zindexImg, setZindexImg] = useState(0); // alterna a sobreposição de imagem e figura, quem fica por cima
   const [zindexSticker, setZindexSticker] = useState(1); // zindex do sticker
@@ -563,63 +568,58 @@ export default function Design({ navigation }) {
           </ActionButton>
         </TopButtonsContainer>
         <NoSlider>
-          {selected !== 'none' ? ( // caso haja elemento selecionado, não mostra a barra de tamanho
+          {selected !== 'none' && (
             <>
               <ContainerActions>
-                <Actions
-                  disabled={topLimitReached}
-                  onPress={() => changeSize('add')}
-                  style={{ backgroundColor: '#333' }}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                >
-                  <Icon name="add-circle" size={30} color="#FFF" />
-                </Actions>
-                <Actions
+                <TouchableOpacity
                   disabled={downLimitReached}
                   onPress={() => changeSize('subtract')}
-                  style={{ backgroundColor: '#333' }}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <Icon name="remove-circle" size={30} color="#FFF" />
-                </Actions>
-                <Actions
+                  <MinusIcon width={35} height={35} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  disabled={topLimitReached}
+                  onPress={() => changeSize('add')}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <MoreIcon width={35} height={35} />
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={() => clearElement()}
-                  style={{ backgroundColor: '#d10000' }}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <Icon name="delete" size={30} color="#FFF" />
-                </Actions>
-                <Actions
+                  <TrashIcon width={35} height={35} />
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={() => setSelected('none')}
-                  style={{ backgroundColor: '#038311' }}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <Icon name="done" size={30} color="#FFF" />
-                </Actions>
+                  <ConfirmationIcon width={35} height={35} />
+                </TouchableOpacity>
               </ContainerActions>
-
-              <Text
-                style={{
-                  marginTop: -5,
-                  fontSize: 14,
-                  color: '#333',
-                  textAlign: 'center',
-                }}
-              >{`Tamanho da ${selected}`}</Text>
             </>
-          ) : (
-            <AddToCart
-              onPress={() => {
-                if (canSend) {
-                  setUploadingModalVisible(true); // abre o modal de 'enviando camiseta...aguarde
-                  capturePic(); // função que tira o print da camiseta
-                } else {
-                  Toast.show('Edite alguma camiseta antes de enviar.');
-                }
-              }}
-            >
-              <AddToCartText>Adicionar ao Carrinho</AddToCartText>
-            </AddToCart>
+          )}
+
+          {selected === 'none' && (
+            <>
+              {canSend ? (
+                <AddToCart
+                  onPress={() => {
+                    if (canSend) {
+                      setUploadingModalVisible(true); // abre o modal de 'enviando camiseta...aguarde
+                      capturePic(); // função que tira o print da camiseta
+                    } else {
+                      Toast.show('Edite alguma camiseta antes de enviar.');
+                    }
+                  }}
+                >
+                  <AddToCartText>Escolher Tamanho</AddToCartText>
+                </AddToCart>
+              ) : (
+                <CannotSendAlert>Edite para continuar</CannotSendAlert>
+              )}
+            </>
           )}
         </NoSlider>
         {/** adicionar lixeira pra apagar o elemento */}
@@ -628,24 +628,19 @@ export default function Design({ navigation }) {
       <Bottom>
         <BottomButton onPress={() => handleChoosePhoto()}>
           {/** função de puxar imagem da galeria */}
-          <Icon name="collections" size={40} color="#000" />
-          <IconLabel>Imagem</IconLabel>
+          <ImageIcon height={40} width={40} />
         </BottomButton>
 
-        <BottomButton onPress={() => setChooseColorVisible(true)}>
-          <Icon name="palette" size={40} color="#000" />
-          <IconLabel>Cores</IconLabel>
+        <BottomButton onPress={() => setVisibleModalColor(true)}>
+          <ColorIcon height={40} width={40} />
         </BottomButton>
 
         <BottomButton onPress={() => setStickerModalVisible(true)}>
-          <Icon name="mood" size={40} color="#000" />
-
-          <IconLabel>Stickers</IconLabel>
+          <StickerIcon height={40} width={40} />
         </BottomButton>
 
         <BottomButton onPress={() => setTextModalVisible(true)}>
-          <Icon name="title" size={40} color="#000" />
-          <IconLabel>Textos</IconLabel>
+          <TextIcon height={40} width={40} />
         </BottomButton>
       </Bottom>
 
@@ -672,7 +667,7 @@ export default function Design({ navigation }) {
         />
       </Modal>
 
-      <CustomModal // selecionar texto
+      <RNModal // selecionar texto
         visible={visibleTextModal}
         animationType="slide"
         transparent
@@ -752,9 +747,9 @@ export default function Design({ navigation }) {
             </FontList>
           </FontMenu>
         </CustomView>
-      </CustomModal>
+      </RNModal>
 
-      <CustomModal // modal de envio da camiseta aparece escrito 'enviando...aguarde'
+      <RNModal // modal de envio da camiseta aparece escrito 'enviando...aguarde'
         visible={visibleUploadingModal}
         animationType="slide"
         transparent
@@ -768,24 +763,17 @@ export default function Design({ navigation }) {
             <ActivityIndicator size="large" color="#fff" />
           </UploadShirtLoading>
         </CustomView>
-      </CustomModal>
+      </RNModal>
 
-      <Modal // modal de selecionar cores da camiseta
-        visible={visibleChooseColor}
-        disabled={false}
-        disabledContent={true}
-        onRequestClose={() => setChooseColorVisible(false)}
-      >
-        <Carousel
-          data={models} // array de camisetas.
-          done={value => {
-            setTShirtImage(value);
-            setChooseColorVisible(false);
-          }}
-          type={shirtType}
-          side="front"
-        />
-      </Modal>
+      <ColorModal // modal de selecionar cores da camiseta
+        visible={visibleModalColor}
+        onCancelPress={() => setVisibleModalColor(false)}
+        listData={models}
+        listDone={value => {
+          setTShirtImage(value);
+          setVisibleModalColor(false);
+        }}
+      />
     </>
   );
 }

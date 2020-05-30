@@ -15,21 +15,14 @@ export const Bottom = styled.View`
   background: #fff;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  padding: 15px 20px 10px;
+  justify-content: space-around;
+  padding: 10px 20px 15px;
   align-items: center;
 `;
 
 export const BottomButton = styled(TouchableOpacity)`
   justify-content: center;
   align-items: center;
-`;
-
-export const IconLabel = styled.Text`
-  margin-top: 5px;
-  color: #000;
-  width: 100%;
-  text-align: center;
 `;
 
 export const TShirtContainer = styled.View`
@@ -71,10 +64,9 @@ export const ActionButtonText = styled.Text`
 `;
 
 export const AddToCart = styled(TouchableOpacity)`
-  background: #038841;
-  border: 1px solid #dcdcdc;
-  border-radius: 6px;
-  padding: 5px 5px;
+  background: #5bae59;
+  border-radius: 50px;
+  padding: 10px 20px;
   width: 260px;
   align-items: center;
   margin: 10px 0;
@@ -82,9 +74,22 @@ export const AddToCart = styled(TouchableOpacity)`
 `;
 
 export const AddToCartText = styled.Text`
-  font-size: 14px;
+  font-size: 16px;
   color: #fff;
   font-weight: normal;
+`;
+
+export const CannotSendAlert = styled.Text`
+  background: #ccc;
+  border-radius: 50px;
+  padding: 10px 20px;
+  width: 260px;
+  align-items: center;
+  margin: 10px 0;
+  align-self: center;
+  text-align: center;
+  color: #000;
+  font-size: 16px;
 `;
 
 export const Input = styled.TextInput.attrs({
@@ -107,30 +112,6 @@ export const CustomView = styled.KeyboardAvoidingView`
   justify-content: center;
 `;
 
-export const PickTextButton = styled.Text`
-  background-color: #7159c1;
-  padding: 5px;
-  border-radius: 4px;
-  margin-right: 5px;
-  height: 35px;
-  width: 70px;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-`;
-
-export const PickTextButtonText = styled.Text`
-  font-size: 12px;
-  color: #fff;
-  text-align: center;
-`;
-
-export const ChangeSizeContainer = styled.View`
-  width: 100%;
-  height: 40px;
-  margin-top: 10px;
-`;
-
 export const NoSlider = styled.View`
   background-color: transparent;
   width: 100%;
@@ -140,21 +121,11 @@ export const NoSlider = styled.View`
 `;
 
 export const ContainerActions = styled.View`
-  width: 200px;
-  height: 35px;
-  margin-top: 5px;
   flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
+  justify-content: space-around;
   align-self: center;
-`;
-
-export const Actions = styled.TouchableOpacity`
-  height: 30px;
-  width: 30px;
-  border-radius: 15px;
-  margin: 10px;
-  align-self: center;
+  display: flex;
+  width: 80%;
 `;
 
 export const Color = styled.TouchableOpacity`

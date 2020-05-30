@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128.228" height="155.028" viewBox="0 0 128.228 155.028">
+  <g id="ico_camera" data-name="ico camera" transform="translate(-153.276 -110.336)">
+    <g id="Grupo_709" data-name="Grupo 709" transform="translate(153.276 137.137)">
+      <path id="Caminho_996" data-name="Caminho 996" d="M268.682,237.982v-17.1a12.823,12.823,0,0,0-12.823-12.823H224.57a2.916,2.916,0,0,0-2.906,2.928,18.38,18.38,0,0,0,.886,5.621H161.993a8.684,8.684,0,0,0-8.716,8.709,8.552,8.552,0,0,0,8.547,8.388h8.549V285h85.486a12.822,12.822,0,0,0,12.823-12.823h9.066a3.756,3.756,0,0,0,3.757-3.757V241.739a3.756,3.756,0,0,0-3.757-3.757Z" transform="translate(-153.276 -173.868)" fill="#ffdcc8"/>
+      <path id="Caminho_997" data-name="Caminho 997" d="M246.245,153.276H192.03a11.373,11.373,0,0,0-11.361,11.36V270.143A11.374,11.374,0,0,0,192.03,281.5h54.216a11.374,11.374,0,0,0,11.361-11.361V164.636A11.373,11.373,0,0,0,246.245,153.276Z" transform="translate(-163.572 -153.276)" fill="#00366d"/>
+      <path id="Caminho_998" data-name="Caminho 998" d="M280.772,270.144V164.636a11.373,11.373,0,0,0-11.361-11.36H242.3V281.5h27.108A11.373,11.373,0,0,0,280.772,270.144Z" transform="translate(-186.738 -153.276)" fill="#01223c"/>
+      <path id="Caminho_999" data-name="Caminho 999" d="M250.326,165.314h-4.291V169.6a11.8,11.8,0,0,1-11.8,11.8H213.093a11.8,11.8,0,0,1-11.8-11.8v-4.291H197a4.3,4.3,0,0,0-4.291,4.291V274.224A4.3,4.3,0,0,0,197,278.515h53.328a4.3,4.3,0,0,0,4.291-4.291V169.6a4.3,4.3,0,0,0-4.291-4.291Z" transform="translate(-168.096 -157.801)" fill="#5ff9fe"/>
+      <path id="Caminho_1000" data-name="Caminho 1000" d="M273.259,274.225V169.6a4.3,4.3,0,0,0-4.291-4.291h-4.291V169.6a11.8,11.8,0,0,1-11.8,11.8H242.3v97.107h26.664A4.3,4.3,0,0,0,273.259,274.225Z" transform="translate(-186.738 -157.801)" fill="#00dde7"/>
+      <circle id="Elipse_9" data-name="Elipse 9" cx="8.548" cy="8.548" r="8.548" transform="translate(8.549 94.034)" fill="#ffc5bb"/>
+      <path id="Caminho_1001" data-name="Caminho 1001" d="M182.345,266.249a8.549,8.549,0,1,0,0-17.1h-17.1a8.549,8.549,0,1,0,0,17.1h4.274a8.549,8.549,0,1,0,0,17.1h12.823a8.549,8.549,0,1,0,0-17.1Z" transform="translate(-154.563 -189.312)" fill="#ffc5bb"/>
+      <path id="Caminho_1002" data-name="Caminho 1002" d="M243.243,328.411h-16.1a3.757,3.757,0,0,1,0-7.513h16.1a3.757,3.757,0,1,1,0,7.513Z" transform="translate(-179.629 -216.279)" fill="#00dde7"/>
+      <path id="Caminho_1003" data-name="Caminho 1003" d="M254.108,324.655a3.757,3.757,0,0,0-3.757-3.757H242.3v7.513h8.048A3.756,3.756,0,0,0,254.108,324.655Z" transform="translate(-186.738 -216.279)" fill="#00bdcd"/>
+      <path id="Caminho_1004" data-name="Caminho 1004" d="M309.866,232.472V220.885a12.823,12.823,0,0,0-12.823-12.823H265.754a2.906,2.906,0,0,0-2.906,2.905,18.488,18.488,0,0,0,18.466,18.466h7.179V285h8.549a12.822,12.822,0,0,0,12.823-12.823h9.066a3.756,3.756,0,0,0,3.757-3.757V236.229a3.756,3.756,0,0,0-3.757-3.757Z" transform="translate(-194.46 -173.868)" fill="#ffc5bb"/>
+      <g id="Grupo_708" data-name="Grupo 708" transform="translate(6.411 76.937)">
+        <path id="Caminho_1005" data-name="Caminho 1005" d="M184.919,276.545H172.1a8.549,8.549,0,1,0,0,17.1h12.822a8.549,8.549,0,1,0,0-17.1Z" transform="translate(-163.548 -276.545)" fill="#ffadad"/>
+        <path id="Caminho_1006" data-name="Caminho 1006" d="M303.938,276.545v34.194h8.549a12.822,12.822,0,0,0,12.823-12.823h9.066a3.756,3.756,0,0,0,3.757-3.757V276.545Z" transform="translate(-216.315 -276.545)" fill="#ffadad"/>
+      </g>
+    </g>
+    <g id="Grupo_710" data-name="Grupo 710" transform="translate(194.447 145.977)">
+      <circle id="Elipse_10" data-name="Elipse 10" cx="3.884" cy="3.884" r="3.884" transform="translate(0 0)" fill="#fff"/>
+      <circle id="Elipse_11" data-name="Elipse 11" cx="3.884" cy="3.884" r="3.884" transform="translate(20.297 0)" fill="#fff"/>
+    </g>
+    <rect id="Retângulo_319" data-name="Retângulo 319" width="8.168" height="19.648" rx="4.084" transform="translate(216.151 110.336)" fill="#01223c"/>
+    <rect id="Retângulo_320" data-name="Retângulo 320" width="8.168" height="19.648" rx="4.084" transform="matrix(0.787, 0.618, -0.618, 0.787, 241.342, 115.06)" fill="#01223c"/>
+    <rect id="Retângulo_321" data-name="Retângulo 321" width="8.168" height="19.648" rx="4.084" transform="translate(212.812 130.514) rotate(141.864)" fill="#01223c"/>
+  </g>
+</svg>

@@ -1,14 +1,10 @@
 import React, { useEffect } from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
 import Header from '~/components/Header';
 
 import { Container, PageText } from './styles';
 
 export default function Contact({ navigation }) {
   useEffect(() => {
-    const abc = AsyncStorage.getItem('var1');
-    console.tron.log(abc);
-
     // write "batata doce" on asyncstorage
     // resgata em outro componente -- redux pra que né?
     // se der certo com texto, tenta com um arquivo criado pelo RNFS ou RNFetchBlob
